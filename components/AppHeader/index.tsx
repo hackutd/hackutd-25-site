@@ -117,7 +117,8 @@ export default function AppHeader() {
             pointerEvents: 'auto',
           }}
         >
-          <AppHeaderCore />
+          {/* Uncomment this line later */}``
+          {/* <AppHeaderCore /> */}
         </div>
       </header>
     </React.Fragment>

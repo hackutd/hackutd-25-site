@@ -258,24 +258,24 @@ export default function AppNavbarBottom(props: Props) {
     return items;
   };
 
-  return (
-    <div
-      className={clsx(
-        'md:hidden fixed z-[1000] bottom-2 left-1/2 -translate-x-1/2',
-        'bg-[rgba(0,0,0,0.70)] p-3 rounded-xl',
-        'w-[90%]',
-      )}
-    >
-      <FloatingDock
-        settings={{
-          widthScaleFactor: 0.5,
-          distanceMagnify: 80,
-        }}
-        classes={{
-          wrapperDiv: clsx('gap-4 flex items-center justify-center flex-wrap'),
-        }}
-        items={floatingDockItems()}
-      />
-    </div>
-  );
+  // return (
+  //   <div
+  //     className={clsx(
+  //       'md:hidden fixed z-[1000] bottom-2 left-1/2 -translate-x-1/2',
+  //       'bg-[rgba(0,0,0,0.70)] p-3 rounded-xl',
+  //       'w-[90%]',
+  //     )}
+  //   >
+  //     <FloatingDock
+  //       settings={{
+  //         widthScaleFactor: 0.5,
+  //         distanceMagnify: 80,
+  //       }}
+  //       classes={{
+  //         wrapperDiv: clsx('gap-4 flex items-center justify-center flex-wrap'),
+  //       }}
+  //       items={floatingDockItems()}
+  //     />
+  //   </div>
+  // );
 }
