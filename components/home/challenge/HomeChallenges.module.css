@@ -1,0 +1,21 @@
+.container {
+  background: #F2F3FF;
+}
+
+.container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
+  z-index: 0;
+
+  background-position: 0 0, 0 0;
+  /* animation: animatedBackground 30s linear infinite; */
+}
+
+.content {
+  position: relative;
+  z-index: 3;
+}
