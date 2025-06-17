@@ -117,7 +117,7 @@ export default function AppHeader() {
             pointerEvents: 'auto',
           }}
         >
-          {/* Uncomment this line later */}``
+          {/* Uncomment this line later */}
           {/* <AppHeaderCore /> */}
         </div>
       </header>
