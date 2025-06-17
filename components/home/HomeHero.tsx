@@ -26,9 +26,9 @@ export default function HomeHero() {
     }
   };
   return (
-    <section className="min-h-screen bg-cover bg-hero-pattern bg-no-repeat bg-center flex flex-col-reverse md:flex-col">
-      <div className="flex h-screen w-full relative">
-        <div className="relative z-10 shrink-0 w-full flex">
+    <section className="h-screen bg-cover bg-hero-pattern bg-no-repeat bg-center flex flex-col-reverse md:flex-col relative">
+      <div className="flex flex-col h-full w-full justify-center items-center">
+        <div className="relative z-10 shrink-0 w-full flex flex-col items-center justify-center flex-grow">
           {/* MLH sticker */}
           <div className="absolute top-0 right-4 z-20">
             <Image
@@ -41,7 +41,7 @@ export default function HomeHero() {
           </div>
 
           {/* Big welcome */}
-          <div className="w-full flex flex-col gap-2 justify-center items-center">
+          <div className="w-full flex flex-col gap-2 justify-center items-center flex-grow">
             {/* <HackTitle /> */}
             <p className="font-poppins text-white font-medium">
               Get notified when applications drop!
@@ -64,12 +64,12 @@ export default function HomeHero() {
               </button>
             </div>
           </div>
-          <div className="absolute right-0 bottom-0 p-3">
-            <Link target="_blank" href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">
-              <h1 className="font-poppins text-lg cursor-pointer">MLH Code of Conduct</h1>
-            </Link>
-          </div>
         </div>
+      </div>
+      <div className="absolute right-0 bottom-0 p-3 z-30">
+        <Link target="_blank" href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">
+          <h1 className="font-poppins text-lg cursor-pointer">MLH Code of Conduct</h1>
+        </Link>
       </div>
     </section>
   );
