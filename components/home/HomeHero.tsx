@@ -1,9 +1,9 @@
 import Image from 'next/image';
 import MLH_Sticker from '../../public/assets/mlh-2025.png';
-//import HackTitle from './HackTitle';
 import { useState } from 'react';
 import { RequestHelper } from '../../lib/request-helper';
 import Link from 'next/link';
+import styles from './HomeHero.module.css';
 
 export default function HomeHero() {
   const [userEmail, setUserEmail] = useState<string>('');
@@ -26,7 +26,9 @@ export default function HomeHero() {
     }
   };
   return (
-    <section className="h-screen bg-cover bg-hero-pattern bg-no-repeat bg-center flex flex-col-reverse md:flex-col relative">
+    <section
+      className={`h-screen bg-no-repeat bg-center flex flex-col-reverse md:flex-col relative ${styles.animatedGradientBg}`}
+    >
       <div className="flex flex-col h-full w-full justify-center items-center">
         <div className="relative z-10 shrink-0 w-full flex flex-col items-center justify-center flex-grow">
           {/* MLH sticker */}
@@ -41,12 +43,35 @@ export default function HomeHero() {
           </div>
 
           {/* Big welcome */}
-          <div className="w-full flex flex-col gap-2 justify-center items-center flex-grow">
-            {/* <HackTitle /> */}
-            <p className="font-poppins text-white font-medium">
+          <div className="w-full flex flex-col gap-2 justify-center items-center flex-grow mt-8 md:mt-16">
+            {/* ComingSoon SVG - above HackTitle */}
+            <div className="w-full flex justify-center mb-20">
+              <img
+                src="/assets/ComingSoon.svg"
+                alt="Coming Soon"
+                className="comingsoon-svg max-w-[180px] md:max-w-[214px] w-2/5 md:w-[214px] h-auto"
+                style={{ display: 'block' }}
+              />
+            </div>
+            {/* HackTitle SVG - hero title as image */}
+            <div className="w-full flex justify-center mb-2 md:mb-4">
+              <img
+                src="/assets/HackTitle.svg"
+                alt="HackUTD Title"
+                className="hacktitle-svg max-w-[320px] md:max-w-[480px] w-4/5 md:w-2/5 h-auto"
+                style={{ display: 'block' }}
+              />
+            </div>
+            {/* Nov 8 - 9 dates */}
+            <div className="w-full flex justify-center mb-2">
+              <span className="font-montserrat text-white text-xl md:text-2xl font-semibold text-center drop-shadow">
+                Nov 8 - 9
+              </span>
+            </div>
+            <p className="font-poppins text-white font-medium text-center">
               Get notified when applications drop!
             </p>
-            <div className="rounded-xl border-none w-4/5 lg:w-2/5 p-[5px] flex justify-between items-center bg-white gap-x-3">
+            <div className="rounded-xl border-none w-11/12 sm:w-4/5 lg:w-2/5 p-[5px] flex justify-between items-center bg-white gap-x-3">
               <input
                 type="text"
                 className="w-3/5 lg:w-4/5 rounded-lg border-none focus:ring-0"
@@ -55,7 +80,7 @@ export default function HomeHero() {
                 onChange={(e) => setUserEmail(e.target.value)}
               />
               <button
-                className="rounded-lg bg-[#F7CE79] px-4 py-3 text-white"
+                className="rounded-lg bg-[#D49410] px-4 py-3 text-white"
                 onClick={async () => {
                   await handleSubmitEmail(userEmail);
                 }}
@@ -68,7 +93,7 @@ export default function HomeHero() {
       </div>
       <div className="absolute right-0 bottom-0 p-3 z-30">
         <Link target="_blank" href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">
-          <h1 className="font-poppins text-lg cursor-pointer">MLH Code of Conduct</h1>
+          <h1 className="font-montserrat text-white text-lg cursor-pointer">MLH Code of Conduct</h1>
         </Link>
       </div>
     </section>
