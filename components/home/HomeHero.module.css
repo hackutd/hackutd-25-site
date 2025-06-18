@@ -1,0 +1,38 @@
+.animatedGradientBg {
+  background: linear-gradient(120deg, #402811, #8C2057, #402811 80%);
+  background-size: 200% 200%;
+  animation: gradientMove 8s ease-in-out infinite;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.shiningGold {
+  background: linear-gradient(90deg, #FFD700 20%, #FFF8DC 40%, #FFD700 60%, #FFA500 80%);
+  background-size: 200% auto;
+  color: #FFD700;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 2.5s linear infinite;
+  font-weight: bold;
+  filter: drop-shadow(0 0 6px #FFD70088);
+}
+
+@keyframes shine {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: 0% center;
+  }
+} 
