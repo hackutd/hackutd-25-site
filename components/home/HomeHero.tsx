@@ -35,10 +35,10 @@ export default function HomeHero() {
           <div className="absolute top-0 right-4 z-20">
             <Image
               src="https://s3.amazonaws.com/logged-assets/trust-badge/2026/mlh-trust-badge-2026-black.svg"
-              height={MLH_Sticker.height}
-              width={MLH_Sticker.width / 7}
+              height={30}
+              width={80}
               alt="MLH sticker"
-              className="object-cover"
+              className="w-full h-full object-cover"
             />
           </div>
 

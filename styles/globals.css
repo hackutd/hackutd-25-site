@@ -21,12 +21,17 @@
   box-sizing: border-box;
 }
 
-html,
+html {
+  overscroll-behavior: none;
+  background: #402811;  /* This matches the hero gradient start color */
+}
+
 body {
   padding: 0;
   margin: 0;
   font-family: sans-serif;
   /* overflow-x: hidden; */
+  background: #402811;  /* This matches the hero gradient start color */
 }
 
 @font-face {
