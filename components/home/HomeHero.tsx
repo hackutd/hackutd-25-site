@@ -33,19 +33,33 @@ export default function HomeHero() {
         <div className="relative z-10 shrink-0 w-full flex flex-col items-center justify-center flex-grow">
           {/* MLH sticker */}
           <div className="absolute top-0 right-4 z-20">
-            <Image
-              src={MLH_Sticker.src}
-              height={MLH_Sticker.height}
-              width={MLH_Sticker.width / 7}
-              alt="MLH sticker"
-              className="w-full h-full object-cover"
-            />
+            <a
+              id="mlh-trust-badge"
+              style={{
+                display: 'block',
+                maxWidth: '100px',
+                minWidth: '60px',
+                position: 'fixed',
+                right: '50px',
+                top: '0',
+                width: '10%',
+                zIndex: 10000,
+              }}
+              href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2026-season&utm_content=gray"
+              target="_blank"
+            >
+              <img
+                src="https://s3.amazonaws.com/logged-assets/trust-badge/2026/mlh-trust-badge-2026-gray.svg"
+                alt="Major League Hacking 2026 Hackathon Season"
+                style={{ width: '100%' }}
+              />
+            </a>
           </div>
 
           {/* Big welcome */}
           <div className="w-full flex flex-col gap-2 justify-center items-center flex-grow mt-8 md:mt-16">
             {/* ComingSoon SVG - above HackTitle */}
-            <div className="w-full flex justify-center mb-20">
+            <div className={`w-full flex justify-center mb-20 ${styles.fadeInUp}`}>
               <img
                 src="/assets/ComingSoon.svg"
                 alt="Coming Soon"
@@ -54,24 +68,30 @@ export default function HomeHero() {
               />
             </div>
             {/* HackTitle SVG - hero title as image */}
-            <div className="w-full flex justify-center mb-2 md:mb-4">
-              <img
+            <div className={`w-full flex justify-center mb-2 md:mb-4 ${styles.fadeInUpDelayed}`}>
+              <Image
                 src="/assets/HackTitle.svg"
                 alt="HackUTD Title"
+                width={480}
+                height={182}
                 className="hacktitle-svg max-w-[320px] md:max-w-[480px] w-4/5 md:w-2/5 h-auto"
                 style={{ display: 'block' }}
               />
             </div>
             {/* Nov 8 - 9 dates */}
-            <div className="w-full flex justify-center mb-2">
+            <div className={`w-full flex justify-center mb-2 ${styles.fadeInUpMoreDelayed}`}>
               <span className="font-montserrat text-white text-xl md:text-2xl font-semibold text-center drop-shadow">
                 Nov 8 - 9
               </span>
             </div>
-            <p className="font-poppins text-white font-medium text-center">
+            <p
+              className={`font-poppins text-white font-medium text-center ${styles.fadeInUpMoreDelayed}`}
+            >
               Get notified when applications drop!
             </p>
-            <div className="rounded-xl border-none w-11/12 sm:w-4/5 lg:w-2/5 p-[5px] flex justify-between items-center bg-white gap-x-3">
+            <div
+              className={`rounded-xl border-none w-11/12 sm:w-4/5 lg:w-2/5 p-[5px] flex justify-between items-center bg-white gap-x-3 ${styles.fadeInUpEvenMoreDelayed}`}
+            >
               <input
                 type="text"
                 className="w-3/5 lg:w-4/5 rounded-lg border-none focus:ring-0"

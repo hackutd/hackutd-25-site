@@ -35,4 +35,64 @@
   100% {
     background-position: 0% center;
   }
+}
+
+/* Fade-in animations for page load */
+.fadeInUp {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 1s ease-out forwards;
+}
+
+.fadeInUpDelayed {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 1s ease-out 0.5s forwards;
+}
+
+.fadeInUpMoreDelayed {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 1s ease-out 1s forwards;
+}
+
+.fadeInUpEvenMoreDelayed {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 1s ease-out 1.5s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scale and fade in for the main title */
+.titleScaleIn {
+  opacity: 0;
+  transform: scale(0.8) translateY(20px);
+  animation: titleScaleIn 1.2s ease-out 0.3s forwards;
+}
+
+@keyframes titleScaleIn {
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Subtle floating animation for the title after it appears */
+.titleFloat {
+  animation: titleFloat 3s ease-in-out 1.5s infinite;
+}
+
+@keyframes titleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
 } 
