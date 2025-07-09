@@ -380,7 +380,16 @@ export default function Register({ allowedRegistrations }: Props) {
   };
 
   return (
-    <div className="flex flex-col flex-grow mt-28 md:mt-0 mb-10 ">
+    <div
+      className="flex flex-col flex-grow mt-0 mb-0"
+      style={{
+        backgroundImage: 'url(/assets/registration-background.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        minHeight: '100vh',
+      }}
+    >
       <Head>
         <title>Hacker Application</title>
         <meta name="description" content="Register for HackPortal" />
