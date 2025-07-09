@@ -37,7 +37,7 @@ function PortalApp({ Component, pageProps }: AppProps) {
   const [particlesInit, setParticlesInit] = useState(false);
   const hash = useUrlHash('');
 
-  const noTopSpacerPathnames = new Set(['/', '/parking', '/live']);
+  const noTopSpacerPathnames = new Set(['/', '/parking', '/live', '/register']);
 
   const faqRef = useRef<HTMLDivElement | null>(null);
   const aboutRef = useRef<HTMLDivElement | null>(null);
