@@ -110,7 +110,7 @@ export default function EventPage(props: Props) {
         <>
           <div className="mt-4">
             <Link href="/admin" passHref legacyBehavior>
-              <div className="cursor-pointer items-center inline-flex text-primaryDark font-bold md:text-lg text-base">
+              <div className="cursor-pointer items-center inline-flex text-[#5D5A88] font-bold md:text-lg text-base">
                 <ChevronLeftIcon />
                 return to event dashboard
               </div>
