@@ -147,7 +147,16 @@ export default function HackerApplications({
             renderValue={(selected) => (
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                 {selected.map((value) => (
-                  <Chip key={value} label={value} />
+                  <Chip
+                    key={value}
+                    label={value}
+                    sx={{
+                      backgroundColor: '#5D5A88',
+                      color: '#fff',
+                      fontWeight: 700,
+                      fontSize: '1rem',
+                    }}
+                  />
                 ))}
               </Box>
             )}
@@ -184,7 +193,7 @@ export default function HackerApplications({
           <div
             className={clsx(
               `flex flex-row border-b-2 px-6 py-3 justify-between sticky z-10 top-0`,
-              `text-[#F2F3FF] bg-[#5D5A88]`,
+              `text-white bg-[#5D5A88]`,
             )}
           >
             <div className="w-2/12 flex items-center justify-center">Status</div>

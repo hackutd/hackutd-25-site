@@ -114,7 +114,7 @@ export default function ViewHackerApplication({
 
   // 208 px
   return (
-    <div className="p-5 sm:p-10 text-complementary bg-[rgba(255,255,255,0.4)] mb-4">
+    <div className="p-5 sm:p-10 text-[#5D5A88] bg-[#F2F3FF] mb-4">
       {/* Application Status */}
       <MaybeVerdictDialog
         isOpen={showMaybeDialog}
@@ -139,7 +139,7 @@ export default function ViewHackerApplication({
           }
         }}
       />
-      <h1 className="text-3xl my-3 text-black font-bold">
+      <h1 className="text-3xl my-3 text-[#5D5A88] font-bold">
         Team member {userIndex}/{groupLength}
       </h1>
       <div className="flex-wrap gap-y-2 flex flex-row justify-between items-center">
@@ -173,14 +173,14 @@ export default function ViewHackerApplication({
 
         <div className="text-sm flex-wrap gap-y-2 flex flex-row justify-between items-start gap-x-3">
           <button
-            className="rounded-full bg-transparent text-[#5D5A88] border-2 border-solid border-[#5D5A88] font-bold py-2 px-8 hover:border-red-500 hover:text-white hover:bg-red-500 transition"
+            className="rounded-full bg-[#F2F3FF] text-[#5D5A88] border-2 border-solid border-[#5D5A88] font-bold py-2 px-8 hover:border-red-500 hover:text-white hover:bg-red-500 transition"
             // Score of 1 means strong NO
             onClick={() => onScoreSubmit(1)}
           >
             REJECT
           </button>
           <button
-            className="rounded-full bg-transparent text-[#5D5A88] border-2 border-solid border-[#5D5A88] font-bold py-2 px-8 hover:border-yellow-500 hover:text-white hover:bg-yellow-500 transition"
+            className="rounded-full bg-[#F2F3FF] text-[#5D5A88] border-2 border-solid border-[#5D5A88] font-bold py-2 px-8 hover:border-yellow-500 hover:text-white hover:bg-yellow-500 transition"
             onClick={() => {
               setShowMaybeDialog(true);
             }}
