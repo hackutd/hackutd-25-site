@@ -40,10 +40,10 @@ export default function AddEventPage() {
     return <div className="text-2xl font-black text-center">Unauthorized</div>;
 
   return (
-    <div className="2xl:px-36 md:px-16 px-6">
+    <div className="2xl:px-36 md:px-16 px-6 text-[#FFFFFF]">
       <div className="mt-4">
         <Link href="/admin/events" passHref legacyBehavior>
-          <div className="cursor-pointer items-center inline-flex text-primaryDark font-bold md:text-lg text-base">
+          <div className="cursor-pointer items-center inline-flex text-[#FFFFFF] font-bold md:text-lg text-base">
             <ChevronLeftIcon />
             Return to events
           </div>

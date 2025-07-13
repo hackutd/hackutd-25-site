@@ -66,7 +66,7 @@ export default function Admin({ questions }: { questions: QADocument[] }) {
   return (
     <div className="flex flex-col flex-grow min-h-screen">
       <Head>
-        <title>HackUTD 2024 - Admin</title>
+        <title>HackUTD 2025 - Admin</title>
         <meta name="description" content="HackPortal's Admin Page" />
       </Head>
       {user.permissions.includes('super_admin') && (
@@ -84,7 +84,7 @@ export default function Admin({ questions }: { questions: QADocument[] }) {
               <SuccessCard msg="Announcement posted successfully" />
             </div>
           )}
-          <h1 className="font-bold lg:text-3xl text-2xl text-[#5D5A88] mb-4">
+          <h1 className="font-bold lg:text-3xl text-2xl text-[#FFFFFF] mb-4">
             Post Announcement:{' '}
           </h1>
           <textarea
@@ -108,7 +108,7 @@ export default function Admin({ questions }: { questions: QADocument[] }) {
         </div>
       )}
       <div className="2xl:px-32 md:px-16 px-6">
-        <h1 className="font-bold text-xl text-[#5D5A88]">Pending Questions: </h1>
+        <h1 className="font-bold text-xl text-[#FFFFFF]">Pending Questions: </h1>
         {questions.map((question, idx) => (
           <Link key={idx} passHref href={`/admin/resolve/${question.id}`}>
             <PendingQuestion key={idx} question={question.question} />
@@ -118,7 +118,7 @@ export default function Admin({ questions }: { questions: QADocument[] }) {
 
       {user.permissions[0] === 'super_admin' && (
         <div className="2xl:px-32 md:px-16 px-6 mt-8">
-          <h1 className="font-bold text-xl text-[#5D5A88]">Event Details: </h1>
+          <h1 className="font-bold text-xl text-[#FFFFFF]">Event Details: </h1>
           <div className="py-2">
             <EventLink title="View Events" href="/admin/events" />
             <EventLink title="View Challenges" href="/admin/challenges" />

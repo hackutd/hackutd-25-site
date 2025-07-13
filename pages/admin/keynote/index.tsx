@@ -73,7 +73,7 @@ const Page = () => {
       {/* Top-left return to event dashboard */}
       <div className="absolute top-4 left-4">
         <Link href="/admin" passHref legacyBehavior>
-          <div className="cursor-pointer items-center inline-flex text-[#5D5A88] font-bold md:text-lg text-base">
+          <div className="cursor-pointer items-center inline-flex text-[#FFFFFF] font-bold md:text-lg text-base">
             <span style={{ fontSize: '1.5rem', marginRight: '0.25rem' }}>{'<'}</span>
             return to event dashboard
           </div>
