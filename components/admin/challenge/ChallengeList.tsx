@@ -50,7 +50,7 @@ export default function ChallengeList({
   }
 
   return (
-    <div className="p-5">
+    <div className="p-5 text-[#FFFFFF]">
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={challenges} strategy={verticalListSortingStrategy}>
           {challenges.map(({ title, description, prizes }, idx) => (

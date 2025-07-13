@@ -85,7 +85,7 @@ export default function EventList({ events, onEventEditClick, onEventDeleteClick
     <div className="p-5">
       <div className="flex gap-2 p-5">
         <div className="flex flex-col w-1/2">
-          <h1 className="text-center" style={{ color: '#5D5A88', fontWeight: 'bold' }}>
+          <h1 className="text-center" style={{ color: '#FFFFFF', fontWeight: 'bold' }}>
             Day 1 :{' '}
             {dates
               ? new Date(
@@ -98,7 +98,7 @@ export default function EventList({ events, onEventEditClick, onEventDeleteClick
               key={idx}
               className="flex items-center justify-between p-3 border-2 my-4 rounded-xl"
             >
-              <h1 className="md:text-lg text-base font-bold" style={{ color: '#5D5A88' }}>
+              <h1 className="md:text-lg text-base font-bold" style={{ color: '#FFFFFF' }}>
                 {event.title}
               </h1>
               <div className="flex gap-4 items-center">
@@ -126,7 +126,7 @@ export default function EventList({ events, onEventEditClick, onEventDeleteClick
           ))}
         </div>
         <div className="flex flex-col w-1/2">
-          <h1 className="text-center" style={{ color: '#5D5A88', fontWeight: 'bold' }}>
+          <h1 className="text-center" style={{ color: '#FFFFFF', fontWeight: 'bold' }}>
             Day 2 :{' '}
             {dates
               ? new Date(
@@ -140,7 +140,7 @@ export default function EventList({ events, onEventEditClick, onEventDeleteClick
               key={idx}
               className="flex items-center justify-between p-3 border-2 my-4 rounded-xl"
             >
-              <h1 className="md:text-lg text-base font-bold" style={{ color: '#5D5A88' }}>
+              <h1 className="md:text-lg text-base font-bold" style={{ color: '#FFFFFF' }}>
                 {event.title}
               </h1>
               <div className="flex gap-4 items-center">
@@ -173,7 +173,7 @@ export default function EventList({ events, onEventEditClick, onEventDeleteClick
         <div>
           <h1
             className="text-center text-4xl border-b-[1px] border-black p-2"
-            style={{ color: '#5D5A88', fontWeight: 'bold' }}
+            style={{ color: '#FFFFFF', fontWeight: 'bold' }}
           >
             Events that cant be seen
           </h1>
@@ -183,7 +183,7 @@ export default function EventList({ events, onEventEditClick, onEventDeleteClick
                 key={idx}
                 className="flex items-center justify-between p-3 border-2 my-4 rounded-xl w-[49%]"
               >
-                <h1 className="md:text-lg text-base font-bold" style={{ color: '#5D5A88' }}>
+                <h1 className="md:text-lg text-base font-bold" style={{ color: '#FFFFFF' }}>
                   {event.title}
                 </h1>
                 <div className="flex gap-4 items-center">

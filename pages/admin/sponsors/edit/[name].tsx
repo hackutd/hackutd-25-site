@@ -60,7 +60,7 @@ export default function EditSponsorPage({ sponsor }: EditSponsorPageProps) {
     <div className="2xl:px-36 md:px-16 px-6">
       <div className="mt-4">
         <Link href="/admin/sponsors" passHref legacyBehavior>
-          <div className="cursor-pointer inline-flex items-center text-primaryDark font-bold md:text-lg text-base">
+          <div className="cursor-pointer inline-flex items-center text-primaryDark font-bold md:text-lg text-base text-[#FFFFFF]">
             <ChevronLeftIcon />
             Return to sponsors
           </div>
