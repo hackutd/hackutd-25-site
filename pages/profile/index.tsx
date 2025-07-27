@@ -246,7 +246,7 @@ export default function ProfilePage() {
                 </div>
               </div>
               <p className="text-lg text-nowrap mr-4 text-[#4A5156] font-bold underline">
-                Decisions will be out by 11/08/2024
+                Decisions will be out by TBD
               </p>
             </div>
 
