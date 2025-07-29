@@ -83,7 +83,7 @@ export default function UserAdminGroupView({
     <div
       className={`
         lg:mx-14 flex flex-row h-full 
-        bg-[rgba(255,255,255,0.6)] backdrop-blur
+        bg-[#F2F3FF]
         rounded-2xl
       `}
     >
@@ -96,10 +96,10 @@ export default function UserAdminGroupView({
               key={getGroupId(group.application)}
               className={`
                 flex flex-row justify-center items-center w-full py-2 rounded-xl mb-3 h-12 p-4
-                bg-[rgba(255,255,255,0.6)]
+                bg-[#F2F3FF]
                 shadow-md ${
                   getGroupId(group.application) === currentUserGroupId
-                    ? 'border-primaryDark border-[2px]'
+                    ? 'border-[#5D5A88] border-[2px]'
                     : ''
                 }
                 cursor-pointer
@@ -173,7 +173,7 @@ export default function UserAdminGroupView({
       {/* User */}
       <div className="rounded-2xl h-full overflow-y-hidden w-full flex-1">
         {/* Header */}
-        <div className="sticky top-0 bg-[rgba(255,255,255,0.8)] flex flex-row justify-between items-center text-secondary">
+        <div className="sticky top-0 bg-[#F2F3FF] flex flex-row justify-between items-center text-[#5D5A88]">
           <div className="flex items-center p-0">
             <ChevronLeftIcon
               className="h-12 w-12 text-sm font-extralight cursor-pointer text-[#5D5A88]"

@@ -59,13 +59,13 @@ const AdminSponsorCard: React.FC<AdminSponsorCardProps> = ({
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+      <div className="bg-[#F2F3FF] rounded-lg shadow-md overflow-hidden hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 border border-[#5D5A88]">
         <div className="p-4 flex flex-col h-full">
           <div>
-            <div className="text-lg font-semibold text-gray-800 mb-2 capitalize">
+            <div className="text-lg font-semibold text-[#5D5A88] mb-2 capitalize">
               {tier} Sponsor
             </div>
-            <div className="text-gray-800 font-medium">{name}</div>
+            <div className="text-[#5D5A88] font-medium">{name}</div>
             <div className="w-full h-32 flex justify-center items-center mb-2">
               {reference && (
                 <img

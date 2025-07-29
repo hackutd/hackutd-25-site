@@ -30,8 +30,8 @@ export default function AdminHeader() {
 
   return (
     <section className="">
-      <header className="hidden md:flex flex-row justify-center p-2 items-center">
-        <div className=" md:text-base lg:text-xl font-header md:text-left text-complementary font-semibold border-b-2 py-2">
+      <header className="hidden md:flex flex-row justify-center p-2 items-center bg-transparent">
+        <div className=" md:text-base lg:text-xl font-header md:text-left text-[#5D5A88] font-semibold border-b-2 border-[#5D5A88] py-2">
           <NavLink
             href="/admin"
             exact={true}

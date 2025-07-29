@@ -1,6 +1,9 @@
 import { RequestHelper } from '@/lib/request-helper';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { useAuthContext } from '@/lib/user/AuthContext';
 import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 
 const Page = () => {
   const { user, isSignedIn } = useAuthContext();
@@ -66,7 +69,16 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="w-full h-full flex flex-col justify-center items-center p-12 gap-4 ">
+    <div className="w-full h-full flex flex-col justify-center items-center p-12 gap-4 relative">
+      {/* Top-left return to event dashboard */}
+      <div className="absolute top-4 left-4">
+        <Link href="/admin" passHref legacyBehavior>
+          <div className="cursor-pointer items-center inline-flex text-[#FFFFFF] font-bold md:text-lg text-base">
+            <span style={{ fontSize: '1.5rem', marginRight: '0.25rem' }}>{'<'}</span>
+            return to event dashboard
+          </div>
+        </Link>
+      </div>
       <div className="flex h-full w-1/2 gap-2 ">
         {!isEditing && (
           <div className="w-1/3 flex justify-center items-center bg-gray-500 rounded-lg">
@@ -75,7 +87,13 @@ const Page = () => {
                 <h1 className="text-white">Currently no image</h1>
               </div>
             ) : (
-              <img className="rounded-lg" src={values.img}></img>
+              <Image
+                className="rounded-lg"
+                src={values.img}
+                alt="Keynote"
+                width={200}
+                height={200}
+              />
             )}
           </div>
         )}
@@ -95,7 +113,7 @@ const Page = () => {
                 <h1 className="text-white">Currently no image</h1>
               </div>
             ) : (
-              <img className=" rounded-lg" src={form.img}></img>
+              <Image className="rounded-lg" src={form.img} alt="Keynote" width={200} height={200} />
             )}
           </div>
         )}
