@@ -1,4 +1,5 @@
 import AdminSponsorList from '@/components/admin/sponsor/AdminSponsorList';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { RequestHelper } from '@/lib/request-helper';
 import { useAuthContext } from '@/lib/user/AuthContext';
 import { GetServerSideProps } from 'next';
@@ -31,7 +32,16 @@ const Page = ({ sponsors_ }: AdminSponsorPageProps) => {
     return <div className="text-2xl font-bold text-center">Unauthorized</div>;
 
   return (
-    <div className="w-full h-full flex flex-col justify-center items-center p-12 gap-4 ">
+    <div className="w-full h-full flex flex-col justify-center items-center p-12 gap-4 relative">
+      {/* Top-left return to event dashboard */}
+      <div className="absolute top-4 left-4">
+        <Link href="/admin" passHref legacyBehavior>
+          <div className="cursor-pointer items-center inline-flex text-[#FFFFFF] font-bold md:text-lg text-base">
+            <ChevronLeftIcon />
+            return to event dashboard
+          </div>
+        </Link>
+      </div>
       <AdminSponsorList sponsors={sponsors} />
       <div className="p-3">
         <Link href={`/admin/sponsors/add`} legacyBehavior>

@@ -43,7 +43,7 @@ export default function AddChallengePage() {
     <div className="p-3">
       <div className="mt-4">
         <Link href="/admin/challenges" passHref legacyBehavior>
-          <div className="cursor-pointer items-center inline-flex text-primaryDark font-bold md:text-lg text-base">
+          <div className="cursor-pointer items-center inline-flex text-primaryDark font-bold md:text-lg text-base text-[#FFFFFF]">
             <ChevronLeftIcon />
             Return to challenges
           </div>
