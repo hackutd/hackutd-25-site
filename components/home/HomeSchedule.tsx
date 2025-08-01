@@ -150,7 +150,7 @@ export default function HomeSchedule(props: { scheduleCard: ScheduleEvent[]; dat
       </div>
 
       {/* Filter */}
-      <div className="md:flex justify-center items-center mx-8">
+      <div className="md:flex justify-center items-center mx-8 mt-20">
         <div className="bg-white border-2 border-blue-900 rounded-3xl px-8 my-4 border-opacity-40">
           <div className="text-center py-1 text-xl font-bold text-[#05149C] font-poppins">
             Filters

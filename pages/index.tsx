@@ -7,6 +7,7 @@ import HomeHero from '@/components/home/HomeHero';
 import HackUTDCountdown from '@/components/home/countdown';
 import HomeAboutText from '@/components/home/about/HomeAboutText';
 import HomeAboutPhotos from '@/components/home/about/HomeAboutPhotos';
+import HomeVideoStats from '@/components/home/HomeVideoStats';
 import HomeSchedule from '@/components/home/HomeSchedule';
 import HomeFaq from '@/components/home/faq';
 import HomeSponsors from '@/components/home/sponsors';
@@ -66,6 +67,7 @@ export default function Home({
           <HackUTDCountdown />
           <HomeAboutText />
           <HomeAboutPhotos />
+          <HomeVideoStats />
           <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
           <HomeChallengesComponent challenges={challenges} />
           <HomeFaq answeredQuestions={answeredQuestion} />
