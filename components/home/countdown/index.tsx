@@ -1,5 +1,4 @@
 import React, { useState, useEffect, CSSProperties } from 'react';
-// TODO: convert styles to tailwind
 import styles from './HackCountdown.module.css';
 import { config } from '../../../hackportal.config';
 
@@ -38,10 +37,7 @@ const HackCountdown: React.FC<Props> = ({ targetDate }) => {
   });
 
   return (
-    <div
-      className={styles.countdownContainer}
-      style={{ padding: '10vh', backgroundColor: '#F2F3FF' }}
-    >
+    <div className={styles.countdownContainer} style={{ padding: '10vh' }}>
       <div className={styles.timeSection}>
         {Object.entries(timeLeft).map(([unit, value]) => {
           const digits = value.toString().padStart(2, '0').split('');

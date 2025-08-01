@@ -11,6 +11,7 @@ import HomeSchedule from '@/components/home/HomeSchedule';
 import HomeFaq from '@/components/home/faq';
 import HomeSponsors from '@/components/home/sponsors';
 import HomeFooter from '@/components/home/HomeFooter';
+import PathDrawingBackground from '@/components/home/PathDrawingBackground';
 
 import { RequestHelper } from '@/lib/request-helper';
 
@@ -34,6 +35,16 @@ export default function Home({
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    // Remove the global background for home page
+    document.body.style.backgroundImage = 'none';
+
+    // Cleanup function to restore background when component unmounts
+    return () => {
+      document.body.style.backgroundImage = 'url("/assets/registration-background.png")';
+    };
+  }, []);
+
   if (loading) {
     return (
       <div>
@@ -49,16 +60,18 @@ export default function Home({
         <meta name="description" content="A default HackPortal instance" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="overflow-x-hidden w-full">
-        <HomeHero />
-        <HackUTDCountdown />
-        <HomeAboutText />
-        <HomeAboutPhotos />
-        <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
-        <HomeChallengesComponent challenges={challenges} />
-        <HomeFaq answeredQuestions={answeredQuestion} />
-        <HomeSponsors />
-        <HomeFooter />
+      <div className="overflow-x-hidden w-full home-page">
+        <PathDrawingBackground>
+          <HomeHero />
+          <HackUTDCountdown />
+          <HomeAboutText />
+          <HomeAboutPhotos />
+          <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
+          <HomeChallengesComponent challenges={challenges} />
+          <HomeFaq answeredQuestions={answeredQuestion} />
+          <HomeSponsors />
+          <HomeFooter />
+        </PathDrawingBackground>
       </div>
     </>
   );

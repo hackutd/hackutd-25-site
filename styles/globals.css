@@ -28,6 +28,13 @@ body, html {
   background-repeat: no-repeat;
   min-height: 100vh;
   background-color: #2a2342;
+  overscroll-behavior: none;
+}
+
+/* Override background for home page */
+body.home-page,
+html.home-page {
+  background-image: none !important;
 }
 
 @font-face {

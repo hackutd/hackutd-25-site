@@ -24,7 +24,7 @@ export default function HomeFooter() {
   };
 
   return (
-    <section className="md:text-base text-xs bg-[#7B81FF] text-white py-10">
+    <section className="md:text-base text-xs text-white py-10">
       <div className="container mx-auto flex flex-wrap justify-between items-start">
         {/* HackUTD Section */}
         <div className="flex-1 p-4">

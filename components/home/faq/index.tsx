@@ -9,7 +9,6 @@ export default function HomeFaq({ answeredQuestions }: Props) {
     answeredQuestions.length != 0 && (
       <section
         style={{
-          background: '#F2F3FF',
           position: 'relative',
         }}
       >

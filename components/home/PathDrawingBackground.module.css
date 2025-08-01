@@ -1,0 +1,47 @@
+.backgroundContainer {
+  position: relative;
+  width: 100%;
+  display: block;
+  margin-top: 0;
+  background-color: #2a2342;
+  overscroll-behavior: none;
+}
+
+.contentContainer {
+  position: relative;
+  z-index: 10;
+  background-image: url('/assets/pathDrawing/bg.PNG');
+  background-size: cover;
+  background-position: center 200px;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  min-height: 100vh;
+  padding-bottom: 2rem;
+  margin-top: 0;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.05);
+  z-index: 1;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .backgroundContainer {
+    background-attachment: scroll;
+    background-size: cover;
+    background-position: center top;
+  }
+}
+
+/* Ensure background doesn't move on mobile */
+@media (max-width: 480px) {
+  .backgroundContainer {
+    background-attachment: scroll;
+    background-size: cover;
+    background-position: center top;
+    transform: translateZ(0); /* Force hardware acceleration */
+  }
+} 

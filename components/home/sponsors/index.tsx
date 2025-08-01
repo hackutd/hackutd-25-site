@@ -47,7 +47,7 @@ export default function HomeSponsors() {
 
   if (loading) {
     return (
-      <section className="relative pt-[10rem] bg-[#F2F3FF] font-fredoka">
+      <section className="relative pt-[10rem] font-fredoka">
         <div className="text-center text-5xl text-[#5D5A88]">
           <h1 className="uppercase font-bold">Loading sponsors...</h1>
         </div>
@@ -57,7 +57,7 @@ export default function HomeSponsors() {
 
   if (error) {
     return (
-      <section className="relative pt-[10rem] bg-[#F2F3FF] font-fredoka">
+      <section className="relative pt-[10rem] font-fredoka">
         <div className="text-center text-5xl text-[#5D5A88]">
           <h1 className="uppercase font-bold">Error loading sponsors</h1>
           <p className="text-2xl mt-4">{error}</p>
@@ -68,7 +68,7 @@ export default function HomeSponsors() {
 
   return (
     sponsors.length !== 0 && (
-      <section className="relative pt-[10rem] bg-[#F2F3FF] font-fredoka">
+      <section className="relative pt-[10rem] font-fredoka">
         {/* TODO: will update styling better once get more assets and finalized content */}
         <div>
           <div className="text-center text-5xl text-[#5D5A88]">

@@ -67,12 +67,6 @@ const HomeAboutText = () => {
     <div
       ref={containerRef}
       className="relative py-12 flex flex-col items-center justify-center font-jua"
-      style={{
-        background: '#F2F3FF',
-        backgroundSize: '100% 100%',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
       id="what-is-hackutd"
     >
       <h1
