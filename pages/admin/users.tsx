@@ -68,7 +68,7 @@ export default function UserPage() {
   };
   const [registrationStatus, setRegistrationStatus] = useState(RegistrationState.UNINITIALIZED);
   const [appViewState, setAppViewState] = useState(
-    user.permissions.includes('super_admin')
+    user?.permissions?.includes('super_admin')
       ? ApplicationViewState.ALL
       : ApplicationViewState.REVIEWABLE,
   );
@@ -123,6 +123,16 @@ export default function UserPage() {
   useEffect(() => {
     fetchInitData();
   }, []);
+
+  useEffect(() => {
+    if (user?.permissions) {
+      setAppViewState(
+        user.permissions.includes('super_admin')
+          ? ApplicationViewState.ALL
+          : ApplicationViewState.REVIEWABLE,
+      );
+    }
+  }, [user]);
 
   useEffect(() => {
     if (loading) return;

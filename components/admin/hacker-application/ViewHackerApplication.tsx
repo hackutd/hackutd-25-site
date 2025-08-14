@@ -13,6 +13,8 @@ interface Props {
   currentNote: string;
   onScoreSubmit: (groupScore: number) => Promise<void>;
   appViewState: ApplicationViewState;
+  isSubmitting?: boolean;
+  hasSubmitted?: boolean;
 }
 
 interface BasicInfoProps {
@@ -66,6 +68,8 @@ export default function ViewHackerApplication({
   onScoreSubmit,
   userIndex,
   appViewState,
+  isSubmitting = false,
+  hasSubmitted = false,
 }: Props) {
   const { user } = useAuthContext();
 
@@ -173,26 +177,41 @@ export default function ViewHackerApplication({
 
         <div className="text-sm flex-wrap gap-y-2 flex flex-row justify-between items-start gap-x-3">
           <button
-            className="rounded-full bg-[#F2F3FF] text-[#5D5A88] border-2 border-solid border-[#5D5A88] font-bold py-2 px-8 hover:border-red-500 hover:text-white hover:bg-red-500 transition"
+            className={`rounded-full font-bold py-2 px-8 border-2 border-solid transition ${
+              isSubmitting || hasSubmitted
+                ? 'bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed'
+                : 'bg-[#F2F3FF] text-[#5D5A88] border-[#5D5A88] hover:border-red-500 hover:text-white hover:bg-red-500'
+            }`}
+            disabled={isSubmitting || hasSubmitted}
             // Score of 1 means strong NO
             onClick={() => onScoreSubmit(1)}
           >
-            REJECT
+            {isSubmitting ? 'SUBMITTING...' : hasSubmitted ? 'REVIEWED' : 'REJECT'}
           </button>
           <button
-            className="rounded-full bg-[#F2F3FF] text-[#5D5A88] border-2 border-solid border-[#5D5A88] font-bold py-2 px-8 hover:border-yellow-500 hover:text-white hover:bg-yellow-500 transition"
+            className={`rounded-full font-bold py-2 px-8 border-2 border-solid transition ${
+              isSubmitting || hasSubmitted
+                ? 'bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed'
+                : 'bg-[#F2F3FF] text-[#5D5A88] border-[#5D5A88] hover:border-yellow-500 hover:text-white hover:bg-yellow-500'
+            }`}
+            disabled={isSubmitting || hasSubmitted}
             onClick={() => {
               setShowMaybeDialog(true);
             }}
           >
-            MAYBE
+            {isSubmitting ? 'SUBMITTING...' : hasSubmitted ? 'REVIEWED' : 'MAYBE'}
           </button>
           <button
-            className="rounded-full bg-[#5D5A88] text-white border-2 border-solid border-[#5D5A88] font-bold py-2 px-8 hover:border-green-500 hover:bg-green-500 transition"
+            className={`rounded-full font-bold py-2 px-8 border-2 border-solid transition ${
+              isSubmitting || hasSubmitted
+                ? 'bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed'
+                : 'bg-[#5D5A88] text-white border-[#5D5A88] hover:border-green-500 hover:bg-green-500'
+            }`}
+            disabled={isSubmitting || hasSubmitted}
             // Score of 4 means strong YES
             onClick={() => onScoreSubmit(4)}
           >
-            ACCEPT
+            {isSubmitting ? 'SUBMITTING...' : hasSubmitted ? 'REVIEWED' : 'ACCEPT'}
           </button>
         </div>
       </div>

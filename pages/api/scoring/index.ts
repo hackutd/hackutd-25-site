@@ -106,25 +106,26 @@ async function handlePostRequest(req: NextApiRequest, res: NextApiResponse) {
           });
           return;
         }
-        // checking whether organizer is reviewing an app assigned to them or an app from common pool
-        const scoringRef = await db
+        // Check if this admin has already reviewed this application
+        const existingReviewRef = await db
           .collection(SCORING_COLLECTION)
           .where('adminId', '==', scoring.adminId)
           .where('hackerId', '==', scoring.hackerId)
           .get();
-        if (!scoringRef.empty) {
-          await scoringRef.docs[0].ref.update({
-            score: scoring.score,
-            isSuperVote: !!scoring.isSuperVote,
-            note: scoring.note,
-          });
-        } else {
-          const appIsAssigned = appAssignee.some((assigneeId) => assigneeId === scoring.adminId);
-          await db.collection(SCORING_COLLECTION).add({
-            ...scoring,
-            appIsAssigned,
+
+        if (!existingReviewRef.empty) {
+          // Admin has already reviewed this application - prevent duplicate
+          return res.status(400).json({
+            msg: 'You have already reviewed this application. Duplicate reviews are not allowed.',
           });
         }
+
+        // Store new scoring into database
+        const appIsAssigned = appAssignee.some((assigneeId) => assigneeId === scoring.adminId);
+        await db.collection(SCORING_COLLECTION).add({
+          ...scoring,
+          appIsAssigned,
+        });
         if (scoring.isSuperVote) {
           // remove app from all pool
           await hackerDoc.ref.update({

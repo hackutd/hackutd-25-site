@@ -79,6 +79,14 @@ export default function UserAdminGroupView({
   const startIndex = (currentPage - 1) * pageSize;
 
   // 208 px
+  if (!userGroups || userGroups.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-full text-[#5D5A88]">
+        <p>No application groups found</p>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`
@@ -202,10 +210,16 @@ export default function UserAdminGroupView({
         </div>
 
         {/* Application */}
-        <UserAdminGroupCarousel
-          group={userGroups[currentUserGroupIndex].application}
-          appViewState={appViewState}
-        />
+        {userGroups[currentUserGroupIndex] ? (
+          <UserAdminGroupCarousel
+            group={userGroups[currentUserGroupIndex].application}
+            appViewState={appViewState}
+          />
+        ) : (
+          <div className="flex items-center justify-center h-full text-[#5D5A88]">
+            <p>No application group found</p>
+          </div>
+        )}
       </div>
     </div>
   );

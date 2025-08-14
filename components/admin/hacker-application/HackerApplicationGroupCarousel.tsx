@@ -31,10 +31,27 @@ export default function HackerApplicationGroupCarousel({ group, appViewState }: 
   }, [emblaApi]);
 
   const [notes, setNotes] = useState(group.map((_) => ''));
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
   useEffect(() => {
     setNotes(group.map((_) => ''));
-  }, [group]);
+
+    // Check if current user has already reviewed this application group
+    const checkIfAlreadyReviewed = async () => {
+      try {
+        // Check if any member of the group has been reviewed by current user
+        const hasReviewed = group.some((member) =>
+          member.scoring?.some((score) => score.reviewer === `${user.firstName} ${user.lastName}`),
+        );
+        setHasSubmitted(hasReviewed);
+      } catch (error) {
+        console.error('Error checking review status:', error);
+      }
+    };
+
+    checkIfAlreadyReviewed();
+  }, [group, user.firstName, user.lastName]);
 
   return (
     <div className="h-full flex w-full p-3">
@@ -66,7 +83,15 @@ export default function HackerApplicationGroupCarousel({ group, appViewState }: 
                   }}
                   currentApplicant={member}
                   currentNote={notes[idx]}
+                  isSubmitting={isSubmitting}
+                  hasSubmitted={hasSubmitted}
                   onScoreSubmit={async (groupScore) => {
+                    if (isSubmitting || hasSubmitted) {
+                      alert('You have already submitted a review for this application group.');
+                      return;
+                    }
+
+                    setIsSubmitting(true);
                     try {
                       const { data } = await RequestHelper.post<
                         {
@@ -98,13 +123,23 @@ export default function HackerApplicationGroupCarousel({ group, appViewState }: 
                         },
                       );
                       alert(data.msg);
+                      setHasSubmitted(true);
                       updateGroupVerdict(
                         groupId,
                         groupScore === 1 ? 'Rejected' : groupScore === 4 ? 'Accepted' : 'Maybe',
                       );
-                    } catch (err) {
-                      alert('Error submitting score. Please try again later...');
+                    } catch (err: any) {
+                      if (err.response?.status === 400) {
+                        alert(
+                          err.response.data.msg || 'You have already reviewed this application.',
+                        );
+                        setHasSubmitted(true);
+                      } else {
+                        alert('Error submitting score. Please try again later...');
+                      }
                       console.error(err);
+                    } finally {
+                      setIsSubmitting(false);
                     }
                   }}
                 />
