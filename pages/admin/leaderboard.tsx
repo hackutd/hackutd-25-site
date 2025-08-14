@@ -18,18 +18,28 @@ interface AdminReviewStats {
   maybeRate: number;
 }
 
+interface LeaderboardResponse {
+  adminStats: AdminReviewStats[];
+  totalApplications: number;
+  judgedApplications: number;
+}
+
 const allowedRoles = ['super_admin'];
 
 export default function AdminLeaderboardPage() {
   const { user, isSignedIn } = useAuthContext();
   const [loading, setLoading] = useState(true);
-  const [leaderboardData, setLeaderboardData] = useState<AdminReviewStats[]>([]);
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardResponse>({
+    adminStats: [],
+    totalApplications: 0,
+    judgedApplications: 0,
+  });
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       try {
-        const { data } = await RequestHelper.get<AdminReviewStats[]>('/api/admin-leaderboard', {
+        const { data } = await RequestHelper.get<LeaderboardResponse>('/api/admin-leaderboard', {
           headers: {
             Authorization: user.token,
           },
@@ -80,32 +90,54 @@ export default function AdminLeaderboardPage() {
           </div>
 
           {/* Summary Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-7 gap-4 mb-8">
             <div className="bg-white rounded-lg p-6 shadow-md">
-              <div className="text-2xl font-bold text-[#5D5A88]">{leaderboardData.length}</div>
+              <div className="text-2xl font-bold text-[#5D5A88]">
+                {leaderboardData.adminStats.length}
+              </div>
               <div className="text-gray-600">Total Admins</div>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-md">
+              <div className="text-2xl font-bold text-purple-600">
+                {leaderboardData.totalApplications}
+              </div>
+              <div className="text-gray-600">Total Applications</div>
+            </div>
+            <div className="bg-white rounded-lg p-6 shadow-md">
+              <div className="text-2xl font-bold text-indigo-600">
+                {leaderboardData.judgedApplications}
+              </div>
+              <div className="text-gray-600">Applications Judged (at least once)</div>
+              <div className="text-sm text-gray-500 mt-1">
+                {leaderboardData.totalApplications > 0
+                  ? `${Math.round(
+                      (leaderboardData.judgedApplications / leaderboardData.totalApplications) *
+                        100,
+                    )}% complete`
+                  : '0% complete'}
+              </div>
+            </div>
+            <div className="bg-white rounded-lg p-6 shadow-md">
               <div className="text-2xl font-bold text-green-600">
-                {leaderboardData.reduce((sum, admin) => sum + admin.totalReviews, 0)}
+                {leaderboardData.adminStats.reduce((sum, admin) => sum + admin.totalReviews, 0)}
               </div>
               <div className="text-gray-600">Total Reviews</div>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-md">
               <div className="text-2xl font-bold text-blue-600">
-                {leaderboardData.reduce((sum, admin) => sum + admin.accepts, 0)}
+                {leaderboardData.adminStats.reduce((sum, admin) => sum + admin.accepts, 0)}
               </div>
               <div className="text-gray-600">Total Accepts</div>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-md">
               <div className="text-2xl font-bold text-red-600">
-                {leaderboardData.reduce((sum, admin) => sum + admin.rejects, 0)}
+                {leaderboardData.adminStats.reduce((sum, admin) => sum + admin.rejects, 0)}
               </div>
               <div className="text-gray-600">Total Rejects</div>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-md">
               <div className="text-2xl font-bold text-yellow-600">
-                {leaderboardData.reduce((sum, admin) => sum + admin.maybes, 0)}
+                {leaderboardData.adminStats.reduce((sum, admin) => sum + admin.maybes, 0)}
               </div>
               <div className="text-gray-600">Total Maybes</div>
             </div>
@@ -130,7 +162,7 @@ export default function AdminLeaderboardPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {leaderboardData.map((admin, index) => (
+                  {leaderboardData.adminStats.map((admin, index) => (
                     <tr key={admin.adminId} className="hover:bg-gray-50">
                       <td className="px-6 py-4">
                         <div className="flex items-center">

@@ -21,6 +21,12 @@ interface AdminReviewStats {
   maybeRate: number;
 }
 
+interface LeaderboardResponse {
+  adminStats: AdminReviewStats[];
+  totalApplications: number;
+  judgedApplications: number;
+}
+
 async function userIsAuthorized(token: string): Promise<boolean> {
   if (!token) return false;
   try {
@@ -32,9 +38,16 @@ async function userIsAuthorized(token: string): Promise<boolean> {
   }
 }
 
-async function getAdminLeaderboardData(): Promise<AdminReviewStats[]> {
+async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
   // Get all scoring data
   const scoringSnapshot = await db.collection(SCORING_COLLECTION).get();
+
+  // Get total applications count
+  const applicationsSnapshot = await db.collection(USERS_COLLECTION).get();
+  const totalApplications = applicationsSnapshot.size;
+
+  // Track unique applications that have been judged at least once
+  const judgedApplicationIds = new Set<string>();
 
   // Group reviews by admin
   const adminStats = new Map<
@@ -51,8 +64,14 @@ async function getAdminLeaderboardData(): Promise<AdminReviewStats[]> {
   scoringSnapshot.forEach((doc) => {
     const data = doc.data();
     const adminId = data.adminId;
+    const hackerId = data.hackerId;
     const score = data.score;
     const isSuperVote = data.isSuperVote || false;
+
+    // Track applications that have been judged at least once
+    if (hackerId) {
+      judgedApplicationIds.add(hackerId);
+    }
 
     if (!adminStats.has(adminId)) {
       adminStats.set(adminId, {
@@ -124,7 +143,13 @@ async function getAdminLeaderboardData(): Promise<AdminReviewStats[]> {
   );
 
   // Sort by total reviews (descending)
-  return leaderboardData.sort((a, b) => b.totalReviews - a.totalReviews);
+  const sortedLeaderboardData = leaderboardData.sort((a, b) => b.totalReviews - a.totalReviews);
+
+  return {
+    adminStats: sortedLeaderboardData,
+    totalApplications,
+    judgedApplications: judgedApplicationIds.size, // Applications judged at least once
+  };
 }
 
 async function handleGetRequest(req: NextApiRequest, res: NextApiResponse) {
