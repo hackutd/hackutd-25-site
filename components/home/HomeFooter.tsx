@@ -28,7 +28,7 @@ export default function HomeFooter() {
       <div className="container mx-auto flex flex-wrap justify-between items-start">
         {/* HackUTD Section */}
         <div className="flex-1 p-4">
-          <h1 className="font-bold text-2xl">HackPortal</h1>
+          <h1 className="font-bold text-2xl">HackUTD</h1>
           <p style={{ whiteSpace: 'nowrap', wordBreak: 'keep-all', textUnderlineOffset: '2px' }}>
             Contact Us
           </p>

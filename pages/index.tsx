@@ -57,7 +57,7 @@ export default function Home({
   return (
     <>
       <Head>
-        <title>HackPortal</title>
+        <title>HackUTD 2025</title>
         <meta name="description" content="A default HackPortal instance" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
