@@ -49,7 +49,25 @@ export default function Home({
         <meta name="description" content="A default HackPortal instance" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="overflow-x-hidden w-full">
+      <div
+        className="overflow-x-hidden w-full"
+        style={{
+          backgroundImage: `url("/assets/pathDrawing/bushLeft.png"),
+                            url("/assets/pathDrawing/pathOutline.png"),
+                            url("/assets/pathDrawing/bg.png")`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'repeat',
+          zIndex: 2,
+        }}
+      >
+        {/* <div
+          className="fixed top-0 left-0 w-full h-full z-20 pointer-events-none"
+          style={{
+            backgroundImage: `url("/assets/pathDrawing/mist.png")`,
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+          }}
+        /> */}
         <HomeHero />
         <HackUTDCountdown />
         <HomeAboutText />

@@ -144,8 +144,8 @@ export default function HomeSchedule(props: { scheduleCard: ScheduleEvent[]; dat
   const day2Events = getDailyEvents(day2StartDateAndTime, eventEndDateAndTime);
 
   return (
-    <div id="schedule-section" className="bg-[#F2F3FF]">
-      <div className="text-center text-5xl font-bold text-[#05149C] p-4 font-fredoka">
+    <div id="schedule-section">
+      <div className="text-center text-5xl font-bold text-[#FFF] p-4 font-fredoka">
         What to Expect?
       </div>
 
@@ -210,16 +210,14 @@ export default function HomeSchedule(props: { scheduleCard: ScheduleEvent[]; dat
       {/* Calendar */}
       <div className="md:flex p-1 overflow-y-auto overflow-x-hidden mx-auto lg:w-[80%] w-full h-full">
         <div className="w-full lg:w-1/2 px-4 md:px-0">
-          <div className="text-3xl font-black py-6 text-[#05149C] font-fredoka">
-            Day 1: Saturday
-          </div>
+          <div className="text-3xl font-black py-6 text-[#FFF] font-fredoka">Day 1: Saturday</div>
           <div className="bg-white mb-8 mx-2 p-2 border-2 rounded-2xl border-[#05149C] border-opacity-20">
             {day1Events}
           </div>
         </div>
 
         <div className="w-full lg:w-1/2 md:ml-6 px-4 md:px-0">
-          <div className="text-3xl font-black py-6 text-[#05149C] font-fredoka">Day 2: Sunday</div>
+          <div className="text-3xl font-black py-6 text-[#FFF] font-fredoka">Day 2: Sunday</div>
           <div className="bg-white mb-8 mx-2 p-2 border-2 rounded-2xl border-[#05149C] border-opacity-20">
             {day2Events}
           </div>

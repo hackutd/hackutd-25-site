@@ -1,5 +1,6 @@
 import BackgroundCircles from '../BackgroundCircles';
 import AppHeader from '../AppHeader';
+import Image from 'next/image';
 
 export default function HomeHero() {
   return (
@@ -8,9 +9,9 @@ export default function HomeHero() {
       <AppHeader />
 
       <div className="flex h-screen w-full relative">
-        <div className="w-full h-full absolute top-0 left-0 z-0">
+        {/* <div className="w-full h-full absolute top-0 left-0 z-0">
           <BackgroundCircles />
-        </div>
+        </div> */}
 
         <div className="relative z-10 shrink-0 w-full flex">
           {/* MLH sticker */}
@@ -25,22 +26,50 @@ export default function HomeHero() {
           </div> */}
 
           {/* Big welcome */}
-          <div className="w-full flex flex-col gap-2 justify-center items-center bg-[rgba(255,255,255,0.75)] backdrop-blur-[60px]">
-            <p className="font-nunito text-[#262626] text-xl md:text-3xl">Welcome To</p>
-            <h1 className="font-fredokaOne text-4xl md:text-6xl lg:text-8xl font-bold text-[#05149C]">
-              HACKPORTAL
-            </h1>
+          <div
+            className="w-full flex flex-col gap-2 justify-center items-center relative"
+            style={{
+              backgroundImage: `url('/assets/topDrawing/frontSideTrees.png'),
+                                url('/assets/topDrawing/bird.png'),
+                                url('/assets/topDrawing/cat.png'),
+                                url('/assets/topDrawing/deer.png'),
+                                url('/assets/topDrawing/fox.png'),
+                                url('/assets/topDrawing/bgGrass.png'), 
+                                url('/assets/topDrawing/bgTrees.png'),
+                                url('/assets/topDrawing/foreground.png'), 
+                                url('/assets/topDrawing/bg.png'), 
+                                url('/assets/topDrawing/bgClouds.png'),
+                                url('/assets/topDrawing/moon.png'), 
+                                url('/assets/topDrawing/sky.png')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          >
+            {/* <p className="font-nunito text-[#FFF] text-xl md:text-3xl">Welcome To</p> */}
+            <div
+              className="w-full max-w-[600px] md:max-w-[800px] z-10 absolute"
+              style={{ top: '33%', transform: 'translateY(-50%)' }}
+            >
+              <Image
+                src="/assets/Vectorized-Title.svg"
+                alt="HACKPORTAL"
+                width={800}
+                height={200}
+                className="w-full h-auto drop-shadow-2xl"
+              />
+            </div>
           </div>
         </div>
       </div>
 
       {/* Bottom banner */}
-      <div className="font-dmSans w-full flex justify-center bg-[#7B81FF] text-white h-[1.75rem] text-nowrap overflow-hidden">
+      {/* <div className="font-dmSans w-full flex justify-center bg-[#7B81FF] text-white h-[1.75rem] text-nowrap overflow-hidden">
         <p className="text-lg">
           SAMPLE TEXT • SAMPLE TEXT • SAMPLE TEXT • SAMPLE TEXT • SAMPLE TEXT • SAMPLE TEXT • SAMPLE
           TEXT • SAMPLE TEXT • SAMPLE TEXT
         </p>
-      </div>
+      </div> */}
     </section>
   );
 }

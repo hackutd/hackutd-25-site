@@ -28,7 +28,7 @@
 }
 
 .digitBox {
-  background: linear-gradient(to bottom, rgba(156, 166, 255, .4), rgba(255, 255, 255, 0.1));
+  background: linear-gradient(to bottom, rgba(156, 166, 255, 0.4), rgba(255, 255, 255, 0.1));
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 7px;
   margin: 0 1vw;
@@ -37,14 +37,14 @@
   align-items: center;
   width: 8vw;
   height: 13vw;
-  border: .5px solid #05149C;
+  border: 0.5px solid #fff;
 }
 
 .digit {
-  font-family: "DS-Digital", monospace;
+  font-family: 'DS-Digital', monospace;
   font-size: 8vw;
   font-weight: 400;
-  color: #05149C;
+  color: #fff;
 }
 
 .label {
@@ -53,11 +53,9 @@
   font-weight: 400;
   font-size: 3vw;
   line-height: 5vw;
-  color: #05149C;
+  color: #fff;
   margin-top: 2vw;
 }
-
-
 
 @keyframes ani {
   0% {
