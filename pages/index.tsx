@@ -52,9 +52,9 @@ export default function Home({
       <div
         className="overflow-x-hidden w-full"
         style={{
-          backgroundImage: `url("/assets/pathDrawing/bushLeft.png"),
-                            url("/assets/pathDrawing/pathOutline.png"),
-                            url("/assets/pathDrawing/bg.png")`,
+          backgroundImage: `url("/assets/pathDrawing/bushLeft.PNG"),
+                            url("/assets/pathDrawing/pathOutline.PNG"),
+                            url("/assets/pathDrawing/bg.PNG")`,
           backgroundSize: 'cover',
           backgroundRepeat: 'repeat',
           zIndex: 2,
@@ -63,7 +63,7 @@ export default function Home({
         {/* <div
           className="fixed top-0 left-0 w-full h-full z-20 pointer-events-none"
           style={{
-            backgroundImage: `url("/assets/pathDrawing/mist.png")`,
+            backgroundImage: `url("/assets/pathDrawing/mist.PNG")`,
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
           }}
