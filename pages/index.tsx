@@ -11,8 +11,9 @@ import HomeSchedule from '@/components/home/HomeSchedule';
 import HomeFaq from '@/components/home/faq';
 import HomeSponsors from '@/components/home/sponsors';
 import HomeFooter from '@/components/home/HomeFooter';
-
+import KeynoteSpeaker from '@/components/home/speakers/KeynoteSpeaker';
 import { RequestHelper } from '@/lib/request-helper';
+import HomeVideoStats from '@/components/home/HomeVideoStats';
 
 interface Props {
   answeredQuestion: AnsweredQuestion[];
@@ -69,9 +70,10 @@ export default function Home({
           }}
         /> */}
         <HomeHero />
-        <HackUTDCountdown />
         <HomeAboutText />
-        <HomeAboutPhotos />
+        <HomeVideoStats />
+        <HackUTDCountdown />
+        <KeynoteSpeaker />
         <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
         <HomeChallengesComponent challenges={challenges} />
         <HomeFaq answeredQuestions={answeredQuestion} />
