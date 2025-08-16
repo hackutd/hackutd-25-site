@@ -6,13 +6,13 @@ import HomeChallengesComponent from '@/components/home/challenge';
 import HomeHero from '@/components/home/HomeHero';
 import HackUTDCountdown from '@/components/home/countdown';
 import HomeAboutText from '@/components/home/about/HomeAboutText';
-import HomeAboutPhotos from '@/components/home/about/HomeAboutPhotos';
 import HomeSchedule from '@/components/home/HomeSchedule';
 import HomeFaq from '@/components/home/faq';
 import HomeSponsors from '@/components/home/sponsors';
 import HomeFooter from '@/components/home/HomeFooter';
-
+import KeynoteSpeaker from '@/components/home/speakers';
 import { RequestHelper } from '@/lib/request-helper';
+import HomeVideoStats from '@/components/home/HomeVideoStats';
 
 interface Props {
   answeredQuestion: AnsweredQuestion[];
@@ -49,15 +49,58 @@ export default function Home({
         <meta name="description" content="A default HackPortal instance" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="overflow-x-hidden w-full">
+      <div
+        className="overflow-x-hidden w-full"
+        style={{
+          backgroundImage: `url("/assets/pathDrawing/bushLeft.PNG"),
+                            url("/assets/pathDrawing/pathOutline.PNG"),
+                            url("/assets/pathDrawing/bg.PNG")`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'repeat',
+          zIndex: 2,
+        }}
+      >
+        {/* <div
+          className="fixed top-0 left-0 w-full h-full z-20 pointer-events-none"
+          style={{
+            backgroundImage: `url("/assets/pathDrawing/mist.PNG")`,
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+          }}
+        /> */}
         <HomeHero />
-        <HackUTDCountdown />
-        <HomeAboutText />
-        <HomeAboutPhotos />
-        <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
-        <HomeChallengesComponent challenges={challenges} />
-        <HomeFaq answeredQuestions={answeredQuestion} />
-        <HomeSponsors />
+
+        <div className="my-72">
+          <HomeAboutText />
+        </div>
+
+        <div className="my-72">
+          <HomeVideoStats />
+        </div>
+
+        <div className="my-72">
+          <HackUTDCountdown />
+        </div>
+
+        <div className="my-72">
+          <KeynoteSpeaker />
+        </div>
+
+        <div className="my-72">
+          <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
+        </div>
+
+        <div className="my-72">
+          <HomeChallengesComponent challenges={challenges} />
+        </div>
+
+        <div className="my-72">
+          <HomeFaq answeredQuestions={answeredQuestion} />
+        </div>
+
+        <div className="my-72">
+          <HomeSponsors />
+        </div>
         <HomeFooter />
       </div>
     </>

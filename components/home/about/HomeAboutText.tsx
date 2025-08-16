@@ -68,7 +68,7 @@ const HomeAboutText = () => {
       ref={containerRef}
       className="relative py-12 flex flex-col items-center justify-center font-jua"
       style={{
-        background: '#F2F3FF',
+        // background: '#F2F3FF',
         backgroundSize: '100% 100%',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -77,7 +77,7 @@ const HomeAboutText = () => {
     >
       <h1
         ref={titleRef}
-        className="text-5xl font-bold mb-3 text-center relative font-jua z-10 text-[#05149C] opacity-0"
+        className="text-5xl font-bold mb-3 text-center relative font-jua z-10 text-[#FFF] opacity-0"
       >
         About HackPortal?
       </h1>
