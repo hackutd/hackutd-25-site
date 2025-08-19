@@ -76,8 +76,8 @@ export default function FaqCore({ fetchedFaqs }: { fetchedFaqs: AnsweredQuestion
         `}
       </style>
       <Head>
-        <title>HackPortal</title>
-        <meta name="description" content="HackPortal's Frequently Asked Questions" />
+        <title>HackUTD 2025</title>
+        <meta name="description" content="HackUTD's Frequently Asked Questions" />
       </Head>
       <div className="top-6">
         <div className="pt-[8rem]">
