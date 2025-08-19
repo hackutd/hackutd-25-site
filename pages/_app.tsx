@@ -106,7 +106,7 @@ function PortalApp({ Component, pageProps }: AppProps) {
                     name="viewport"
                     content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
                   />
-                  <title>HackPortal</title> {/* !change */}
+                  <title>HackUTD 2025</title> {/* !change */}
                   <meta name="description" content="Your all-in-one guide to this hackathon." />
                   {process.env.ENABLE_PWA ||
                     (process.env.NODE_ENV !== 'development' && (
@@ -126,7 +126,7 @@ function PortalApp({ Component, pageProps }: AppProps) {
                   )}
                   <Component {...pageProps} />
                   {/* Spacer at the bottom of the page for navbar bottom on mobile, so that content won't be covered by the navbar */}
-                  <div className="md:hidden h-[80px] shrink-0 bg-primary" />
+                  <div className="md:hidden h-[80px] shrink-0 bg-gradient-to-br from-purple-900 to-purple-950" />
                   <AppNavbarBottom />
                 </div>
               </NavbarCallbackRegistryContext.Provider>
