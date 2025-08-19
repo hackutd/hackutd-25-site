@@ -28,6 +28,12 @@ body, html {
   background-repeat: no-repeat;
   min-height: 100vh;
   background-color: #2a2342;
+  overscroll-behavior: auto;
+}
+
+/* Custom overscroll color to match footer theme */
+html {
+  background: linear-gradient(to bottom right, #581c87, #1e1b4b);
 }
 
 @font-face {
