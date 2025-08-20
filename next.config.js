@@ -15,7 +15,7 @@ const withPWA = require('next-pwa')({
       {
         source: '/travel-reimbursement',
         destination:
-          'https://hackutd.notion.site/HackUTD-Ripple-Effect-fab1d9efcfd0468fbaee0ba4010caec7?pvs=4',
+          'https://hackutd.notion.site/HackUTD-2025-Lost-in-the-Pages-Travel-Reimbursement-13e0d994cbb981c5a336f1dda3e5d3be',
         permanent: true,
       },
     ];
