@@ -8,7 +8,7 @@ export const hackPortalConfig: HackPortalConfig = {
   //  which hold all the questions of that type
   //add extra questions types(even ones already used) to question topics and add more questions under each question type
   //questions are displayed on page in order
-  groupNames: ['Duck', 'Corgi', 'Capybara', 'Frog'],
+  groupNames: ['Bird', 'Cat', 'Deer', 'Fox'],
   registrationFields: {
     //Question Topic
     generalQuestions: [
