@@ -48,16 +48,30 @@ export default function Home({
         <title>HackUTD 2025</title>
         <meta name="description" content="A default HackPortal instance" />
         <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+        <style jsx>{`
+          @supports not (background-image: url('data:image/webp')) {
+            .bg-fallback {
+              background-image: url('/assets/pathDrawing/bushLeft.PNG'),
+                url('/assets/pathDrawing/pathOutline.PNG'), url('/assets/pathDrawing/bg.PNG') !important;
+            }
+          }
+        `}</style>
       </Head>
       <div
-        className="overflow-x-hidden w-full"
+        className="overflow-x-hidden w-full bg-fallback"
         style={{
-          backgroundImage: `url("/assets/pathDrawing/bushLeft.PNG"),
-                            url("/assets/pathDrawing/pathOutline.PNG"),
-                            url("/assets/pathDrawing/bg.PNG")`,
+          backgroundImage: `url("/assets/pathDrawing/bushLeft.webp"),
+                            url("/assets/pathDrawing/pathOutline.webp"),
+                            url("/assets/pathDrawing/bg.webp")`,
           backgroundSize: 'cover',
           backgroundRepeat: 'repeat',
           zIndex: 2,
+          // Mobile optimization
+          backgroundAttachment: 'scroll',
         }}
       >
         {/* <div

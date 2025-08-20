@@ -36,6 +36,26 @@ html {
   background: linear-gradient(to bottom right, #581c87, #1e1b4b);
 }
 
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  /* Reduce background image loading on mobile */
+  body {
+    background-attachment: scroll !important;
+  }
+  
+  /* Optimize for mobile memory */
+  * {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
+  /* Reduce animations on mobile */
+  .animate-pulse,
+  .animate-bounce {
+    animation: none !important;
+  }
+}
+
 @font-face {
   font-family: 'wavehaus';
   src: url('/fonts/Wavehaus-66Book.ttf') format('truetype');
