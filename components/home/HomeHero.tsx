@@ -1,75 +1,86 @@
-import BackgroundCircles from '../BackgroundCircles';
-import AppHeader from '../AppHeader';
+import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
+import AppHeader from '../AppHeader';
 
 export default function HomeHero() {
+  // Default to "mobile" on first paint to keep memory low on iOS before JS runs.
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mql = window.matchMedia('(max-width: 768px)');
+    const update = () => setIsMobile(mql.matches);
+    update();
+    mql.addEventListener('change', update);
+    return () => mql.removeEventListener('change', update);
+  }, []);
+
+  // Keep mobile to 3–4 layers max; desktop can have the full scene.
+  const MOBILE_LAYERS = [
+    '/assets/topDrawing/sky.webp',
+    '/assets/topDrawing/bgClouds.webp',
+    '/assets/topDrawing/bg.webp',
+    '/assets/topDrawing/foreground.webp',
+  ];
+
+  const DESKTOP_LAYERS = [
+    // Animals on top (last in array = top layer)
+    '/assets/topDrawing/fox.webp',
+    '/assets/topDrawing/deer.webp',
+    '/assets/topDrawing/cat.webp',
+    '/assets/topDrawing/bird.webp',
+    // Foreground elements
+    '/assets/topDrawing/frontSideTrees.webp',
+    '/assets/topDrawing/foreground.webp',
+    // Background elements
+    '/assets/topDrawing/bgGrass.webp',
+    '/assets/topDrawing/bgTrees.webp',
+    '/assets/topDrawing/bg.webp',
+    '/assets/topDrawing/bgClouds.webp',
+    '/assets/topDrawing/moon.webp',
+    // Sky at bottom (first in array = bottom layer)
+    '/assets/topDrawing/sky.webp',
+  ];
+
+  const layers = isMobile ? MOBILE_LAYERS : DESKTOP_LAYERS;
+
+  const bgStyle = useMemo<React.CSSProperties>(() => {
+    const urls = layers.map((u) => `url('${u}')`).join(', ');
+    const repeats = layers.map(() => 'no-repeat').join(', ');
+    // Using 'cover' for all keeps your visual look; mobile list is tiny so it's safe.
+    const sizes = layers.map(() => 'cover').join(', ');
+    const positions = layers.map(() => 'center').join(', ');
+
+    return {
+      backgroundImage: urls,
+      backgroundRepeat: repeats,
+      backgroundSize: sizes,
+      backgroundPosition: positions,
+      backgroundAttachment: 'scroll',
+    };
+  }, [layers]);
+
   return (
-    <section className="min-h-screen bg-contain bg-white flex flex-col-reverse md:flex-col">
-      {/* App header */}
+    <section className="min-h-[100svh] bg-white flex flex-col-reverse md:flex-col">
+      {/* Header above the hero */}
       <AppHeader />
 
-      <div className="flex h-screen w-full relative">
-        {/* <div className="w-full h-full absolute top-0 left-0 z-0">
-          <BackgroundCircles />
-        </div> */}
-
-        <div className="relative z-10 shrink-0 w-full flex">
-          {/* MLH sticker */}
-          {/* <div className="absolute top-0 right-4 z-20">
-            <Image
-              src={MLH_Sticker.src}
-              height={MLH_Sticker.height}
-              width={MLH_Sticker.width}
-              alt="MLH sticker"
-              className="w-full h-full object-cover"
-            />
-          </div> */}
-
-          {/* Big welcome */}
-          <div
-            className="w-full flex flex-col gap-2 justify-center items-center relative"
-            style={{
-              backgroundImage: `url('/assets/topDrawing/frontSideTrees.webp'),
-                                url('/assets/topDrawing/bird.webp'),
-                                url('/assets/topDrawing/cat.webp'),
-                                url('/assets/topDrawing/deer.webp'),
-                                url('/assets/topDrawing/fox.webp'),
-                                url('/assets/topDrawing/bgGrass.webp'), 
-                                url('/assets/topDrawing/bgTrees.webp'),
-                                url('/assets/topDrawing/foreground.webp'), 
-                                url('/assets/topDrawing/bg.webp'), 
-                                url('/assets/topDrawing/bgClouds.webp'),
-                                url('/assets/topDrawing/moon.webp'), 
-                                url('/assets/topDrawing/sky.webp')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-            }}
-          >
-            {/* <p className="font-nunito text-[#FFF] text-xl md:text-3xl">Welcome To</p> */}
-            <div
-              className="w-full max-w-[600px] md:max-w-[800px] z-10 absolute"
-              style={{ top: '33%', transform: 'translateY(-50%)' }}
-            >
-              <Image
-                src="/assets/Vectorized-Title.svg"
-                alt="HACKPORTAL"
-                width={800}
-                height={200}
-                className="w-full h-auto drop-shadow-2xl"
-              />
-            </div>
-          </div>
+      <div className="relative w-full min-h-[100svh]" style={bgStyle}>
+        {/* Title lockup */}
+        <div
+          className="absolute left-1/2 z-10 w-full max-w-[600px] md:max-w-[800px] px-4"
+          style={{ top: '33%', transform: 'translate(-50%, -50%)' }}
+        >
+          <Image
+            src="/assets/Vectorized-Title.svg"
+            alt="HACKPORTAL"
+            width={800}
+            height={200}
+            priority
+            className="w-full h-auto drop-shadow-2xl"
+          />
         </div>
       </div>
-
-      {/* Bottom banner */}
-      {/* <div className="font-dmSans w-full flex justify-center bg-[#7B81FF] text-white h-[1.75rem] text-nowrap overflow-hidden">
-        <p className="text-lg">
-          SAMPLE TEXT • SAMPLE TEXT • SAMPLE TEXT • SAMPLE TEXT • SAMPLE TEXT • SAMPLE TEXT • SAMPLE
-          TEXT • SAMPLE TEXT • SAMPLE TEXT
-        </p>
-      </div> */}
     </section>
   );
 }
