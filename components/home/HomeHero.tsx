@@ -7,11 +7,7 @@ const useHeroImageCache = () => {
   const [isLoading, setIsLoading] = useState(true);
   const cachedImagesRef = useRef<Set<string>>(new Set());
 
-  const MOBILE_LAYERS = [
-    '/assets/topDrawing/bg.webp',
-    '/assets/topDrawing/bgClouds.webp',
-    '/assets/topDrawing/sky.webp',
-  ];
+  const MOBILE_LAYERS = ['/assets/topDrawing/mobileBG.webp'];
 
   const DESKTOP_LAYERS = [
     '/assets/topDrawing/frontSideTrees.webp',

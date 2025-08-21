@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import gsap from 'gsap';
 
 import { SectionReferenceContext } from '@/lib/context/section';
 
@@ -19,26 +18,11 @@ const HomeAboutText = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const titleText = titleRef.current;
-            gsap.set(titleText, { opacity: 1 });
-            const titleLetters = titleText.innerText.split('');
-            titleText.innerHTML = titleLetters.map((letter) => `<span>${letter}</span>`).join('');
-            gsap.fromTo(
-              titleText.children,
-              { opacity: 0, y: 50 },
-              {
-                opacity: 1,
-                y: 0,
-                stagger: 0.1,
-                ease: 'power3.out',
-                duration: 1,
-              },
-            );
+            const explanationText = explanationRef.current;
 
-            gsap.fromTo(
-              explanationRef.current,
-              { opacity: 0, y: 100 },
-              { opacity: 1, y: 0, duration: 1.5, ease: 'power3.out', delay: 1.5 },
-            );
+            // Add animation classes
+            titleText.classList.add('title-animate-in');
+            explanationText.classList.add('explanation-animate-in');
 
             observer.unobserve(entry.target);
           }
@@ -46,7 +30,8 @@ const HomeAboutText = () => {
       };
 
       const observer = new IntersectionObserver(handleIntersection, {
-        threshold: 1,
+        threshold: 0.3,
+        rootMargin: '0px 0px -100px 0px',
       });
 
       if (containerRef.current) {
@@ -59,7 +44,11 @@ const HomeAboutText = () => {
         }
       };
     } else {
-      gsap.set([titleRef.current, explanationRef.current], { opacity: 1, y: 0 });
+      // Mobile: show immediately
+      const titleText = titleRef.current;
+      const explanationText = explanationRef.current;
+      if (titleText) titleText.classList.add('title-animate-in');
+      if (explanationText) explanationText.classList.add('explanation-animate-in');
     }
   }, []);
 
@@ -75,9 +64,37 @@ const HomeAboutText = () => {
       }}
       id="what-is-hackutd"
     >
+      <style>
+        {`
+          .title-animate {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+            will-change: opacity, transform;
+          }
+
+          .title-animate-in {
+            opacity: 1;
+            transform: translateY(0);
+          }
+
+          .explanation-animate {
+            opacity: 0;
+            transform: translateY(100px);
+            transition: opacity 1.5s ease-out 1.5s, transform 1.5s ease-out 1.5s;
+            will-change: opacity, transform;
+          }
+
+          .explanation-animate-in {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        `}
+      </style>
+
       <h1
         ref={titleRef}
-        className="text-5xl font-bold mb-3 text-center relative font-jua z-10 text-[#FFF] opacity-0"
+        className="text-5xl font-bold mb-3 text-center relative font-jua z-10 text-[#FFF] title-animate"
       >
         About HackPortal?
       </h1>
@@ -85,7 +102,7 @@ const HomeAboutText = () => {
       <div className="relative w-full flex justify-center items-center z-10">
         <p
           ref={explanationRef}
-          className="text-xl text-center text-[#616161] max-w-2xl mb-16 font-fredoka relative z-10 px-6 md:px-0 opacity-0"
+          className="text-xl text-center text-[#616161] max-w-2xl mb-16 font-fredoka relative z-10 px-6 md:px-0 explanation-animate"
         >
           Hackathons are 24-hour gatherings where students collaborate to create innovative
           projects, forge new connections, and compete for prizes.
