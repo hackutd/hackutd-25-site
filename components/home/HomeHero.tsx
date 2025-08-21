@@ -15,16 +15,15 @@ export default function HomeHero() {
     return () => mql.removeEventListener('change', update);
   }, []);
 
-  // Keep mobile to 3–4 layers max; desktop can have the full scene.
   const MOBILE_LAYERS = [
-    '/assets/topDrawing/sky.webp',
-    '/assets/topDrawing/bgClouds.webp',
-    '/assets/topDrawing/bg.webp',
     '/assets/topDrawing/foreground.webp',
+    '/assets/topDrawing/bg.webp',
+    '/assets/topDrawing/bgGrass.webp',
+    '/assets/topDrawing/moon.webp',
+    '/assets/topDrawing/sky.webp',
   ];
 
   const DESKTOP_LAYERS = [
-    // Animals on top (last in array = top layer)
     '/assets/topDrawing/fox.webp',
     '/assets/topDrawing/deer.webp',
     '/assets/topDrawing/cat.webp',
