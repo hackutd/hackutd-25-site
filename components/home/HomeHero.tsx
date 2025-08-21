@@ -1,28 +1,17 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import AppHeader from '../AppHeader';
 import Image from 'next/image';
 
-export default function HomeHero() {
-  // Default to "mobile" on first paint to keep memory low on iOS before JS runs.
-  const [isMobile, setIsMobile] = useState(true);
+const useHeroImageCache = () => {
+  const [cachedImages, setCachedImages] = useState<Set<string>>(new Set());
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const mql = window.matchMedia('(max-width: 768px)');
-    const update = () => setIsMobile(mql.matches);
-    update();
-    mql.addEventListener('change', update);
-    return () => mql.removeEventListener('change', update);
-  }, []);
-
-  // Mobile: 4 layers for performance (bg, bgClouds, moon, sky)
   const MOBILE_LAYERS = [
     '/assets/topDrawing/bg.webp',
     '/assets/topDrawing/bgClouds.webp',
     '/assets/topDrawing/sky.webp',
   ];
 
-  // Desktop: full scene with all layers
   const DESKTOP_LAYERS = [
     '/assets/topDrawing/frontSideTrees.webp',
     '/assets/topDrawing/fox.webp',
@@ -38,9 +27,81 @@ export default function HomeHero() {
     '/assets/topDrawing/sky.webp',
   ];
 
+  const preloadImages = useCallback(
+    async (imageUrls: string[]) => {
+      const newCachedImages = new Set(cachedImages);
+      const uncachedImages = imageUrls.filter((url) => !newCachedImages.has(url));
+
+      if (uncachedImages.length === 0) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const loadPromises = uncachedImages.map((url) => {
+          return new Promise<void>((resolve, reject) => {
+            const img = new window.Image();
+            img.onload = () => {
+              newCachedImages.add(url);
+              resolve();
+            };
+            img.onerror = () => {
+              console.warn(`Failed to load image: ${url}`);
+              resolve();
+            };
+            img.src = url;
+          });
+        });
+
+        await Promise.all(loadPromises);
+        setCachedImages(newCachedImages);
+      } catch (error) {
+        console.error('Error preloading images:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [cachedImages],
+  );
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const allImages = Array.from(new Set([...MOBILE_LAYERS, ...DESKTOP_LAYERS]));
+    preloadImages(allImages);
+  }, [preloadImages]);
+
+  return {
+    cachedImages,
+    isLoading,
+    MOBILE_LAYERS,
+    DESKTOP_LAYERS,
+    preloadImages,
+  };
+};
+
+export default function HomeHero() {
+  const [isMobile, setIsMobile] = useState(true);
+  const { cachedImages, isLoading, MOBILE_LAYERS, DESKTOP_LAYERS } = useHeroImageCache();
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mql = window.matchMedia('(max-width: 768px)');
+    const update = () => setIsMobile(mql.matches);
+    update();
+    mql.addEventListener('change', update);
+    return () => mql.removeEventListener('change', update);
+  }, []);
+
   const layers = isMobile ? MOBILE_LAYERS : DESKTOP_LAYERS;
 
   const bgStyle = useMemo<React.CSSProperties>(() => {
+    if (isLoading) {
+      return {
+        backgroundColor: '#2a2342',
+      };
+    }
+
     const urls = layers.map((u) => `url('${u}')`).join(', ');
     const repeats = layers.map(() => 'no-repeat').join(', ');
     const sizes = layers.map(() => 'cover').join(', ');
@@ -53,7 +114,7 @@ export default function HomeHero() {
       backgroundPosition: positions,
       backgroundAttachment: 'scroll',
     };
-  }, [layers]);
+  }, [layers, isLoading]);
 
   return (
     <section className="min-h-[100svh] bg-white flex flex-col-reverse md:flex-col">
