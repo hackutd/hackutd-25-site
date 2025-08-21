@@ -60,6 +60,15 @@ export default function Home({
             }
           }
         `}</style>
+        {/* Preload hero images */}
+        <link rel="preload" as="image" href="/assets/topDrawing/sky.webp" />
+        <link rel="preload" as="image" href="/assets/topDrawing/moon.webp" />
+        <link rel="preload" as="image" href="/assets/topDrawing/bgClouds.webp" />
+        <link rel="preload" as="image" href="/assets/topDrawing/bg.webp" />
+        <link rel="preload" as="image" href="/assets/topDrawing/bgTrees.webp" />
+        <link rel="preload" as="image" href="/assets/topDrawing/bgGrass.webp" />
+        <link rel="preload" as="image" href="/assets/topDrawing/foreground.webp" />
+        <link rel="preload" as="image" href="/assets/topDrawing/frontSideTrees.webp" />
       </Head>
       <div
         className="overflow-x-hidden w-full bg-fallback"

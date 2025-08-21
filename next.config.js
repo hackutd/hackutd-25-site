@@ -21,6 +21,20 @@ const withPWA = require('next-pwa')({
     ];
   },
 
+  async headers() {
+    return [
+      {
+        source: '/assets/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
+
   images: {
     remotePatterns: [
       {
