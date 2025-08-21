@@ -121,6 +121,29 @@ export default function HomeHero() {
       <AppHeader />
 
       <div className="relative w-full min-h-[100svh]" style={bgStyle}>
+        {/* MLH sticker */}
+        <div className="relative z-10 shrink-0 w-full flex">
+          <div className="absolute top-0 right-4 z-20 transition-all">
+            <a
+              id="mlh-trust-badge"
+              style={{
+                display: 'block',
+                maxWidth: '100px',
+                minWidth: '60px',
+                width: '10%',
+              }}
+              href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2026-season&utm_content=gray"
+              target="_blank"
+            >
+              <img
+                src="https://s3.amazonaws.com/logged-assets/trust-badge/2026/mlh-trust-badge-2026-gray.svg"
+                alt="Major League Hacking 2026 Hackathon Season"
+                style={{ width: '100%' }}
+              />
+            </a>
+          </div>
+        </div>
+
         {/* Title lockup */}
         <div
           className="absolute left-1/2 z-10 w-full max-w-[600px] md:max-w-[800px] px-4"
