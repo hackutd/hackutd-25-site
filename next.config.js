@@ -32,6 +32,11 @@ const withPWA = require('next-pwa')({
         hostname: 'firebasestorage.googleapis.com',
       },
     ],
+    // Optimize images for better performance
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
   },
 
   // https://sebhastian.com/javascript-unexpected-token-export/
@@ -49,6 +54,14 @@ const withPWA = require('next-pwa')({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
     });
+
+    // Optimize bundle size
+    if (!options.isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+      };
+    }
 
     return config;
   },
