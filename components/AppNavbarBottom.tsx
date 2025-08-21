@@ -258,13 +258,19 @@ export default function AppNavbarBottom(props: Props) {
     return items;
   };
 
-  return (
+  const navbarContent = (
     <div
       className={clsx(
-        'md:hidden fixed z-[1000] bottom-2 left-1/2 -translate-x-1/2',
+        'md:hidden sticky z-[9999] bottom-0',
         'bg-[rgba(0,0,0,0.70)] p-3 rounded-xl',
-        'w-[90%]',
+        'w-[90%] mx-auto',
+        'pointer-events-auto',
       )}
+      style={{
+        position: 'sticky',
+        bottom: '0',
+        zIndex: 9999,
+      }}
     >
       <FloatingDock
         settings={{
@@ -278,4 +284,6 @@ export default function AppNavbarBottom(props: Props) {
       />
     </div>
   );
+
+  return navbarContent;
 }
