@@ -55,8 +55,8 @@ export default function Home({
         <style jsx>{`
           @supports not (background-image: url('data:image/webp')) {
             .bg-fallback {
-              background-image: url('/assets/pathDrawing/bushLeft.PNG'),
-                url('/assets/pathDrawing/pathOutline.PNG'), url('/assets/pathDrawing/bg.PNG') !important;
+              background-image: url('/assets/pathDrawing/bushLeft.webp'),
+                url('/assets/pathDrawing/pathOutline.webp'), url('/assets/pathDrawing/bg.webp') !important;
             }
           }
         `}</style>
@@ -77,7 +77,7 @@ export default function Home({
         {/* <div
           className="fixed top-0 left-0 w-full h-full z-20 pointer-events-none"
           style={{
-            backgroundImage: `url("/assets/pathDrawing/mist.PNG")`,
+            backgroundImage: `url("/assets/pathDrawing/mist.webp")`,
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
           }}
