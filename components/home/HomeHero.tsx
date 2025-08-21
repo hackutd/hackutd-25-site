@@ -30,10 +30,10 @@ export default function HomeHero() {
             className="w-full flex flex-col gap-2 justify-center items-center relative"
             style={{
               backgroundImage: `url('/assets/topDrawing/frontSideTrees.webp'),
-                                url('/assets/topDrawing/bird.PNG'),
-                                url('/assets/topDrawing/cat.PNG'),
-                                url('/assets/topDrawing/deer.PNG'),
-                                url('/assets/topDrawing/fox.PNG'),
+                                url('/assets/topDrawing/bird.webp'),
+                                url('/assets/topDrawing/cat.webp'),
+                                url('/assets/topDrawing/deer.webp'),
+                                url('/assets/topDrawing/fox.webp'),
                                 url('/assets/topDrawing/bgGrass.webp'), 
                                 url('/assets/topDrawing/bgTrees.webp'),
                                 url('/assets/topDrawing/foreground.webp'), 
