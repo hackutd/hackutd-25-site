@@ -27,13 +27,17 @@ body, html {
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
-  background-color: #2a2342;
+  background-color: #1e1b4b;
   overscroll-behavior: auto;
 }
 
 /* Custom overscroll color to match footer theme */
 html {
-  background: linear-gradient(to bottom right, #581c87, #1e1b4b);
+  background: #1e1b4b;
+}
+
+body {
+  background: #1e1b4b;
 }
 
 /* Mobile optimizations */
@@ -41,6 +45,11 @@ html {
   /* Reduce background image loading on mobile */
   body {
     background-attachment: scroll !important;
+    background: #1e1b4b !important;
+  }
+  
+  html {
+    background: #1e1b4b !important;
   }
   
   /* Optimize for mobile memory */

@@ -18,26 +18,23 @@ export default function HomeHero() {
   const MOBILE_LAYERS = [
     '/assets/topDrawing/foreground.webp',
     '/assets/topDrawing/bg.webp',
-    '/assets/topDrawing/bgGrass.webp',
+    '/assets/topDrawing/bgClouds.webp',
     '/assets/topDrawing/moon.webp',
     '/assets/topDrawing/sky.webp',
   ];
 
   const DESKTOP_LAYERS = [
-    '/assets/topDrawing/fox.webp',
-    '/assets/topDrawing/deer.webp',
-    '/assets/topDrawing/cat.webp',
-    '/assets/topDrawing/bird.webp',
-    // Foreground elements
     '/assets/topDrawing/frontSideTrees.webp',
-    '/assets/topDrawing/foreground.webp',
-    // Background elements
+    '/assets/topDrawing/bird.webp',
+    '/assets/topDrawing/cat.webp',
+    '/assets/topDrawing/deer.webp',
+    '/assets/topDrawing/fox.webp',
     '/assets/topDrawing/bgGrass.webp',
     '/assets/topDrawing/bgTrees.webp',
+    '/assets/topDrawing/foreground.webp',
     '/assets/topDrawing/bg.webp',
     '/assets/topDrawing/bgClouds.webp',
     '/assets/topDrawing/moon.webp',
-    // Sky at bottom (first in array = bottom layer)
     '/assets/topDrawing/sky.webp',
   ];
 
