@@ -19,7 +19,6 @@ export default function HomeHero() {
   const MOBILE_LAYERS = [
     '/assets/topDrawing/bg.webp',
     '/assets/topDrawing/bgClouds.webp',
-    '/assets/topDrawing/moon.webp',
     '/assets/topDrawing/sky.webp',
   ];
 
