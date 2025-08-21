@@ -1,75 +1,103 @@
-import BackgroundCircles from '../BackgroundCircles';
+import { useEffect, useMemo, useState } from 'react';
 import AppHeader from '../AppHeader';
 import Image from 'next/image';
 
 export default function HomeHero() {
+  // Default to "mobile" on first paint to keep memory low on iOS before JS runs.
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mql = window.matchMedia('(max-width: 768px)');
+    const update = () => setIsMobile(mql.matches);
+    update();
+    mql.addEventListener('change', update);
+    return () => mql.removeEventListener('change', update);
+  }, []);
+
+  // Mobile: 4 layers for performance (bg, bgClouds, moon, sky)
+  const MOBILE_LAYERS = [
+    '/assets/topDrawing/bg.webp',
+    '/assets/topDrawing/bgClouds.webp',
+    '/assets/topDrawing/moon.webp',
+    '/assets/topDrawing/sky.webp',
+  ];
+
+  // Desktop: full scene with all layers
+  const DESKTOP_LAYERS = [
+    '/assets/topDrawing/frontSideTrees.webp',
+    '/assets/topDrawing/fox.webp',
+    '/assets/topDrawing/deer.webp',
+    '/assets/topDrawing/cat.webp',
+    '/assets/topDrawing/bird.webp',
+    '/assets/topDrawing/bgGrass.webp',
+    '/assets/topDrawing/bgTrees.webp',
+    '/assets/topDrawing/foreground.webp',
+    '/assets/topDrawing/bg.webp',
+    '/assets/topDrawing/bgClouds.webp',
+    '/assets/topDrawing/moon.webp',
+    '/assets/topDrawing/sky.webp',
+  ];
+
+  const layers = isMobile ? MOBILE_LAYERS : DESKTOP_LAYERS;
+
+  const bgStyle = useMemo<React.CSSProperties>(() => {
+    const urls = layers.map((u) => `url('${u}')`).join(', ');
+    const repeats = layers.map(() => 'no-repeat').join(', ');
+    const sizes = layers.map(() => 'cover').join(', ');
+    const positions = layers.map(() => 'center').join(', ');
+
+    return {
+      backgroundImage: urls,
+      backgroundRepeat: repeats,
+      backgroundSize: sizes,
+      backgroundPosition: positions,
+      backgroundAttachment: 'scroll',
+    };
+  }, [layers]);
+
   return (
-    <section className="min-h-screen bg-contain bg-white flex flex-col-reverse md:flex-col">
-      {/* App header */}
+    <section className="min-h-[100svh] bg-white flex flex-col-reverse md:flex-col">
+      {/* Header above the hero */}
       <AppHeader />
 
-      <div className="flex h-screen w-full relative">
-        {/* <div className="w-full h-full absolute top-0 left-0 z-0">
-          <BackgroundCircles />
-        </div> */}
+      <div className="relative w-full min-h-[100svh]" style={bgStyle}>
+        {/* Title lockup */}
+        <div
+          className="absolute left-1/2 z-10 w-full max-w-[600px] md:max-w-[800px] px-4"
+          style={{ top: '33%', transform: 'translate(-50%, -50%)' }}
+        >
+          <Image
+            src="/assets/Vectorized-Title.svg"
+            alt="HACKPORTAL"
+            width={800}
+            height={200}
+            priority
+            className="w-full h-auto drop-shadow-2xl"
+          />
 
-        <div className="relative z-10 shrink-0 w-full flex">
-          {/* MLH sticker */}
-          {/* <div className="absolute top-0 right-4 z-20">
-            <Image
-              src={MLH_Sticker.src}
-              height={MLH_Sticker.height}
-              width={MLH_Sticker.width}
-              alt="MLH sticker"
-              className="w-full h-full object-cover"
-            />
-          </div> */}
-
-          {/* Big welcome */}
-          <div
-            className="w-full flex flex-col gap-2 justify-center items-center relative"
-            style={{
-              backgroundImage: `url('/assets/topDrawing/frontSideTrees.webp'),
-                                url('/assets/topDrawing/bird.PNG'),
-                                url('/assets/topDrawing/cat.PNG'),
-                                url('/assets/topDrawing/deer.PNG'),
-                                url('/assets/topDrawing/fox.PNG'),
-                                url('/assets/topDrawing/bgGrass.webp'), 
-                                url('/assets/topDrawing/bgTrees.webp'),
-                                url('/assets/topDrawing/foreground.webp'), 
-                                url('/assets/topDrawing/bg.webp'), 
-                                url('/assets/topDrawing/bgClouds.webp'),
-                                url('/assets/topDrawing/moon.webp'), 
-                                url('/assets/topDrawing/sky.webp')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-            }}
-          >
-            {/* <p className="font-nunito text-[#FFF] text-xl md:text-3xl">Welcome To</p> */}
-            <div
-              className="w-full max-w-[600px] md:max-w-[800px] z-10 absolute"
-              style={{ top: '33%', transform: 'translateY(-50%)' }}
+          {/* Apply Button */}
+          <div className="mt-8 text-center">
+            <button
+              onClick={() => (window.location.href = '/auth')}
+              className="relative overflow-hidden font-bold py-3 px-10 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300 backdrop-blur-sm group"
+              style={{
+                background: 'linear-gradient(135deg, #EABF73 0%, #D4A574 100%)',
+                color: '#1e1b4b',
+                border: '1px solid rgba(234, 191, 115, 0.4)',
+                textShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                boxShadow:
+                  '0 10px 40px rgba(234, 191, 115, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+              }}
             >
-              <Image
-                src="/assets/Vectorized-Title.svg"
-                alt="HACKPORTAL"
-                width={800}
-                height={200}
-                className="w-full h-auto drop-shadow-2xl"
-              />
-            </div>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+              <span className="relative text-lg md:text-xl font-bold tracking-wider uppercase">
+                Apply Now
+              </span>
+            </button>
           </div>
         </div>
       </div>
-
-      {/* Bottom banner */}
-      {/* <div className="font-dmSans w-full flex justify-center bg-[#7B81FF] text-white h-[1.75rem] text-nowrap overflow-hidden">
-        <p className="text-lg">
-          SAMPLE TEXT • SAMPLE TEXT • SAMPLE TEXT • SAMPLE TEXT • SAMPLE TEXT • SAMPLE TEXT • SAMPLE
-          TEXT • SAMPLE TEXT • SAMPLE TEXT
-        </p>
-      </div> */}
     </section>
   );
 }
