@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import AppHeader from '../AppHeader';
 import Image from 'next/image';
 
 const useHeroImageCache = () => {
   const [cachedImages, setCachedImages] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
+  const cachedImagesRef = useRef<Set<string>>(new Set());
 
   const MOBILE_LAYERS = [
     '/assets/topDrawing/bg.webp',
@@ -27,49 +28,47 @@ const useHeroImageCache = () => {
     '/assets/topDrawing/sky.webp',
   ];
 
-  const preloadImages = useCallback(
-    async (imageUrls: string[]) => {
-      const newCachedImages = new Set(cachedImages);
-      const uncachedImages = imageUrls.filter((url) => !newCachedImages.has(url));
+  const preloadImages = useCallback(async (imageUrls: string[]) => {
+    const newCachedImages = new Set(cachedImagesRef.current);
+    const uncachedImages = imageUrls.filter((url) => !newCachedImages.has(url));
 
-      if (uncachedImages.length === 0) {
-        setIsLoading(false);
-        return;
-      }
+    if (uncachedImages.length === 0) {
+      setIsLoading(false);
+      return;
+    }
 
-      try {
-        const loadPromises = uncachedImages.map((url) => {
-          return new Promise<void>((resolve, reject) => {
-            const img = new window.Image();
-            img.onload = () => {
-              newCachedImages.add(url);
-              resolve();
-            };
-            img.onerror = () => {
-              console.warn(`Failed to load image: ${url}`);
-              resolve();
-            };
-            img.src = url;
-          });
+    try {
+      const loadPromises = uncachedImages.map((url) => {
+        return new Promise<void>((resolve, reject) => {
+          const img = new window.Image();
+          img.onload = () => {
+            newCachedImages.add(url);
+            cachedImagesRef.current.add(url);
+            resolve();
+          };
+          img.onerror = () => {
+            console.warn(`Failed to load image: ${url}`);
+            resolve();
+          };
+          img.src = url;
         });
+      });
 
-        await Promise.all(loadPromises);
-        setCachedImages(newCachedImages);
-      } catch (error) {
-        console.error('Error preloading images:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [cachedImages],
-  );
+      await Promise.all(loadPromises);
+      setCachedImages(newCachedImages);
+    } catch (error) {
+      console.error('Error preloading images:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const allImages = Array.from(new Set([...MOBILE_LAYERS, ...DESKTOP_LAYERS]));
     preloadImages(allImages);
-  }, [preloadImages]);
+  }, []);
 
   return {
     cachedImages,
