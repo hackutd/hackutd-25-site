@@ -64,7 +64,7 @@ export default function Admin({ questions }: { questions: QADocument[] }) {
     return <div className="text-2xl font-black text-center bg-blue-200">Unauthorized</div>;
 
   return (
-    <div className="flex flex-col flex-grow min-h-screen">
+    <div className="flex flex-col bg-white flex-grow min-h-screen">
       <Head>
         <title>HackUTD 2025 - Admin</title>
         <meta name="description" content="HackPortal's Admin Page" />
