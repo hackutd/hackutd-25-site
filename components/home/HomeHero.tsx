@@ -139,7 +139,7 @@ export default function HomeHero() {
   return (
     <section className="min-h-[100svh] bg-white flex flex-col-reverse md:flex-col">
       {/* Header above the hero */}
-      <AppHeader />
+      {/* <AppHeader /> */}
 
       <div className="relative w-full min-h-[100svh]" style={bgStyle}>
         {/* MLH sticker */}
