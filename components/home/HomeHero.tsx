@@ -109,7 +109,7 @@ export default function HomeHero() {
       };
     }
 
-    // Mobile optimization: use simpler background for better performance
+    // Mobile optimization: use lightweight background for better performance
     if (isMobile) {
       return {
         backgroundImage: `url('${layers[0]}')`,
@@ -117,6 +117,7 @@ export default function HomeHero() {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'scroll',
+        backgroundColor: '#2a2342', // fallback color
       };
     }
 
@@ -175,24 +176,31 @@ export default function HomeHero() {
             width={800}
             height={200}
             priority
-            className="w-full h-auto drop-shadow-2xl"
+            className={`w-full h-auto ${isMobile ? '' : 'drop-shadow-2xl'}`}
           />
 
           {/* Apply Button */}
           <div className="mt-8 text-center">
             <button
               onClick={() => (window.location.href = '/auth')}
-              className="relative overflow-hidden font-bold py-3 px-10 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300 backdrop-blur-sm group"
+              className={`relative overflow-hidden font-bold py-3 px-10 rounded-full shadow-2xl transform transition-all duration-300 backdrop-blur-sm group ${
+                isMobile ? 'hover:scale-100' : 'hover:scale-105'
+              }`}
               style={{
-                background: 'linear-gradient(135deg, #EABF73 0%, #D4A574 100%)',
+                background: isMobile
+                  ? '#EABF73'
+                  : 'linear-gradient(135deg, #EABF73 0%, #D4A574 100%)',
                 color: '#1e1b4b',
-                border: '1px solid rgba(234, 191, 115, 0.4)',
+                border: isMobile ? '1px solid #EABF73' : '1px solid rgba(234, 191, 115, 0.4)',
                 textShadow: '0 1px 2px rgba(0,0,0,0.1)',
-                boxShadow:
-                  '0 10px 40px rgba(234, 191, 115, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+                boxShadow: isMobile
+                  ? '0 4px 6px rgba(0,0,0,0.1)'
+                  : '0 10px 40px rgba(234, 191, 115, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
               }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+              {!isMobile && (
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+              )}
               <span className="relative text-lg md:text-xl font-bold tracking-wider uppercase">
                 Apply Now
               </span>

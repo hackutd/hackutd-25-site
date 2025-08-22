@@ -30,8 +30,25 @@ export default function Home({
   sponsorCard,
 }: Props) {
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
     setLoading(false);
+
+    // Detect mobile device
+    const checkMobile = () => {
+      if (typeof window === 'undefined') return false;
+      return window.innerWidth <= 768;
+    };
+
+    setIsMobile(checkMobile());
+
+    const handleResize = () => {
+      setIsMobile(checkMobile());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   if (loading) {
@@ -64,9 +81,12 @@ export default function Home({
       <div
         className="overflow-x-hidden w-full bg-fallback"
         style={{
-          backgroundImage: `url("/assets/pathDrawing/bushLeft.webp"),
+          backgroundImage: isMobile
+            ? `url("/assets/pathDrawing/bg.webp")`
+            : `url("/assets/pathDrawing/bushLeft.webp"),
                             url("/assets/pathDrawing/pathOutline.webp"),
                             url("/assets/pathDrawing/bg.webp")`,
+          backgroundColor: isMobile ? '#2a2342' : 'transparent',
           backgroundSize: 'cover',
           backgroundRepeat: 'repeat',
           zIndex: 2,
@@ -84,7 +104,7 @@ export default function Home({
         /> */}
         <HomeHero />
 
-        <div className="my-72">
+        {/* <div className="my-72">
           <HomeAboutText />
         </div>
 
@@ -115,7 +135,7 @@ export default function Home({
         <div className="my-72">
           <HomeSponsors />
         </div>
-        <HomeFooter />
+        <HomeFooter /> */}
       </div>
     </>
   );

@@ -38,10 +38,12 @@ html {
 
 /* Mobile optimizations */
 @media (max-width: 768px) {
-  /* Reduce background image loading on mobile */
+  /* Optimize background loading on mobile */
   body {
     background-attachment: scroll !important;
     background-size: cover !important;
+    background-color: #2a2342 !important;
+    contain: layout style paint;
   }
   
   /* Optimize for mobile memory */
@@ -75,6 +77,36 @@ html {
   .backdrop-blur-md,
   .backdrop-blur-lg {
     backdrop-filter: blur(4px) !important;
+  }
+  
+  /* Disable complex CSS effects on mobile */
+  .drop-shadow-2xl {
+    filter: none !important;
+  }
+  
+  /* Optimize images */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    contain: layout style paint;
+  }
+  
+  /* Reduce layout thrashing */
+  .min-h-\[100svh\] {
+    min-height: 100vh !important;
+  }
+  
+  /* Disable complex gradients on mobile */
+  .bg-gradient-to-r,
+  .bg-gradient-to-l,
+  .bg-gradient-to-t,
+  .bg-gradient-to-b {
+    background: #2a2342 !important;
+  }
+  
+  /* Optimize sections */
+  section {
+    contain: layout style paint;
   }
 }
 
