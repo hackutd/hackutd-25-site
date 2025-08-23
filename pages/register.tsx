@@ -471,6 +471,7 @@ export default function Register({ allowedRegistrations }: Props) {
           if (values['heardFrom'] === 'Other' && values['heardFromManual'] === '') {
             errors['heardFromManual'] = 'Required';
           }
+
           return errors;
         }}
         onSubmit={async (values, { setSubmitting }) => {
@@ -490,7 +491,7 @@ export default function Register({ allowedRegistrations }: Props) {
                   await router.push('/');
                 }}
               >
-                <div className="mt-2 cursor-pointer items-center inline-flex text-white font-bold bg-[#5D5A88] rounded-[30px] pr-4 pl-1 py-2 border-2 border-white">
+                <div className="mt-2 cursor-pointer items-center inline-flex text-white font-bold bg-[#2D5016] rounded-[30px] pr-4 pl-1 py-2 border-2 border-white">
                   <ChevronLeftIcon className="text-white" fontSize={'large'} />
                   Home
                 </div>
@@ -505,9 +506,9 @@ export default function Register({ allowedRegistrations }: Props) {
               >
                 {/* General Questions */}
                 {registrationSection == 0 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-4 py-10 px-8 mb-8 text-[#5D5A88]">
+                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-4 py-10 px-8 mb-8 text-[#2D5016]">
                     <header>
-                      <h1 className="text-[#5D5A88] lg:text-4xl sm:text-3xl text-2xl font-bold text-center mt-2 md:mt-8 mb-4 poppins-bold">
+                      <h1 className="text-[#2D5016] lg:text-4xl sm:text-3xl text-2xl font-bold text-center mt-2 md:mt-8 mb-4 poppins-bold">
                         Hacker Application
                       </h1>
                       <div
@@ -532,7 +533,7 @@ export default function Register({ allowedRegistrations }: Props) {
                           e.preventDefault();
                           await handleSaveProfile(values, registrationSection, resetForm);
                         }}
-                        className="bg-[#5D5A88] rounded-lg p-3 text-white font-bold"
+                        className="bg-[#7A9E7E] rounded-lg p-3 text-white font-bold"
                       >
                         Save Profile
                       </button>
@@ -542,7 +543,7 @@ export default function Register({ allowedRegistrations }: Props) {
 
                 {/* School Questions */}
                 {registrationSection == 1 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#5D5A88]">
+                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
                     <h2 className="sm:text-2xl text-xl sm:mb-3 mb-1 poppins-bold mt-2">
                       School Info
                     </h2>
@@ -590,7 +591,7 @@ export default function Register({ allowedRegistrations }: Props) {
                           e.preventDefault();
                           handleSaveProfile(values, registrationSection, resetForm);
                         }}
-                        className="bg-[#5D5A88] rounded-lg p-3 text-white font-bold"
+                        className="bg-[#7A9E7E] rounded-lg p-3 text-white font-bold"
                       >
                         Save Profile
                       </button>
@@ -600,7 +601,7 @@ export default function Register({ allowedRegistrations }: Props) {
 
                 {/* Hackathon Questions */}
                 {registrationSection == 2 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#5D5A88]">
+                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
                     <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
                       Hackathon Experience
                     </h2>
@@ -608,22 +609,6 @@ export default function Register({ allowedRegistrations }: Props) {
                       {hackathonExperienceQuestions.map((obj, idx) => (
                         <DisplayRegistrationQuestion key={idx} obj={obj} />
                       ))}
-                      {values['heardFrom'] === 'Other' && (
-                        <DisplayRegistrationQuestion
-                          key={1000}
-                          obj={{
-                            textInputQuestions: [
-                              {
-                                id: 'heardFromManual',
-                                name: 'heardFromManual',
-                                question: 'Where did you hear about HackPortal?',
-                                required: values['heardFrom'] === 'Other',
-                                initialValue: '',
-                              },
-                            ],
-                          }}
-                        />
-                      )}
                     </div>
                     <div className="flex justify-end my-4">
                       <button
@@ -632,7 +617,7 @@ export default function Register({ allowedRegistrations }: Props) {
                           e.preventDefault();
                           handleSaveProfile(values, registrationSection, resetForm);
                         }}
-                        className="bg-[#5D5A88] rounded-lg p-3 text-white font-bold"
+                        className="bg-[#7A9E7E] rounded-lg p-3 text-white font-bold"
                       >
                         Save Profile
                       </button>
@@ -642,7 +627,7 @@ export default function Register({ allowedRegistrations }: Props) {
 
                 {/* Short Answer Questions */}
                 {registrationSection == 3 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#5D5A88]">
+                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
                     <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
                       Short Answer Questions
                     </h2>
@@ -658,7 +643,7 @@ export default function Register({ allowedRegistrations }: Props) {
                           e.preventDefault();
                           handleSaveProfile(values, registrationSection, resetForm);
                         }}
-                        className="bg-[#5D5A88] rounded-lg p-3 text-white font-bold"
+                        className="bg-[#7A9E7E] rounded-lg p-3 text-white font-bold"
                       >
                         Save Profile
                       </button>
@@ -666,19 +651,16 @@ export default function Register({ allowedRegistrations }: Props) {
                   </section>
                 )}
 
-                {/* Event Questions */}
+                {/* Event Info Questions */}
                 {registrationSection == 4 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#5D5A88]">
+                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
                     <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
                       Event Info
                     </h2>
                     <div className="flex flex-col poppins-regular md:px-4">
-                      {/* apply styling issue fix, it's an ugly fix but this solve the styling issue */}
-                      {eventInfoQuestions.map((obj, idx) => {
-                        // if (idx !== 0) return <DisplayQuestion key={idx} obj={obj} />;
-
-                        return <DisplayRegistrationQuestion key={idx} obj={obj} />;
-                      })}
+                      {eventInfoQuestions.map((obj, idx) => (
+                        <DisplayRegistrationQuestion key={idx} obj={obj} />
+                      ))}
                     </div>
                     <div className="flex justify-end my-4">
                       <button
@@ -687,7 +669,7 @@ export default function Register({ allowedRegistrations }: Props) {
                           e.preventDefault();
                           handleSaveProfile(values, registrationSection, resetForm);
                         }}
-                        className="bg-[#5D5A88] rounded-lg p-3 text-white font-bold"
+                        className="bg-[#7A9E7E] rounded-lg p-3 text-white font-bold"
                       >
                         Save Profile
                       </button>
@@ -695,9 +677,9 @@ export default function Register({ allowedRegistrations }: Props) {
                   </section>
                 )}
 
-                {/* Sponsor Questions */}
+                {/* Sponsor Info Questions */}
                 {registrationSection == 5 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#5D5A88] relative">
+                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016] relative">
                     <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
                       Sponsor Info
                     </h2>
@@ -722,9 +704,9 @@ export default function Register({ allowedRegistrations }: Props) {
                         accept=".pdf, .doc, .docx, image/png, image/jpeg, .txt, .tex, .rtf"
                         className="hidden"
                       />
-                      <div className="flex items-center gap-x-3 poppins-regular w-full border border-[#5D5A88] rounded-md">
+                      <div className="flex items-center gap-x-3 poppins-regular w-full border border-[#2D5016] rounded-md">
                         <button
-                          className="md:p-2 p-1 bg-[#5D5A88] text-white h-full rounded-l-md border-none"
+                          className="md:p-2 p-1 bg-[#7A9E7E] text-white h-full rounded-l-md border-none"
                           onClick={(e) => {
                             e.preventDefault();
                             resumeFileRef.current?.click();
@@ -732,17 +714,17 @@ export default function Register({ allowedRegistrations }: Props) {
                         >
                           Upload new resume...
                         </button>
-                        <p className="text-[#5D5A88]">
+                        <p className="text-[#2D5016]">
                           {resumeFile ? resumeFile.name : 'No file selected.'}
                         </p>
                       </div>
-                      <p className="poppins-regular text-xs text-[#5D5A88]">
+                      <p className="poppins-regular text-xs text-[#2D5016]">
                         Accepted file types: .pdf, .doc, .docx, .png, .jpeg, .txt, .tex, .rtf
                       </p>
                       {partialProfile?.resume && (
                         <div className="my-4 w-fit">
                           <Link href={partialProfile.resume} target="_blank">
-                            <div className="bg-[#5D5A88] md:p-2 p-1 text-white rounded-lg">
+                            <div className="bg-[#7A9E7E] md:p-2 p-1 text-white rounded-lg">
                               Click to view your current resume
                             </div>
                           </Link>
@@ -758,16 +740,17 @@ export default function Register({ allowedRegistrations }: Props) {
                           await handleSaveProfile(values, registrationSection, resetForm);
                           setIsSavingApplication(false);
                         }}
-                        className="bg-[#5D5A88] rounded-lg p-3 text-white font-bold"
+                        className="bg-[#7A9E7E] rounded-lg p-3 text-white font-bold"
                       >
                         Save Profile
                       </button>
                     </div>
                   </section>
                 )}
+
                 {/* Teammate Questions */}
                 {registrationSection == 6 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#5D5A88]">
+                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
                     <h2 className="sm:text-2xl text-xl font-semibold sm:mb-3 mb-1">
                       Teammate Questions
                     </h2>
@@ -785,7 +768,7 @@ export default function Register({ allowedRegistrations }: Props) {
                       <button
                         disabled={isSubmitting}
                         type="submit"
-                        className="mr-auto cursor-pointer px-4 py-2 rounded-lg bg-[#5D5A88] hover:brightness-90"
+                        className="mr-auto cursor-pointer px-4 py-2 rounded-lg bg-[#7A9E7E] hover:brightness-90"
                       >
                         Submit
                       </button>
@@ -803,7 +786,7 @@ export default function Register({ allowedRegistrations }: Props) {
                           e.preventDefault();
                           handleSaveProfile(values, registrationSection, resetForm);
                         }}
-                        className="bg-[#5D5A88] rounded-lg p-3 text-white font-bold"
+                        className="bg-[#7A9E7E] rounded-lg p-3 text-white font-bold"
                       >
                         Save Profile
                       </button>
@@ -836,16 +819,16 @@ export default function Register({ allowedRegistrations }: Props) {
                   >
                     <div
                       style={{ width: 'fit-content' }}
-                      className="hidden md:inline-flex cursor-pointer select-none bg-white text-[#5D5A88] rounded-[30px] py-3 pl-2 pr-4 text-xs md:text-lg border-2 border-[#5D5A88]"
+                      className="hidden md:inline-flex cursor-pointer select-none bg-[#2D5016] text-white rounded-[30px] py-3 pl-2 pr-4 text-xs md:text-lg border-2 border-[#2D5016]"
                     >
-                      <ChevronLeftIcon className="text-[#5D5A88]" />
+                      <ChevronLeftIcon className="text-white" />
                       prev page
                     </div>
                     <div
                       style={{ width: 'fit-content' }}
-                      className="md:hidden cursor-pointer select-none bg-white text-[#5D5A88] rounded-[30px] py-3 pl-2 pr-4 text-xs md:text-lg border-2 border-[#5D5A88]"
+                      className="md:hidden cursor-pointer select-none bg-[#2D5016] text-white rounded-[30px] py-3 pl-2 pr-4 text-xs md:text-lg border-2 border-[#2D5016]"
                     >
-                      <ChevronLeftIcon className="text-[#5D5A88]" />
+                      <ChevronLeftIcon className="text-white" />
                       prev
                     </div>
                   </div>
@@ -893,14 +876,14 @@ export default function Register({ allowedRegistrations }: Props) {
                   >
                     <div
                       style={{ width: 'fit-content' }}
-                      className="hidden md:inline-flex cursor-pointer select-none bg-white text-[#5D5A88] text-xs md:text-lg rounded-[30px] py-3 pr-2 pl-4 border-2 border-[#5D5A88]"
+                      className="hidden md:inline-flex cursor-pointer select-none bg-[#2D5016] text-white text-xs md:text-lg rounded-[30px] py-3 pr-2 pl-4 border-2 border-[#2D5016]"
                     >
                       next page
                       <ChevronRightIcon />
                     </div>
                     <div
                       style={{ width: 'fit-content' }}
-                      className="md:hidden cursor-pointer select-none bg-white text-[#5D5A88] text-xs md:text-lg rounded-[30px] py-3 pr-2 pl-4 border-2 border-[#5D5A88]"
+                      className="md:hidden cursor-pointer select-none bg-[#2D5016] text-white text-xs md:text-lg rounded-[30px] py-3 pr-2 pl-4 border-2 border-[#2D5016]"
                     >
                       next
                       <ChevronRightIcon />
