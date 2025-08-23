@@ -30,8 +30,25 @@ export default function Home({
   sponsorCard,
 }: Props) {
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
     setLoading(false);
+
+    // Detect mobile device
+    const checkMobile = () => {
+      if (typeof window === 'undefined') return false;
+      return window.innerWidth <= 768;
+    };
+
+    setIsMobile(checkMobile());
+
+    const handleResize = () => {
+      setIsMobile(checkMobile());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   if (loading) {
@@ -55,8 +72,8 @@ export default function Home({
         <style jsx>{`
           @supports not (background-image: url('data:image/webp')) {
             .bg-fallback {
-              background-image: url('/assets/pathDrawing/bushLeft.PNG'),
-                url('/assets/pathDrawing/pathOutline.PNG'), url('/assets/pathDrawing/bg.PNG') !important;
+              background-image: url('/assets/pathDrawing/bushLeft.webp'),
+                url('/assets/pathDrawing/pathOutline.webp'), url('/assets/pathDrawing/bg.webp') !important;
             }
           }
         `}</style>
@@ -64,9 +81,12 @@ export default function Home({
       <div
         className="overflow-x-hidden w-full bg-fallback"
         style={{
-          backgroundImage: `url("/assets/pathDrawing/bushLeft.webp"),
+          backgroundImage: isMobile
+            ? `url("/assets/pathDrawing/bg.webp")`
+            : `url("/assets/pathDrawing/bushLeft.webp"),
                             url("/assets/pathDrawing/pathOutline.webp"),
                             url("/assets/pathDrawing/bg.webp")`,
+          backgroundColor: isMobile ? '#2a2342' : 'transparent',
           backgroundSize: 'cover',
           backgroundRepeat: 'repeat',
           zIndex: 2,
@@ -77,14 +97,14 @@ export default function Home({
         {/* <div
           className="fixed top-0 left-0 w-full h-full z-20 pointer-events-none"
           style={{
-            backgroundImage: `url("/assets/pathDrawing/mist.PNG")`,
+            backgroundImage: `url("/assets/pathDrawing/mist.webp")`,
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
           }}
         /> */}
         <HomeHero />
 
-        <div className="my-72">
+        {/* <div className="my-72">
           <HomeAboutText />
         </div>
 
@@ -115,7 +135,7 @@ export default function Home({
         <div className="my-72">
           <HomeSponsors />
         </div>
-        <HomeFooter />
+        <HomeFooter /> */}
       </div>
     </>
   );

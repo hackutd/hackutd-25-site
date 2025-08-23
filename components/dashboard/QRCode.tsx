@@ -10,10 +10,10 @@ export interface Props {
 
 // TODO: update this
 const IMAGE_GROUP_MAPPING = {
-  Bird: '/assets/ab-bird.PNG',
-  Cat: '/assets/ab-cat.PNG',
-  Deer: '/assets/ab-deer.PNG',
-  Fox: '/assets/ab-fox.PNG',
+  Bird: '/assets/ab-bird.webp',
+  Cat: '/assets/ab-cat.webp',
+  Deer: '/assets/ab-deer.webp',
+  Fox: '/assets/ab-fox.webp',
 };
 
 // TODO: update this
