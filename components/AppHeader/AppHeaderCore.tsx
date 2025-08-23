@@ -129,8 +129,8 @@ export default function AppHeaderCore(props: Props) {
           id={itemIdRoot + idx}
           onClick={item.onClick}
           className={clsx(
-            'py-2 px-4 text-[#5D5A88] cursor-pointer flex justify-center font-bold',
-            'hover:bg-[#EAE6F2] transition-[background] duration-300 ease-in-out',
+            'py-2 px-4 text-[#2D5016] cursor-pointer flex justify-center font-bold',
+            'hover:bg-[#8FBC8F] transition-[background] duration-300 ease-in-out',
             'rounded-[20px]',
           )}
         >
@@ -146,18 +146,18 @@ export default function AppHeaderCore(props: Props) {
         <Menu id={itemIdRoot + itemIdx} as="div">
           <Menu.Button
             className={clsx(
-              'py-2 px-4 text-[#5D5A88] cursor-pointer flex gap-1 items-center justify-center font-bold',
-              'hover:bg-[#EAE6F2] transition-[background] duration-300 ease-in-out',
+              'py-2 px-4 text-[#2D5016] cursor-pointer flex gap-1 items-center justify-center font-bold',
+              'hover:bg-[#8FBC8F] transition-[background] duration-300 ease-in-out',
               'rounded-[20px]',
             )}
           >
-            <div className="text-[##5D5A88]">Admin</div>
+            <div className="text-[#2D5016]">Admin</div>
             <svg
               xmlns="http:www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
-              stroke="#5D5A88"
+              stroke="#2D5016"
               className="size-4"
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -257,7 +257,7 @@ export default function AppHeaderCore(props: Props) {
               await router.push('/profile');
             }}
           >
-            <div className="py-3 px-5 rounded-[30px] bg-[#5D5A88] font-bold">Profile</div>
+            <div className="py-3 px-5 rounded-[30px] bg-[#2D5016] font-bold">Profile</div>
           </button>
         )}
       </div>,
@@ -272,7 +272,7 @@ export default function AppHeaderCore(props: Props) {
       {/* Real navbar */}
       <div
         id="nav-bar"
-        className="relative font-dmSans border-[3px] border-[rgba(30,30,30,0.60)] rounded-xl p-1 bg-white opacity-90 text-[#5D5A88] cursor-pointer flex-wrap"
+        className="relative font-dmSans border-[3px] border-[rgba(30,30,30,0.60)] rounded-xl p-1 bg-white opacity-90 text-[#2D5016] cursor-pointer flex-wrap"
       >
         {/* Sign out button */}
         <button
@@ -284,7 +284,7 @@ export default function AppHeaderCore(props: Props) {
                 ? '-left-[calc(102px+0.5rem)] lg:left-[unset] lg:-right-[calc(102px+1rem)] xl:-right-[calc(102px+2rem)]'
                 : '-right-[calc(102px+0.5rem)] lg:-right-[calc(102px+2rem)]'
             }`,
-            'text-sm py-3 px-4 rounded-[30px] bg-[#5D5A88] font-bold text-white border-2 border-white',
+            'text-sm py-3 px-4 rounded-[30px] bg-[#2D5016] font-bold text-white border-2 border-white',
           )}
           onClick={async () => {
             if (user) {
