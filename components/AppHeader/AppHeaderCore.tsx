@@ -73,6 +73,7 @@ export default function AppHeaderCore(props: Props) {
           }
         },
       },
+      /*
       {
         text: 'Livestream',
         onClick: () => {
@@ -119,6 +120,7 @@ export default function AppHeaderCore(props: Props) {
           }
         },
       },
+      */
     ];
 
     navItems.map((item, idx) => {
