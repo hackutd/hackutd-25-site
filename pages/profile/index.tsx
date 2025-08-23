@@ -86,6 +86,18 @@ export default function ProfilePage() {
       .join(' ');
   };
 
+  const handleSignInOut = async () => {
+    if (isSignedIn) {
+      await signOut();
+    } else {
+      router.push('/auth');
+    }
+  };
+
+  const handleHomeClick = () => {
+    router.push('/');
+  };
+
   const textFieldOverrides: TextFieldProps = {
     InputLabelProps: {
       classes: {
@@ -195,6 +207,7 @@ export default function ProfilePage() {
           showDialog={showAppDeleteModal}
           confirmDeletionHandler={deleteApplicationHandler}
         />
+
         <div className="bg-white min-w-3/4 py-12 px-16 rounded-xl flex flex-col md:flex-row 2xl:gap-x-14 gap-x-12 2xl:justify-center">
           {/* QR Code */}
           <div className="">
