@@ -526,18 +526,6 @@ export default function Register({ allowedRegistrations }: Props) {
                         ))}
                       </div>
                     </div>
-                    <div className="flex justify-end">
-                      <button
-                        disabled={!dirty}
-                        onClick={async (e) => {
-                          e.preventDefault();
-                          await handleSaveProfile(values, registrationSection, resetForm);
-                        }}
-                        className="bg-[#7A9E7E] rounded-lg px-6 py-4 text-white font-bold"
-                      >
-                        Save Profile
-                      </button>
-                    </div>
                   </section>
                 )}
 
@@ -584,18 +572,6 @@ export default function Register({ allowedRegistrations }: Props) {
                         />
                       )}
                     </div>
-                    <div className="flex justify-end my-4">
-                      <button
-                        disabled={!dirty}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleSaveProfile(values, registrationSection, resetForm);
-                        }}
-                        className="bg-[#7A9E7E] rounded-lg px-6 py-4 text-white font-bold"
-                      >
-                        Save Profile
-                      </button>
-                    </div>
                   </section>
                 )}
 
@@ -626,18 +602,6 @@ export default function Register({ allowedRegistrations }: Props) {
                         />
                       )}
                     </div>
-                    <div className="flex justify-end my-4">
-                      <button
-                        disabled={!dirty}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleSaveProfile(values, registrationSection, resetForm);
-                        }}
-                        className="bg-[#7A9E7E] rounded-lg px-6 py-4 text-white font-bold"
-                      >
-                        Save Profile
-                      </button>
-                    </div>
                   </section>
                 )}
 
@@ -651,18 +615,6 @@ export default function Register({ allowedRegistrations }: Props) {
                       {shortAnswerQuestions.map((obj, idx) => (
                         <DisplayRegistrationQuestion key={idx} obj={obj} />
                       ))}
-                    </div>
-                    <div className="flex justify-end my-4">
-                      <button
-                        disabled={!dirty}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleSaveProfile(values, registrationSection, resetForm);
-                        }}
-                        className="bg-[#7A9E7E] rounded-lg px-6 py-4 text-white font-bold"
-                      >
-                        Save Profile
-                      </button>
                     </div>
                   </section>
                 )}
@@ -689,18 +641,6 @@ export default function Register({ allowedRegistrations }: Props) {
                           Need travel reimbursement? Learn more here
                         </a>
                       </div>
-                    </div>
-                    <div className="flex justify-end my-4">
-                      <button
-                        disabled={!dirty}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleSaveProfile(values, registrationSection, resetForm);
-                        }}
-                        className="bg-[#7A9E7E] rounded-lg px-6 py-4 text-white font-bold"
-                      >
-                        Save Profile
-                      </button>
                     </div>
                   </section>
                 )}
@@ -759,20 +699,6 @@ export default function Register({ allowedRegistrations }: Props) {
                         </div>
                       )}
                     </div>
-                    <div className="flex justify-end my-4">
-                      <button
-                        disabled={(!dirty && !resumeFileUpdated) || isSavingApplication}
-                        onClick={async (e) => {
-                          e.preventDefault();
-                          setIsSavingApplication(true);
-                          await handleSaveProfile(values, registrationSection, resetForm);
-                          setIsSavingApplication(false);
-                        }}
-                        className="bg-[#7A9E7E] rounded-lg px-6 py-4 text-white font-bold"
-                      >
-                        Save Profile
-                      </button>
-                    </div>
                   </section>
                 )}
 
@@ -806,18 +732,6 @@ export default function Register({ allowedRegistrations }: Props) {
                           make sure that every required fields are filled out.
                         </div>
                       )}
-                    </div>
-                    <div className="flex justify-end my-4">
-                      <button
-                        disabled={!dirty}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleSaveProfile(values, registrationSection, resetForm);
-                        }}
-                        className="bg-[#7A9E7E] rounded-lg px-6 py-4 text-white font-bold"
-                      >
-                        Save Profile
-                      </button>
                     </div>
                   </section>
                 )}
