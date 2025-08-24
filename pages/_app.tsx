@@ -50,6 +50,20 @@ function PortalApp({ Component, pageProps }: AppProps) {
     }
   }, [hash]);
 
+  // Add home-page class to body for mobile scrolling prevention
+  useEffect(() => {
+    if (router.pathname === '/') {
+      document.body.classList.add('home-page');
+    } else {
+      document.body.classList.remove('home-page');
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove('home-page');
+    };
+  }, [router.pathname]);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <AuthProvider>
