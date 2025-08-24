@@ -180,6 +180,18 @@ export default function HomeHero() {
             className={`w-full h-auto ${isMobile ? '' : 'drop-shadow-2xl'}`}
           />
 
+          {/* Date SVG */}
+          <div className="text-center mt-6 mb-4">
+            <Image
+              src="/assets/topDrawing/Nov-8-9.svg"
+              alt="Nov 8-9"
+              width={92}
+              height={99}
+              priority
+              className="w-auto h-6 md:h-8 mx-auto"
+            />
+          </div>
+
           {/* Apply Button */}
           <div className={`${isMobile ? 'mt-24' : 'mt-8'} text-center`}>
             <button
