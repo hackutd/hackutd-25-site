@@ -533,7 +533,7 @@ export default function Register({ allowedRegistrations }: Props) {
                           e.preventDefault();
                           await handleSaveProfile(values, registrationSection, resetForm);
                         }}
-                        className="bg-[#7A9E7E] rounded-lg p-3 text-white font-bold"
+                        className="bg-[#7A9E7E] rounded-lg px-6 py-4 text-white font-bold"
                       >
                         Save Profile
                       </button>
@@ -591,7 +591,7 @@ export default function Register({ allowedRegistrations }: Props) {
                           e.preventDefault();
                           handleSaveProfile(values, registrationSection, resetForm);
                         }}
-                        className="bg-[#7A9E7E] rounded-lg p-3 text-white font-bold"
+                        className="bg-[#7A9E7E] rounded-lg px-6 py-4 text-white font-bold"
                       >
                         Save Profile
                       </button>
@@ -609,6 +609,22 @@ export default function Register({ allowedRegistrations }: Props) {
                       {hackathonExperienceQuestions.map((obj, idx) => (
                         <DisplayRegistrationQuestion key={idx} obj={obj} />
                       ))}
+                      {values['heardFrom'] === 'Other' && (
+                        <DisplayRegistrationQuestion
+                          key={1000}
+                          obj={{
+                            textInputQuestions: [
+                              {
+                                id: 'heardFromManual',
+                                name: 'heardFromManual',
+                                question: 'Where did you hear about HackUTD?',
+                                required: values['heardFrom'] === 'Other',
+                                initialValue: '',
+                              },
+                            ],
+                          }}
+                        />
+                      )}
                     </div>
                     <div className="flex justify-end my-4">
                       <button
@@ -617,7 +633,7 @@ export default function Register({ allowedRegistrations }: Props) {
                           e.preventDefault();
                           handleSaveProfile(values, registrationSection, resetForm);
                         }}
-                        className="bg-[#7A9E7E] rounded-lg p-3 text-white font-bold"
+                        className="bg-[#7A9E7E] rounded-lg px-6 py-4 text-white font-bold"
                       >
                         Save Profile
                       </button>
@@ -643,7 +659,7 @@ export default function Register({ allowedRegistrations }: Props) {
                           e.preventDefault();
                           handleSaveProfile(values, registrationSection, resetForm);
                         }}
-                        className="bg-[#7A9E7E] rounded-lg p-3 text-white font-bold"
+                        className="bg-[#7A9E7E] rounded-lg px-6 py-4 text-white font-bold"
                       >
                         Save Profile
                       </button>
@@ -681,7 +697,7 @@ export default function Register({ allowedRegistrations }: Props) {
                           e.preventDefault();
                           handleSaveProfile(values, registrationSection, resetForm);
                         }}
-                        className="bg-[#7A9E7E] rounded-lg p-3 text-white font-bold"
+                        className="bg-[#7A9E7E] rounded-lg px-6 py-4 text-white font-bold"
                       >
                         Save Profile
                       </button>
@@ -752,7 +768,7 @@ export default function Register({ allowedRegistrations }: Props) {
                           await handleSaveProfile(values, registrationSection, resetForm);
                           setIsSavingApplication(false);
                         }}
-                        className="bg-[#7A9E7E] rounded-lg p-3 text-white font-bold"
+                        className="bg-[#7A9E7E] rounded-lg px-6 py-4 text-white font-bold"
                       >
                         Save Profile
                       </button>
@@ -798,7 +814,7 @@ export default function Register({ allowedRegistrations }: Props) {
                           e.preventDefault();
                           handleSaveProfile(values, registrationSection, resetForm);
                         }}
-                        className="bg-[#7A9E7E] rounded-lg p-3 text-white font-bold"
+                        className="bg-[#7A9E7E] rounded-lg px-6 py-4 text-white font-bold"
                       >
                         Save Profile
                       </button>
