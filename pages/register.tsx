@@ -529,8 +529,158 @@ export default function Register({ allowedRegistrations }: Props) {
                   </section>
                 )}
 
-                {/* School Questions */}
+                {/* Travel Reimbursement Info */}
                 {registrationSection == 1 && (
+                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
+                    <h2 className="sm:text-2xl text-xl sm:mb-3 mb-1 poppins-bold mt-2 text-center">
+                      Before You Continue
+                    </h2>
+                    <div className="text-center mb-6">
+                      <h3 className="text-xl font-semibold mb-4 text-[#2D5016]">
+                        Travel Reimbursement Information
+                      </h3>
+
+                      {/* Apply Section */}
+                      <div className="bg-[#2D5016] p-6 rounded-lg mb-6 text-white">
+                        <h4 className="text-lg font-bold mb-3">📃 Apply!</h4>
+                        <p className="mb-4 text-sm leading-relaxed">
+                          <strong>
+                            If you are applying with a team, please make sure everyone on the team
+                            applies!
+                          </strong>
+                        </p>
+                        <div className="text-center">
+                          <a
+                            href="https://hackutd.notion.site/HackUTD-2025-Lost-in-the-Pages-Travel-Reimbursement-13e0d994cbb981c5a336f1dda3e5d3be"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block bg-white text-[#2D5016] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200"
+                          >
+                            View Travel Reimbursement Policy
+                          </a>
+                        </div>
+                      </div>
+
+                      {/* Eligibility Section */}
+                      <div className="bg-gray-50 p-6 rounded-lg mb-6 text-left">
+                        <h4 className="text-lg font-bold mb-3 text-[#2D5016]">✅ Eligibility</h4>
+                        <ul className="text-[#2D5016] space-y-3 mb-4">
+                          <li className="flex items-start">
+                            <span className="text-[#7A9E7E] font-bold mr-3 mt-1">•</span>
+                            <span className="leading-relaxed">
+                              Must be <strong>flying</strong> over <em>250 miles</em> or{' '}
+                              <strong>driving</strong> over <em>50 miles</em> from UT Dallas
+                              Engineering and Computer Science West (2520 Rutford Ave, Richardson,
+                              TX 75080)
+                            </span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="text-[#7A9E7E] font-bold mr-3 mt-1">•</span>
+                            <span className="leading-relaxed">
+                              Must be <strong>non-UT Dallas</strong> student
+                            </span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="text-[#7A9E7E] font-bold mr-3 mt-1">•</span>
+                            <span className="leading-relaxed">
+                              Submit a travel reimbursement application before the deadline (
+                              <strong>October 4th 2025 @ 11:59pm CST</strong>)
+                            </span>
+                          </li>
+                        </ul>
+                      </div>
+
+                      {/* Reimbursement Types */}
+                      <div className="space-y-4 text-left">
+                        {/* Gas Reimbursements */}
+                        <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                          <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
+                            ⛽ Gas Reimbursements
+                          </h4>
+                          <p className="text-sm text-[#2D5016] mb-2 leading-relaxed">
+                            Gas reimbursements are usually capped at $50 per person travelling
+                            depending on distance. If traveling in a group, the maximum we will
+                            reimburse is $50 per person up to $200.
+                          </p>
+                          <p className="text-xs text-[#2D5016] font-semibold">
+                            <strong>Full Reimbursements are not guaranteed.</strong>
+                          </p>
+                        </div>
+
+                        {/* Bus Reimbursements */}
+                        <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                          <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
+                            🚌 Bus Reimbursements
+                          </h4>
+                          <p className="text-sm text-[#2D5016] mb-2 leading-relaxed">
+                            We do not provide bus service from any university to our campus. If you
+                            decide to take a bus (greyhound, etc.) we will reimburse the cost of the
+                            bus ticket up to $50.
+                          </p>
+                        </div>
+
+                        {/* Flight Reimbursements */}
+                        <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-400">
+                          <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
+                            ✈️ Flight Reimbursements
+                          </h4>
+                          <p className="text-sm text-[#2D5016] mb-2 leading-relaxed">
+                            Flight reimbursements are handled on a case by case basis. Generally
+                            these reimbursements will be in the range of $50-150.{' '}
+                            <em>However, more can be allotted based on team travel.</em>
+                          </p>
+                          <p className="text-xs text-[#2D5016] font-semibold">
+                            <strong>
+                              We highly recommend you apply with a team if you are requesting Flight
+                              Reimbursements.
+                            </strong>
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Important Notes */}
+                      <div className="bg-yellow-50 p-4 rounded-lg mt-6 text-left border-l-4 border-yellow-400">
+                        <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
+                          ⚖️ Important Terms
+                        </h4>
+                        <ul className="text-sm text-[#2D5016] space-y-1">
+                          <li>
+                            • All travel assistance is based on a{' '}
+                            <strong>first-come-first-serve application process</strong>
+                          </li>
+                          <li>
+                            • Travel reimbursement acceptance guarantees you and your team
+                            acceptance to HackUTD
+                          </li>
+                          <li>
+                            • We will be in touch by October 8th with a decision regarding
+                            reimbursement
+                          </li>
+                          <li>
+                            • Reimbursements will start to be processed after verifying that
+                            projects were submitted and presented
+                          </li>
+                        </ul>
+                      </div>
+
+                      {/* Contact Info */}
+                      <div className="mt-6 text-center">
+                        <p className="text-sm text-[#2D5016] mb-2">
+                          Questions? Contact us at{' '}
+                          <a
+                            href="mailto:hello@hackutd.co"
+                            className="text-[#7A9E7E] hover:text-[#2D5016] underline"
+                          >
+                            hello@hackutd.co
+                          </a>
+                        </p>
+                      </div>
+                    </div>
+                  </section>
+                )}
+
+                {/* School Questions */}
+                {registrationSection == 2 && (
                   <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
                     <h2 className="sm:text-2xl text-xl sm:mb-3 mb-1 poppins-bold mt-2">
                       School Info
@@ -576,7 +726,7 @@ export default function Register({ allowedRegistrations }: Props) {
                 )}
 
                 {/* Hackathon Questions */}
-                {registrationSection == 2 && (
+                {registrationSection == 3 && (
                   <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
                     <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
                       Hackathon Experience
@@ -606,7 +756,7 @@ export default function Register({ allowedRegistrations }: Props) {
                 )}
 
                 {/* Short Answer Questions */}
-                {registrationSection == 3 && (
+                {registrationSection == 4 && (
                   <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
                     <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
                       Short Answer Questions
@@ -620,7 +770,7 @@ export default function Register({ allowedRegistrations }: Props) {
                 )}
 
                 {/* Event Info Questions */}
-                {registrationSection == 4 && (
+                {registrationSection == 5 && (
                   <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
                     <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
                       Event Info
@@ -629,24 +779,12 @@ export default function Register({ allowedRegistrations }: Props) {
                       {eventInfoQuestions.map((obj, idx) => (
                         <DisplayRegistrationQuestion key={idx} obj={obj} />
                       ))}
-
-                      {/* Travel Reimbursement Link */}
-                      <div className="mt-6 text-center">
-                        <a
-                          href="https://hackutd.notion.site/HackUTD-2025-Lost-in-the-Pages-Travel-Reimbursement-13e0d994cbb981c5a336f1dda3e5d3be"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[#7A9E7E] hover:text-[#2D5016] underline font-medium transition-colors duration-200"
-                        >
-                          Need travel reimbursement? Learn more here
-                        </a>
-                      </div>
                     </div>
                   </section>
                 )}
 
                 {/* Sponsor Info Questions */}
-                {registrationSection == 5 && (
+                {registrationSection == 6 && (
                   <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016] relative">
                     <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
                       Sponsor Info
@@ -703,7 +841,7 @@ export default function Register({ allowedRegistrations }: Props) {
                 )}
 
                 {/* Teammate Questions */}
-                {registrationSection == 6 && (
+                {registrationSection == 7 && (
                   <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
                     <h2 className="sm:text-2xl text-xl font-semibold sm:mb-3 mb-1">
                       Teammate Questions
@@ -746,7 +884,7 @@ export default function Register({ allowedRegistrations }: Props) {
                 className={`lg:block ${
                   registrationSection == 0
                     ? 'justify-end'
-                    : registrationSection >= 6
+                    : registrationSection >= 7
                     ? 'justify-start'
                     : 'justify-between'
                 } lg:pb-4 pb-8 lg:px-4 sm:px-8 px-6 text-primaryDark font-semibold text-primaryDark font-semibold text-md`}
@@ -780,7 +918,7 @@ export default function Register({ allowedRegistrations }: Props) {
                   className="flex justify-center items-center"
                   style={{ gridArea: '1 / 2 / 2 / 3' }}
                 >
-                  {Array.from({ length: 7 }).map((_, i) => (
+                  {Array.from({ length: 8 }).map((_, i) => (
                     <div
                       key={i}
                       onClick={async (e) => {
@@ -799,7 +937,7 @@ export default function Register({ allowedRegistrations }: Props) {
                   ))}
                 </div>
 
-                {registrationSection < 6 && (
+                {registrationSection < 7 && (
                   <div
                     className="flex justify-end "
                     style={{ gridArea: '1 / 3 / 2 / 4' }}
