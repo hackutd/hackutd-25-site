@@ -661,6 +661,18 @@ export default function Register({ allowedRegistrations }: Props) {
                       {eventInfoQuestions.map((obj, idx) => (
                         <DisplayRegistrationQuestion key={idx} obj={obj} />
                       ))}
+
+                      {/* Travel Reimbursement Link */}
+                      <div className="mt-6 text-center">
+                        <a
+                          href="https://hackutd.notion.site/HackUTD-2025-Lost-in-the-Pages-Travel-Reimbursement-13e0d994cbb981c5a336f1dda3e5d3be"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#7A9E7E] hover:text-[#2D5016] underline font-medium transition-colors duration-200"
+                        >
+                          Need travel reimbursement? Learn more here
+                        </a>
+                      </div>
                     </div>
                     <div className="flex justify-end my-4">
                       <button
