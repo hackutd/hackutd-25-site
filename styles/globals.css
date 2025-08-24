@@ -38,6 +38,14 @@ html {
 
 /* Mobile optimizations */
 @media (max-width: 768px) {
+  /* Prevent scrolling only on home page for mobile */
+  body.home-page {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+  
   /* Optimize background loading on mobile */
   body {
     background-attachment: scroll !important;

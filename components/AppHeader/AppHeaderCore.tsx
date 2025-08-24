@@ -272,18 +272,18 @@ export default function AppHeaderCore(props: Props) {
       {/* Real navbar */}
       <div
         id="nav-bar"
-        className="relative font-dmSans border-[3px] border-[rgba(30,30,30,0.60)] rounded-xl p-1 bg-white opacity-90 text-[#2D5016] cursor-pointer flex-wrap"
+        className="relative font-dmSans border-[3px] border-[rgba(30,30,30,0.60)] rounded-xl p-1 bg-white opacity-90 text-[#2D5016] cursor-pointer flex items-center justify-center gap-4"
       >
+        <FloatingDock
+          classes={{
+            wrapperDiv: clsx('gap-4 flex items-center justify-center flex-wrap'),
+          }}
+          items={mainDockItems()}
+        />
+
         {/* Sign out button */}
         <button
           className={clsx(
-            'w-[102px]',
-            'top-1/2 -translate-y-1/2',
-            `absolute ${
-              location.pathname === '/'
-                ? '-left-[calc(102px+0.5rem)] lg:left-[unset] lg:-right-[calc(102px+1rem)] xl:-right-[calc(102px+2rem)]'
-                : '-right-[calc(102px+0.5rem)] lg:-right-[calc(102px+2rem)]'
-            }`,
             'text-sm py-3 px-4 rounded-[30px] bg-[#2D5016] font-bold text-white border-2 border-white',
           )}
           onClick={async () => {
@@ -296,13 +296,6 @@ export default function AppHeaderCore(props: Props) {
         >
           {user ? 'Sign Out' : 'Sign In'}
         </button>
-
-        <FloatingDock
-          classes={{
-            wrapperDiv: clsx('gap-4 flex items-center justify-center flex-wrap'),
-          }}
-          items={mainDockItems()}
-        />
 
         <QRScanDialog scan={currentScan} onModalClose={() => setCurrentScan(null)} />
       </div>

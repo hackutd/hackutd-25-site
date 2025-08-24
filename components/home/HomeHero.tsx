@@ -181,7 +181,7 @@ export default function HomeHero() {
           />
 
           {/* Apply Button */}
-          <div className="mt-8 text-center">
+          <div className={`${isMobile ? 'mt-24' : 'mt-8'} text-center`}>
             <button
               onClick={() => (window.location.href = '/auth')}
               className={`relative overflow-hidden font-bold py-3 px-10 rounded-full shadow-2xl transform transition-all duration-300 backdrop-blur-sm group ${
