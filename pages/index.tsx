@@ -64,7 +64,6 @@ export default function Home({
       <Head>
         <title>HackUTD 2025</title>
         <meta name="description" content="A default HackPortal instance" />
-        <link rel="icon" href="/favicon.ico" />
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
