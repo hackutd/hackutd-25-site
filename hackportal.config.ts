@@ -242,7 +242,7 @@ export const hackPortalConfig: HackPortalConfig = {
             id: 'hackathonExperience',
             name: 'hackathonExperience',
             min: '0',
-            max: '100',
+            max: '1000',
             pattern: '[0-9]+',
             initialValue: null,
           },
