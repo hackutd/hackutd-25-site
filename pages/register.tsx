@@ -540,7 +540,7 @@ export default function Register({ allowedRegistrations }: Props) {
       >
         {({ values, isValid, isSubmitting, dirty, resetForm }) => (
           <>
-            <section className="pl-4 relative mb-4 z-[9999] hidden md:flex">
+            <section className="pl-4 relative mb-4 z-[100] hidden md:flex">
               <button
                 onClick={async (e) => {
                   e.preventDefault();
