@@ -541,18 +541,7 @@ export default function Register({ allowedRegistrations }: Props) {
         {({ values, isValid, isSubmitting, dirty, resetForm }) => (
           <>
             <section className="pl-4 relative mb-4 z-[100] hidden md:flex">
-              <button
-                onClick={async (e) => {
-                  e.preventDefault();
-                  if (dirty) await handleSaveProfile(values, registrationSection, resetForm);
-                  await router.push('/');
-                }}
-              >
-                <div className="mt-2 cursor-pointer items-center inline-flex text-white font-bold bg-[#2D5016] rounded-[30px] pr-4 pl-1 py-2 border-2 border-white">
-                  <ChevronLeftIcon className="text-white" fontSize={'large'} />
-                  Home
-                </div>
-              </button>
+              <div className="mt-2 h-12"></div>
             </section>
             <section className="relative">
               {/* Field component automatically hooks input to form values. Use name attribute to match corresponding value */}
