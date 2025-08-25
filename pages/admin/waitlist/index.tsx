@@ -135,7 +135,7 @@ export default function WaitlistCheckinPage() {
         }}
       />
       <Head>
-        <title>HackPortal - Admin</title>
+        <title>HackUTD 2025 - Admin</title>
         <meta name="description" content="HackPortal's Admin Page" />
       </Head>
       <div className="mt-4 flex flex-col justify-center">

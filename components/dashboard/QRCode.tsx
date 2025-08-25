@@ -10,18 +10,18 @@ export interface Props {
 
 // TODO: update this
 const IMAGE_GROUP_MAPPING = {
-  Duck: '/assets/ab-duck.png',
-  Capybara: '/assets/ab-capybara.png',
-  Frog: '/assets/ab-frog.png',
-  Corgi: '/assets/ab-doggo.png',
+  Bird: '/assets/ab-bird.webp',
+  Cat: '/assets/ab-cat.webp',
+  Deer: '/assets/ab-deer.webp',
+  Fox: '/assets/ab-fox.webp',
 };
 
 // TODO: update this
 const COLOR_GROUP_MAPPING = {
-  Corgi: '#E7A65D',
-  Duck: '#000000',
-  Capybara: '#C59E7D',
-  Frog: '#000000',
+  Bird: '#E7A65D',
+  Cat: '#000000',
+  Deer: '#C59E7D',
+  Fox: '#8B4513',
 };
 
 export default function QRCode({ data, width, height, group }: Props) {

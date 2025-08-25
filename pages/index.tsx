@@ -1,29 +1,54 @@
-import Head from 'next/head';
 import { GetServerSideProps } from 'next';
 import { useEffect, useState } from 'react';
-import { RequestHelper } from '../lib/request-helper';
-import HomeHero from '../components/home/HomeHero';
+import Head from 'next/head';
 
-/**
- * The home page.
- *
- * Landing: /
- *
- */
-export default function Home(props: {
-  keynoteSpeakers: KeynoteSpeaker[];
-  challenges: Challenge[];
+import HomeChallengesComponent from '@/components/home/challenge';
+import HomeHero from '@/components/home/HomeHero';
+import HackUTDCountdown from '@/components/home/countdown';
+import HomeAboutText from '@/components/home/about/HomeAboutText';
+import HomeSchedule from '@/components/home/HomeSchedule';
+import HomeFaq from '@/components/home/faq';
+import HomeSponsors from '@/components/home/sponsors';
+import HomeFooter from '@/components/home/HomeFooter';
+import KeynoteSpeaker from '@/components/home/speakers';
+import { RequestHelper } from '@/lib/request-helper';
+import HomeVideoStats from '@/components/home/HomeVideoStats';
+
+interface Props {
   answeredQuestion: AnsweredQuestion[];
-  fetchedMembers: TeamMember[];
   sponsorCard: Sponsor[];
   scheduleCard: ScheduleEvent[];
   dateCard: Dates;
-  prizeData: Array<{ rank: number; prizeName: string }>;
-}) {
+  challenges: Challenge[];
+}
+
+export default function Home({
+  answeredQuestion,
+  challenges,
+  dateCard,
+  scheduleCard,
+  sponsorCard,
+}: Props) {
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
-    // Wait for all components to render before showing page
     setLoading(false);
+
+    // Detect mobile device
+    const checkMobile = () => {
+      if (typeof window === 'undefined') return false;
+      return window.innerWidth <= 768;
+    };
+
+    setIsMobile(checkMobile());
+
+    const handleResize = () => {
+      setIsMobile(checkMobile());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   if (loading) {
@@ -37,172 +62,113 @@ export default function Home(props: {
   return (
     <>
       <Head>
-        <title>HackUTD 2025</title> {/* !change */}
-        <meta name="description" content="HackUTD 2025 Event Site" /> {/* !change */}
-        <link rel="icon" href="/favicon.ico" />
+        <title>HackUTD 2025</title>
+        <meta name="description" content="A default HackPortal instance" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+        <style jsx>{`
+          @supports not (background-image: url('data:image/webp')) {
+            .bg-fallback {
+              background-image: url('/assets/pathDrawing/bushLeft.webp'),
+                url('/assets/pathDrawing/pathOutline.webp'), url('/assets/pathDrawing/bg.webp') !important;
+            }
+          }
+        `}</style>
       </Head>
-      <HomeHero />
-      {/* <HomeNotif />
-      <HomeHero />
-      <HomeVideoStats />
-      <HackCountdown />
-      <HomeAbout />
-      <HomeSchedule scheduleCard={props.scheduleCard} dateCard={props.dateCard} />
-      <HomeSpeakers keynoteSpeakers={props.keynoteSpeakers} />
-      <HomeChallenges challenges={props.challenges} />
-      <HomePrizes prizes={props.prizeData} />
-      <HomeTeam members={props.fetchedMembers} />
-      <HomeFaq answeredQuestion={props.answeredQuestion} />
-      <HomeSponsors sponsorCard={props.sponsorCard} />
-      <HomeFooter /> */}
+      <div
+        className="overflow-x-hidden w-full bg-fallback"
+        style={{
+          backgroundImage: isMobile
+            ? `url("/assets/pathDrawing/bg.webp")`
+            : `url("/assets/pathDrawing/bushLeft.webp"),
+                            url("/assets/pathDrawing/pathOutline.webp"),
+                            url("/assets/pathDrawing/bg.webp")`,
+          backgroundColor: isMobile ? '#2a2342' : 'transparent',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'repeat',
+          zIndex: 2,
+          // Mobile optimization
+          backgroundAttachment: 'scroll',
+        }}
+      >
+        {/* <div
+          className="fixed top-0 left-0 w-full h-full z-20 pointer-events-none"
+          style={{
+            backgroundImage: `url("/assets/pathDrawing/mist.webp")`,
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+          }}
+        /> */}
+        <HomeHero />
+
+        {/* <div className="my-72">
+          <HomeAboutText />
+        </div>
+
+        <div className="my-72">
+          <HomeVideoStats />
+        </div>
+
+        <div className="my-72">
+          <HackUTDCountdown />
+        </div>
+
+        <div className="my-72">
+          <KeynoteSpeaker />
+        </div>
+
+        <div className="my-72">
+          <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
+        </div>
+
+        <div className="my-72">
+          <HomeChallengesComponent challenges={challenges} />
+        </div>
+
+        <div className="my-72">
+          <HomeFaq answeredQuestions={answeredQuestion} />
+        </div>
+
+        <div className="my-72">
+          <HomeSponsors />
+        </div>
+        <HomeFooter /> */}
+      </div>
     </>
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const protocol = context.req.headers.referer?.split('://')[0] || 'http';
-//   const { data: keynoteData } = await RequestHelper.get<KeynoteSpeaker[]>(
-//     `${protocol}://${context.req.headers.host}/api/keynotespeakers`,
-//     {},
-//   );
-//   const { data: challengeData } = await RequestHelper.get<Challenge[]>(
-//     `${protocol}://${context.req.headers.host}/api/challenges/`,
-//     {},
-//   );
-//   const { data: prizeData } = await RequestHelper.get<Array<{ rank: number; prizeName: string }>>(
-//     `${protocol}://${context.req.headers.host}/api/prizes`,
-//     {},
-//   );
-//   const { data: answeredQuestion } = await RequestHelper.get<AnsweredQuestion[]>(
-//     `${protocol}://${context.req.headers.host}/api/questions/faq`,
-//     {},
-//   );
-//   const { data: memberData } = await RequestHelper.get<TeamMember[]>(
-//     `${protocol}://${context.req.headers.host}/api/members`,
-//     {},
-//   );
-//   const { data: sponsorData } = await RequestHelper.get<Sponsor[]>(
-//     `${protocol}://${context.req.headers.host}/api/sponsor`,
-//     {},
-//   );
-//   const { data: scheduleData } = await RequestHelper.get<ScheduleEvent[]>(
-//     `${protocol}://${context.req.headers.host}/api/schedule`,
-//     {},
-//   );
-//   const { data: dateData } = await RequestHelper.get<ScheduleEvent[]>(
-//     `${protocol}://${context.req.headers.host}/api/dates`,
-//     {},
-//   );
-//   return {
-//     props: {
-//       keynoteSpeakers: keynoteData,
-//       challenges: challengeData,
-//       answeredQuestion: answeredQuestion,
-//       fetchedMembers: memberData,
-//       sponsorCard: sponsorData,
-//       scheduleCard: scheduleData,
-//       dateCard: dateData,
-//       prizeData: prizeData,
-//     },
-//   };
-// };
-
-// Add this back later
-// import { GetServerSideProps } from 'next';
-// import { useEffect, useState } from 'react';
-// import Head from 'next/head';
-
-// import HomeChallengesComponent from '@/components/home/challenge';
-// import HomeHero from '@/components/home/HomeHero';
-// import HackUTDCountdown from '@/components/home/countdown';
-// import HomeAboutText from '@/components/home/about/HomeAboutText';
-// import HomeAboutPhotos from '@/components/home/about/HomeAboutPhotos';
-// import HomeSchedule from '@/components/home/HomeSchedule';
-// import HomeFaq from '@/components/home/faq';
-// import HomeSponsors from '@/components/home/sponsors';
-// import HomeFooter from '@/components/home/HomeFooter';
-
-// import { RequestHelper } from '@/lib/request-helper';
-
-// interface Props {
-//   answeredQuestion: AnsweredQuestion[];
-//   sponsorCard: Sponsor[];
-//   scheduleCard: ScheduleEvent[];
-//   dateCard: Dates;
-//   challenges: Challenge[];
-// }
-
-// export default function Home({
-//   answeredQuestion,
-//   challenges,
-//   dateCard,
-//   scheduleCard,
-//   sponsorCard,
-// }: Props) {
-//   const [loading, setLoading] = useState(true);
-//   useEffect(() => {
-//     setLoading(false);
-//   }, []);
-
-//   if (loading) {
-//     return (
-//       <div>
-//         <h1>Loading...</h1>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <>
-//       <Head>
-//         <title>HackUTD 2025</title>
-//         <meta name="description" content="HackUTD 2025 Event Site" />
-//         <link rel="icon" href="/favicon.ico" />
-//       </Head>
-//       <div className="overflow-x-hidden w-full">
-//         <HomeHero />
-//         <HackUTDCountdown />
-//         <HomeAboutText />
-//         <HomeAboutPhotos />
-//         <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
-//         <HomeChallengesComponent challenges={challenges} />
-//         <HomeFaq answeredQuestions={answeredQuestion} />
-//         <HomeSponsors />
-//         <HomeFooter />
-//       </div>
-//     </>
-//   );
-// }
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const protocol = context.req.headers.referer?.split('://')[0] || 'http';
-//   const { data: keynoteData } = await RequestHelper.get<KeynoteSpeaker[]>(
-//     `${protocol}://${context.req.headers.host}/api/keynotespeakers`,
-//     {},
-//   );
-//   const { data: challengeData } = await RequestHelper.get<Challenge[]>(
-//     `${protocol}://${context.req.headers.host}/api/challenges/`,
-//     {},
-//   );
-//   const { data: answeredQuestion } = await RequestHelper.get<AnsweredQuestion[]>(
-//     `${protocol}://${context.req.headers.host}/api/questions/faq`,
-//     {},
-//   );
-//   const { data: scheduleData } = await RequestHelper.get<ScheduleEvent[]>(
-//     `${protocol}://${context.req.headers.host}/api/schedule`,
-//     {},
-//   );
-//   const { data: dateData } = await RequestHelper.get<ScheduleEvent[]>(
-//     `${protocol}://${context.req.headers.host}/api/dates`,
-//     {},
-//   );
-//   return {
-//     props: {
-//       keynoteSpeakers: keynoteData,
-//       challenges: challengeData,
-//       answeredQuestion: answeredQuestion,
-//       scheduleCard: scheduleData,
-//       dateCard: dateData,
-//     },
-//   };
-// };
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const protocol = context.req.headers.referer?.split('://')[0] || 'http';
+  const { data: keynoteData } = await RequestHelper.get<KeynoteSpeaker[]>(
+    `${protocol}://${context.req.headers.host}/api/keynotespeakers`,
+    {},
+  );
+  const { data: challengeData } = await RequestHelper.get<Challenge[]>(
+    `${protocol}://${context.req.headers.host}/api/challenges/`,
+    {},
+  );
+  const { data: answeredQuestion } = await RequestHelper.get<AnsweredQuestion[]>(
+    `${protocol}://${context.req.headers.host}/api/questions/faq`,
+    {},
+  );
+  const { data: scheduleData } = await RequestHelper.get<ScheduleEvent[]>(
+    `${protocol}://${context.req.headers.host}/api/schedule`,
+    {},
+  );
+  const { data: dateData } = await RequestHelper.get<ScheduleEvent[]>(
+    `${protocol}://${context.req.headers.host}/api/dates`,
+    {},
+  );
+  return {
+    props: {
+      keynoteSpeakers: keynoteData,
+      challenges: challengeData,
+      answeredQuestion: answeredQuestion,
+      scheduleCard: scheduleData,
+      dateCard: dateData,
+    },
+  };
+};

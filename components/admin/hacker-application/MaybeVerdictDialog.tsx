@@ -46,7 +46,7 @@ export default function MaybeVerdictDialog({
                 </Dialog.Title>
                 <div className="my-5 flex gap-x-6 justify-around">
                   <button
-                    className="rounded-full bg-transparent text-[#5D5A88] border-2 border-solid border-[#5D5A88] font-bold py-2 px-8 hover:border-red-500 hover:text-white hover:bg-red-500 transition"
+                    className="rounded-full bg-[#F2F3FF] text-[#5D5A88] border-2 border-solid border-[#5D5A88] font-bold py-2 px-8 hover:border-red-500 hover:text-white hover:bg-red-500 transition"
                     onClick={() => onMaybeNo()}
                   >
                     MAYBE NO

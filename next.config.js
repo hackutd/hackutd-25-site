@@ -15,7 +15,7 @@ const withPWA = require('next-pwa')({
       {
         source: '/travel-reimbursement',
         destination:
-          'https://hackutd.notion.site/HackUTD-Ripple-Effect-fab1d9efcfd0468fbaee0ba4010caec7?pvs=4',
+          'https://hackutd.notion.site/HackUTD-2025-Lost-in-the-Pages-Travel-Reimbursement-13e0d994cbb981c5a336f1dda3e5d3be',
         permanent: true,
       },
     ];
@@ -32,6 +32,11 @@ const withPWA = require('next-pwa')({
         hostname: 'firebasestorage.googleapis.com',
       },
     ],
+    // Optimize images for better performance
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
   },
 
   // https://sebhastian.com/javascript-unexpected-token-export/
@@ -49,6 +54,14 @@ const withPWA = require('next-pwa')({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
     });
+
+    // Optimize bundle size
+    if (!options.isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+      };
+    }
 
     return config;
   },
