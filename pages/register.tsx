@@ -901,32 +901,30 @@ export default function Register({ allowedRegistrations }: Props) {
                       ))}
                     </div>
 
-                    {/* Review Submission Message */}
-                    <div className="bg-green-50 p-4 rounded-lg mt-6 text-left border-l-4 border-green-400">
+                    {/* Review and Application Process */}
+                    <div className="bg-blue-50 p-4 rounded-lg mt-6 text-left border-l-4 border-blue-400">
                       <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
                         📝 Please Review Your Submission
                       </h4>
                       <p className="text-sm text-[#2D5016] leading-relaxed">
                         Before submitting your application, please take a moment to review all the
-                        information you&apos;ve provided. Make sure all required fields are
-                        completed and your responses accurately represent your qualifications and
-                        experience.
-                      </p>
-                    </div>
-
-                    {/* Application Review Process */}
-                    <div className="bg-blue-50 p-4 rounded-lg mt-4 text-left border-l-4 border-blue-400">
-                      <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
-                        📋 Application Review Process
-                      </h4>
-                      <p className="text-sm text-[#2D5016] leading-relaxed">
+                        information you&apos;ve provided.{' '}
                         <strong>
                           All applications are reviewed based on the essay questions and how they
                           were answered.
                         </strong>{' '}
                         Our selection process evaluates each applicant&apos;s responses to the essay
                         questions, their thoughtfulness, creativity, and potential contribution to
-                        the hackathon community.
+                        the hackathon community.{' '}
+                        <a
+                          href="https://medium.com/@hackUTD/applying-to-hackutd-ripple-effect-1a85143a22da"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline"
+                        >
+                          Find more information here from last year&apos;s event
+                        </a>
+                        .
                       </p>
                     </div>
 
