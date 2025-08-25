@@ -117,8 +117,7 @@ function PortalApp({ Component, pageProps }: AppProps) {
               </Head>
 
               <div className="min-h-screen flex flex-col">
-                {/* Hide navbar on registration page */}
-                {router.pathname !== '/register' && <AppHeader />}
+                <AppHeader />
                 {/* Spacer at the top of the page so that content won't be covered by the navbar */}
                 {!noTopSpacerPathnames.has(router.pathname) && (
                   <div className="h-[86px] shrink-0" />
@@ -127,8 +126,7 @@ function PortalApp({ Component, pageProps }: AppProps) {
                 {/* Spacer at the bottom of the page for navbar bottom on mobile, so that content won't be covered by the navbar */}
                 <div className="md:hidden h-[80px] shrink-0" />
               </div>
-              {/* Hide mobile navbar on registration page */}
-              {router.pathname !== '/register' && <AppNavbarBottom />}
+              <AppNavbarBottom />
             </NavbarCallbackRegistryContext.Provider>
           </SectionReferenceContext.Provider>
         </FCMProvider>
