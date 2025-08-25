@@ -925,15 +925,19 @@ export default function Register({ allowedRegistrations }: Props) {
                       </p>
                     </div>
 
-                    {/* Merit Review Disclaimer */}
+                    {/* Application Review Process */}
                     <div className="bg-blue-50 p-4 rounded-lg mt-4 text-left border-l-4 border-blue-400">
                       <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
                         📋 Application Review Process
                       </h4>
                       <p className="text-sm text-[#2D5016] leading-relaxed">
-                        <strong>All applications are reviewed based on merit.</strong> Our selection
-                        process evaluates each applicant&apos;s qualifications, experience, and
-                        potential contribution to the hackathon community.
+                        <strong>
+                          All applications are reviewed based on the essay questions and how they
+                          were answered.
+                        </strong>{' '}
+                        Our selection process evaluates each applicant&apos;s responses to the essay
+                        questions, their thoughtfulness, creativity, and potential contribution to
+                        the hackathon community.
                       </p>
                     </div>
 
