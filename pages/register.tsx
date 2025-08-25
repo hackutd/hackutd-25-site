@@ -540,19 +540,8 @@ export default function Register({ allowedRegistrations }: Props) {
       >
         {({ values, isValid, isSubmitting, dirty, resetForm }) => (
           <>
-            <section className="pl-4 relative mb-4 z-[9999] hidden md:flex">
-              <button
-                onClick={async (e) => {
-                  e.preventDefault();
-                  if (dirty) await handleSaveProfile(values, registrationSection, resetForm);
-                  await router.push('/');
-                }}
-              >
-                <div className="mt-2 cursor-pointer items-center inline-flex text-white font-bold bg-[#2D5016] rounded-[30px] pr-4 pl-1 py-2 border-2 border-white">
-                  <ChevronLeftIcon className="text-white" fontSize={'large'} />
-                  Home
-                </div>
-              </button>
+            <section className="pl-4 relative mb-4 z-[100] hidden md:flex">
+              <div className="mt-2 h-12"></div>
             </section>
             <section className="relative">
               {/* Field component automatically hooks input to form values. Use name attribute to match corresponding value */}
@@ -925,15 +914,19 @@ export default function Register({ allowedRegistrations }: Props) {
                       </p>
                     </div>
 
-                    {/* Merit Review Disclaimer */}
+                    {/* Application Review Process */}
                     <div className="bg-blue-50 p-4 rounded-lg mt-4 text-left border-l-4 border-blue-400">
                       <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
                         📋 Application Review Process
                       </h4>
                       <p className="text-sm text-[#2D5016] leading-relaxed">
-                        <strong>All applications are reviewed based on merit.</strong> Our selection
-                        process evaluates each applicant&apos;s qualifications, experience, and
-                        potential contribution to the hackathon community.
+                        <strong>
+                          All applications are reviewed based on the essay questions and how they
+                          were answered.
+                        </strong>{' '}
+                        Our selection process evaluates each applicant&apos;s responses to the essay
+                        questions, their thoughtfulness, creativity, and potential contribution to
+                        the hackathon community.
                       </p>
                     </div>
 
