@@ -106,9 +106,20 @@ function PortalApp({ Component, pageProps }: AppProps) {
                   (process.env.NODE_ENV !== 'development' && (
                     <link rel="manifest" href="/manifest.json" />
                   ))}
-                <link href="/icons/favicon-16x16.png" rel="icon" type="image/png" sizes="16x16" />
-                <link href="/icons/favicon-32x32.png" rel="icon" type="image/png" sizes="32x32" />
-                <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+                <link rel="icon" href="/favicon.ico?v=2025" />
+                <link
+                  href="/icons/favicon-16x16.png?v=2025"
+                  rel="icon"
+                  type="image/png"
+                  sizes="16x16"
+                />
+                <link
+                  href="/icons/favicon-32x32.png?v=2025"
+                  rel="icon"
+                  type="image/png"
+                  sizes="32x32"
+                />
+                <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=2025" />
                 <meta name="theme-color" content="#5D5FEF" />
                 {/* Preload critical resources */}
                 <link rel="preload" href="/assets/topDrawing/mobileBG-optimized.jpg" as="image" />
