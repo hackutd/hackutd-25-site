@@ -379,6 +379,63 @@ export default function Register({ allowedRegistrations }: Props) {
     return errors;
   };
 
+  // Function to validate current page
+  const validateCurrentPage = (values) => {
+    let errors = {};
+
+    switch (registrationSection) {
+      case 0: // General Questions
+        for (let obj of generalQuestions) {
+          errors = setErrors(obj, values, errors);
+        }
+        break;
+      case 1: // Travel Reimbursement (no required fields)
+        break;
+      case 2: // School Questions
+        for (let obj of schoolQuestions) {
+          errors = setErrors(obj, values, errors);
+        }
+        // Check manual fields if "Other" is selected
+        if (values['major'] === 'Other' && !values['majorManual']) {
+          errors['majorManual'] = 'Required';
+        }
+        if (values['university'] === 'Other' && !values['universityManual']) {
+          errors['universityManual'] = 'Required';
+        }
+        break;
+      case 3: // Hackathon Experience
+        for (let obj of hackathonExperienceQuestions) {
+          errors = setErrors(obj, values, errors);
+        }
+        if (values['heardFrom'] === 'Other' && !values['heardFromManual']) {
+          errors['heardFromManual'] = 'Required';
+        }
+        break;
+      case 4: // Short Answer Questions
+        for (let obj of shortAnswerQuestions) {
+          errors = setErrors(obj, values, errors);
+        }
+        break;
+      case 5: // Event Info
+        for (let obj of eventInfoQuestions) {
+          errors = setErrors(obj, values, errors);
+        }
+        break;
+      case 6: // Sponsor Info (resume is optional)
+        for (let obj of sponsorInfoQuestions) {
+          errors = setErrors(obj, values, errors);
+        }
+        break;
+      case 7: // Teammate Questions
+        for (let obj of teammateQuestions) {
+          errors = setErrors(obj, values, errors);
+        }
+        break;
+    }
+
+    return Object.keys(errors).length === 0;
+  };
+
   return (
     <div
       className="flex flex-col flex-grow mt-0 mb-0"
@@ -855,6 +912,31 @@ export default function Register({ allowedRegistrations }: Props) {
                       ))}
                     </div>
 
+                    {/* Review Submission Message */}
+                    <div className="bg-green-50 p-4 rounded-lg mt-6 text-left border-l-4 border-green-400">
+                      <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
+                        📝 Please Review Your Submission
+                      </h4>
+                      <p className="text-sm text-[#2D5016] leading-relaxed">
+                        Before submitting your application, please take a moment to review all the
+                        information you&apos;ve provided. Make sure all required fields are
+                        completed and your responses accurately represent your qualifications and
+                        experience.
+                      </p>
+                    </div>
+
+                    {/* Merit Review Disclaimer */}
+                    <div className="bg-blue-50 p-4 rounded-lg mt-4 text-left border-l-4 border-blue-400">
+                      <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
+                        📋 Application Review Process
+                      </h4>
+                      <p className="text-sm text-[#2D5016] leading-relaxed">
+                        <strong>All applications are reviewed based on merit.</strong> Our selection
+                        process evaluates each applicant&apos;s qualifications, experience, and
+                        potential contribution to the hackathon community.
+                      </p>
+                    </div>
+
                     {/* Submit */}
                     <div className="mt-8 text-white">
                       <button
@@ -924,6 +1006,15 @@ export default function Register({ allowedRegistrations }: Props) {
                       onClick={async (e) => {
                         e.preventDefault();
                         if (isSavingApplication) return;
+
+                        // Only allow jumping to pages if current page is complete or if going backwards
+                        if (i > registrationSection && !validateCurrentPage(values)) {
+                          alert(
+                            'Please fill out all required fields on the current page before proceeding.',
+                          );
+                          return;
+                        }
+
                         if (dirty || resumeFileUpdated) {
                           setIsSavingApplication(true);
                           await handleSaveProfile(values, registrationSection, resetForm);
@@ -946,6 +1037,15 @@ export default function Register({ allowedRegistrations }: Props) {
                       if (isSavingApplication) {
                         return;
                       }
+
+                      // Validate current page before proceeding
+                      if (!validateCurrentPage(values)) {
+                        alert(
+                          'Please fill out all required fields before proceeding to the next page.',
+                        );
+                        return;
+                      }
+
                       if (dirty || resumeFileUpdated) {
                         setIsSavingApplication(true);
                         await handleSaveProfile(values, registrationSection, resetForm);
