@@ -35,6 +35,10 @@ export default function AdminLeaderboardPage() {
     judgedApplications: 0,
   });
   const [error, setError] = useState<string>('');
+  const [sortBy, setSortBy] = useState<'totalReviews' | 'accepts' | 'rejects' | 'acceptanceRate'>(
+    'totalReviews',
+  );
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
@@ -143,6 +147,36 @@ export default function AdminLeaderboardPage() {
             </div>
           </div>
 
+          {/* Sorting Controls */}
+          <div className="bg-white rounded-lg p-4 shadow-md mb-6">
+            <div className="flex flex-wrap items-center gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Sort by:</label>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as any)}
+                  className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                >
+                  <option value="totalReviews">Total Reviews</option>
+                  <option value="accepts">Total Accepts</option>
+                  <option value="rejects">Total Rejects</option>
+                  <option value="acceptanceRate">Acceptance Rate</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Order:</label>
+                <select
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
+                  className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                >
+                  <option value="desc">Descending</option>
+                  <option value="asc">Ascending</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
           {/* Leaderboard Table */}
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="overflow-x-auto">
@@ -162,49 +196,56 @@ export default function AdminLeaderboardPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {leaderboardData.adminStats.map((admin, index) => (
-                    <tr key={admin.adminId} className="hover:bg-gray-50">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center">
-                          {index === 0 && <span className="text-yellow-500 mr-2">🥇</span>}
-                          {index === 1 && <span className="text-gray-400 mr-2">🥈</span>}
-                          {index === 2 && <span className="text-orange-500 mr-2">🥉</span>}
-                          <span className="font-semibold text-[#5D5A88]">#{index + 1}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 font-medium text-[#5D5A88]">{admin.adminName}</td>
-                      <td className="px-6 py-4 text-center font-semibold text-blue-600">
-                        {admin.totalReviews}
-                      </td>
-                      <td className="px-6 py-4 text-center text-green-600 font-medium">
-                        {admin.accepts}
-                      </td>
-                      <td className="px-6 py-4 text-center text-red-600 font-medium">
-                        {admin.rejects}
-                      </td>
-                      <td className="px-6 py-4 text-center text-yellow-600 font-medium">
-                        {admin.maybes}
-                      </td>
-                      <td className="px-6 py-4 text-center text-purple-600 font-medium">
-                        {admin.superVotes}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium">
-                          {admin.acceptanceRate}%
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-sm font-medium">
-                          {admin.rejectionRate}%
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm font-medium">
-                          {admin.maybeRate}%
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
+                  {leaderboardData.adminStats
+                    .sort((a, b) => {
+                      const aValue = a[sortBy];
+                      const bValue = b[sortBy];
+                      const comparison = aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+                      return sortOrder === 'desc' ? -comparison : comparison;
+                    })
+                    .map((admin, index) => (
+                      <tr key={admin.adminId} className="hover:bg-gray-50">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center">
+                            {index === 0 && <span className="text-yellow-500 mr-2">🥇</span>}
+                            {index === 1 && <span className="text-gray-400 mr-2">🥈</span>}
+                            {index === 2 && <span className="text-orange-500 mr-2">🥉</span>}
+                            <span className="font-semibold text-[#5D5A88]">#{index + 1}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 font-medium text-[#5D5A88]">{admin.adminName}</td>
+                        <td className="px-6 py-4 text-center font-semibold text-blue-600">
+                          {admin.totalReviews}
+                        </td>
+                        <td className="px-6 py-4 text-center text-green-600 font-medium">
+                          {admin.accepts}
+                        </td>
+                        <td className="px-6 py-4 text-center text-red-600 font-medium">
+                          {admin.rejects}
+                        </td>
+                        <td className="px-6 py-4 text-center text-yellow-600 font-medium">
+                          {admin.maybes}
+                        </td>
+                        <td className="px-6 py-4 text-center text-purple-600 font-medium">
+                          {admin.superVotes}
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium">
+                            {admin.acceptanceRate}%
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-sm font-medium">
+                            {admin.rejectionRate}%
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm font-medium">
+                            {admin.maybeRate}%
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
