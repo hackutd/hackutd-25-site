@@ -54,6 +54,11 @@ export default function AppHeaderCore(props: Props) {
     }
   }, [user, isAdmin]);
 
+  // makes it so the navbar doesn't render if user is signed out
+  if (!user) {
+    return null;
+  }
+
   const mainDockItems = (): JSX.Element[] => {
     const items: JSX.Element[] = [];
     const itemIdRoot: string = (props.dockItemIdRoot ?? 'AppHeader2-Core-mainDockItems') + '_';
