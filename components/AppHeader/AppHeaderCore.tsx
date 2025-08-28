@@ -206,6 +206,10 @@ export default function AppHeaderCore(props: Props) {
                             optionName: 'Stats at a Glance',
                             onClick: () => router.push('/admin/stats'),
                           },
+                          {
+                            optionName: 'Admin Leaderboard',
+                            onClick: () => router.push('/admin/leaderboard'),
+                          },
                         ]
                       : []),
                     ...(isAdmin
