@@ -54,6 +54,11 @@ export default function AppHeaderCore(props: Props) {
     }
   }, [user, isAdmin]);
 
+  // makes it so the navbar doesn't render if user is signed out
+  if (!user) {
+    return null;
+  }
+
   const mainDockItems = (): JSX.Element[] => {
     const items: JSX.Element[] = [];
     const itemIdRoot: string = (props.dockItemIdRoot ?? 'AppHeader2-Core-mainDockItems') + '_';
@@ -200,6 +205,10 @@ export default function AppHeaderCore(props: Props) {
                           {
                             optionName: 'Stats at a Glance',
                             onClick: () => router.push('/admin/stats'),
+                          },
+                          {
+                            optionName: 'Admin Leaderboard',
+                            onClick: () => router.push('/admin/leaderboard'),
                           },
                         ]
                       : []),
