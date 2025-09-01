@@ -79,6 +79,10 @@ a.link {
   font-family: 'Montserrat', sans-serif;
 }
 
+.font-DM-Sans {
+  font-family: 'DM Sans', sans-serif;
+}
+
 .text-shadow {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }

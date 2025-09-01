@@ -54,7 +54,8 @@ export default function Home({
         style={{
           backgroundImage: `url("/assets/pathDrawing/bushLeft.PNG"),
                             url("/assets/pathDrawing/pathOutline.PNG"),
-                            url("/assets/pathDrawing/bg.PNG")`,
+                            url("/assets/pathDrawing/bg.PNG"),
+                            url("/assets/pathDrawing/forestyGround.PNG")`,
           backgroundSize: 'cover',
           backgroundRepeat: 'repeat',
           zIndex: 2,
