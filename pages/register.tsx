@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState, useCallback } from 'react';
 import { Formik, Form, useFormikContext } from 'formik';
 import Link from 'next/link';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -20,6 +20,10 @@ import DisplayRegistrationQuestion from '@/components/register/DisplayRegistrati
 
 interface Props {
   allowedRegistrations: boolean;
+  isEditMode?: boolean;
+  initialProfile?: any;
+  partialProfile?: any;
+  onFormChange?: (dirty: boolean) => void;
 }
 
 function ApplicationAutosaveHandler({
@@ -79,7 +83,19 @@ function ApplicationAutosaveHandler({
     return () => {
       removeCallback(router.pathname);
     };
-  }, [dirty, values, resumeFile]);
+  }, [
+    dirty,
+    values,
+    resumeFile,
+    currentPage,
+    defaultResumeUrl,
+    removeCallback,
+    resetForm,
+    router.pathname,
+    setCallback,
+    updatePartialProfile,
+    user.id,
+  ]);
   return null;
 }
 /**
@@ -88,7 +104,13 @@ function ApplicationAutosaveHandler({
  * Registration: /
  */
 
-export default function Register({ allowedRegistrations }: Props) {
+export default function Register({
+  allowedRegistrations,
+  isEditMode = false,
+  initialProfile,
+  partialProfile: editPartialProfile,
+  onFormChange,
+}: Props) {
   const router = useRouter();
 
   const {
@@ -105,6 +127,10 @@ export default function Register({ allowedRegistrations }: Props) {
 
   const { user, profile, partialProfile, hasProfile, updateProfile, updatePartialProfile } =
     useAuthContext();
+
+  // Use edit mode profile if available, otherwise use regular profile
+  const effectiveProfile = isEditMode ? initialProfile : profile;
+  const effectivePartialProfile = isEditMode ? editPartialProfile : partialProfile;
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [isSavingApplication, setIsSavingApplication] = useState(false);
   const [resumeFileUpdated, setResumeFileUpdated] = useState(false);
@@ -115,16 +141,17 @@ export default function Register({ allowedRegistrations }: Props) {
   const [registrationSection, setRegistrationSection] = useState(
     partialProfile?.currentRegistrationPage || 0,
   );
-  const checkRedirect = async () => {
+  const checkRedirect = useCallback(async () => {
     if (!allowedRegistrations) return;
-    if (hasProfile) router.push('/profile');
+    // Don't redirect if in edit mode
+    if (hasProfile && !isEditMode) router.push('/profile');
     if (user) setLoading(false);
-  };
+  }, [allowedRegistrations, hasProfile, isEditMode, router, user]);
 
   // disable this for testing
   useEffect(() => {
     checkRedirect();
-  }, [user]);
+  }, [user, hasProfile, isEditMode, allowedRegistrations]);
 
   const cleanData = (registrationData: PartialRegistration): Registration => {
     let cleanedValues = { ...registrationData };
@@ -195,26 +222,50 @@ export default function Register({ allowedRegistrations }: Props) {
         );
         resumeUrl = data.url;
       }
-      const { data } = await RequestHelper.post<
-        Registration,
-        { msg: string; registrationData: Registration }
-      >(
-        '/api/applications',
-        {},
-        {
-          ...registrationData,
-          id: registrationData.id || user.id,
-          user: {
-            ...registrationData.user,
-            id: registrationData.user.id || user.id,
+      // Use PUT for updates in edit mode, POST for new applications
+      if (isEditMode) {
+        const { data } = await RequestHelper.put<
+          Registration,
+          { msg: string; updatedData: Registration }
+        >(
+          '/api/applications',
+          {},
+          {
+            ...registrationData,
+            id: registrationData.id || user.id,
+            user: {
+              ...registrationData.user,
+              id: registrationData.user.id || user.id,
+            },
+            resume: resumeUrl,
           },
-          resume: resumeUrl,
-        },
-      );
-      alert('Application Submitted');
-      updateProfile(data.registrationData);
-      updatePartialProfile(null);
-      router.push('/profile');
+        );
+        alert('Application Updated Successfully');
+        updateProfile(data.updatedData);
+        updatePartialProfile(null);
+        router.push('/profile');
+      } else {
+        const { data } = await RequestHelper.post<
+          Registration,
+          { msg: string; registrationData: Registration }
+        >(
+          '/api/applications',
+          {},
+          {
+            ...registrationData,
+            id: registrationData.id || user.id,
+            user: {
+              ...registrationData.user,
+              id: registrationData.user.id || user.id,
+            },
+            resume: resumeUrl,
+          },
+        );
+        alert('Application Submitted');
+        updateProfile(data.registrationData);
+        updatePartialProfile(null);
+        router.push('/dashboard');
+      }
     } catch (error) {
       console.error(error);
       console.log('Request creation error');
@@ -236,6 +287,71 @@ export default function Register({ allowedRegistrations }: Props) {
     nextPage: number,
     resetForm: (param: { values: any }) => void,
   ) => {
+    // Enable saving for edit mode to allow auto-save when navigating pages
+    if (isEditMode) {
+      return (async () => {
+        if (resumeFile && resumeFileUpdated) {
+          const formData = new FormData();
+          formData.append('resume', resumeFile);
+          formData.append('fileName', `${user.id}${getFileExtension(resumeFile.name)}`);
+          formData.append('studyLevel', registrationData['studyLevel']);
+          formData.append('major', registrationData['major']);
+          formData.append('isPartialProfile', 'true');
+
+          const res = await fetch('/api/resume/upload', {
+            method: 'post',
+            body: formData,
+          });
+          const resumeUrl = (await res.json()).url;
+          return resumeUrl;
+        } else {
+          return effectivePartialProfile?.resume || effectiveProfile?.resume || '';
+        }
+      })()
+        .then((resumeUrl: string) => {
+          return RequestHelper.put<any, { msg: string; registrationData: PartialRegistration }>(
+            '/api/applications/save',
+            {},
+            {
+              ...registrationData,
+              id: registrationData.id || user.id,
+              currentRegistrationPage: nextPage,
+              resume: resumeUrl,
+            },
+          )
+            .then(() => {
+              setDisplayProfileSavedToaster(true);
+              // Don't reset the form in edit mode to preserve user's changes
+              if (!isEditMode) {
+                resetForm({ values: registrationData });
+              }
+              setResumeFileUpdated(false);
+              // Update the partial profile for edit mode
+              if (isEditMode && editPartialProfile) {
+                updatePartialProfile({
+                  ...editPartialProfile,
+                  ...registrationData,
+                  currentRegistrationPage: nextPage,
+                  resume: resumeUrl,
+                });
+              } else {
+                updatePartialProfile(registrationData);
+              }
+              // Show success message for edit mode
+              if (isEditMode) {
+                console.log('Application auto-saved successfully');
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        })
+        .catch((err) => {
+          alert('Something went wrong while saving your application');
+          console.error(err);
+        });
+    }
+
     // const cleanedData = cleanData(registrationData);
     return (async () => {
       if (resumeFile && resumeFileUpdated) {
@@ -448,21 +564,30 @@ export default function Register({ allowedRegistrations }: Props) {
       }}
     >
       <Head>
-        <title>Hacker Application</title>
-        <meta name="description" content="Register for HackPortal" />
+        <title>{isEditMode ? 'Edit Hacker Application' : 'Hacker Application'}</title>
+        <meta
+          name="description"
+          content={isEditMode ? 'Edit your HackPortal application' : 'Register for HackPortal'}
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Formik
         initialValues={{
-          ...generateInitialValues(partialProfile),
-          id: partialProfile?.id || '',
-          firstName: partialProfile?.firstName || '',
-          lastName: partialProfile?.lastName || '',
-          preferredEmail: partialProfile?.preferredEmail || user?.preferredEmail || '',
-          majorManual: partialProfile?.majorManual || '',
-          universityManual: partialProfile?.universityManual || '',
-          heardFromManual: partialProfile?.heardFromManual || '',
-          resume: partialProfile?.resume || '',
+          ...generateInitialValues(effectivePartialProfile || effectiveProfile),
+          id: effectivePartialProfile?.id || effectiveProfile?.id || user?.id || '',
+          firstName: effectivePartialProfile?.firstName || effectiveProfile?.user?.firstName || '',
+          lastName: effectivePartialProfile?.lastName || effectiveProfile?.user?.lastName || '',
+          preferredEmail:
+            effectivePartialProfile?.preferredEmail ||
+            effectiveProfile?.user?.preferredEmail ||
+            user?.preferredEmail ||
+            '',
+          majorManual: effectivePartialProfile?.majorManual || effectiveProfile?.major || '',
+          universityManual:
+            effectivePartialProfile?.universityManual || effectiveProfile?.university || '',
+          heardFromManual:
+            effectivePartialProfile?.heardFromManual || effectiveProfile?.heardFrom || '',
+          resume: effectivePartialProfile?.resume || effectiveProfile?.resume || '',
         }}
         validateOnBlur={false}
         validateOnChange={false}
@@ -538,545 +663,604 @@ export default function Register({ allowedRegistrations }: Props) {
           // alert(JSON.stringify(values, null, 2)); //Displays form results on submit for testing purposes
         }}
       >
-        {({ values, isValid, isSubmitting, dirty, resetForm }) => (
-          <>
-            <section className="pl-4 relative mb-4 z-[100] hidden md:flex">
-              <div className="mt-2 h-12"></div>
-            </section>
-            <section className="relative">
-              {/* Field component automatically hooks input to form values. Use name attribute to match corresponding value */}
-              {/* ErrorMessage component automatically displays error based on validation above. Use name attribute to match corresponding value */}
-              <Form
-                onKeyDown={onKeyDown}
-                className="registrationForm px-4 md:px-24 w-full sm:text-base text-sm"
-              >
-                {/* General Questions */}
-                {registrationSection == 0 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-4 py-10 px-8 mb-8 text-[#2D5016]">
-                    <header>
-                      <h1 className="text-[#2D5016] lg:text-4xl sm:text-3xl text-2xl font-bold text-center mt-2 md:mt-8 mb-4 poppins-bold">
-                        Hacker Application
-                      </h1>
-                      <div
-                        style={{ color: '#A6A4A8' }}
-                        className="poppins-regular text-center text-md mb-4 font-light"
-                      >
-                        Please fill out the following fields. The application should take
-                        approximately 10 minutes.
-                      </div>
-                    </header>
-                    <div className="md:px-10">
-                      <div className="flex flex-col">
-                        {generalQuestions.map((obj, idx) => (
-                          <DisplayRegistrationQuestion key={idx} obj={obj} />
-                        ))}
-                      </div>
-                    </div>
-                  </section>
-                )}
-
-                {/* Travel Reimbursement Info */}
-                {registrationSection == 1 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
-                    <h2 className="sm:text-2xl text-xl sm:mb-3 mb-1 poppins-bold mt-2 text-center">
-                      Before You Continue
-                    </h2>
-                    <div className="text-center mb-6">
-                      <h3 className="text-xl font-semibold mb-4 text-[#2D5016]">
-                        Travel Reimbursement Information
-                      </h3>
-
-                      {/* Apply Section */}
-                      <div className="bg-[#2D5016] p-6 rounded-lg mb-6 text-white">
-                        <h4 className="text-lg font-bold mb-3">📃 Apply!</h4>
-                        <p className="mb-4 text-sm leading-relaxed">
-                          <strong>
-                            If you are applying with a team, please make sure everyone on the team
-                            applies!
-                          </strong>
-                        </p>
-                        <div className="text-center">
-                          <a
-                            href="https://hackutd.notion.site/HackUTD-2025-Lost-in-the-Pages-Travel-Reimbursement-13e0d994cbb981c5a336f1dda3e5d3be"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-block bg-white text-[#2D5016] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200"
-                          >
-                            View Travel Reimbursement Policy
-                          </a>
+        {({ values, isValid, isSubmitting, dirty, resetForm }) => {
+          return (
+            <>
+              <section className="pl-4 relative mb-4 z-[100] hidden md:flex">
+                <div className="mt-2 h-12"></div>
+              </section>
+              <section className="relative">
+                {/* Field component automatically hooks input to form values. Use name attribute to match corresponding value */}
+                {/* ErrorMessage component automatically displays error based on validation above. Use name attribute to match corresponding value */}
+                <Form
+                  onKeyDown={onKeyDown}
+                  className="registrationForm px-4 md:px-24 w-full sm:text-base text-sm"
+                >
+                  {/* General Questions */}
+                  {registrationSection == 0 && (
+                    <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-4 py-10 px-8 mb-8 text-[#2D5016]">
+                      <header>
+                        <h1 className="text-[#2D5016] lg:text-4xl sm:text-3xl text-2xl font-bold text-center mt-2 md:mt-8 mb-4 poppins-bold">
+                          {isEditMode ? 'Edit Hacker Application' : 'Hacker Application'}
+                        </h1>
+                        <div
+                          style={{ color: '#A6A4A4' }}
+                          className="poppins-regular text-center text-md mb-4 font-light"
+                        >
+                          {isEditMode
+                            ? 'Your current application is loaded below. Make changes as needed and complete the full application to submit.'
+                            : 'Please fill out the following fields. The application should take approximately 10 minutes.'}
+                        </div>
+                      </header>
+                      <div className="md:px-10">
+                        <div className="flex flex-col">
+                          {generalQuestions.map((obj, idx) => (
+                            <DisplayRegistrationQuestion
+                              key={idx}
+                              obj={obj}
+                              isEditMode={isEditMode}
+                            />
+                          ))}
                         </div>
                       </div>
+                    </section>
+                  )}
 
-                      {/* Eligibility Section */}
-                      <div className="bg-gray-50 p-6 rounded-lg mb-6 text-left">
-                        <h4 className="text-lg font-bold mb-3 text-[#2D5016]">✅ Eligibility</h4>
-                        <ul className="text-[#2D5016] space-y-3 mb-4">
-                          <li className="flex items-start">
-                            <span className="text-[#7A9E7E] font-bold mr-3 mt-1">•</span>
-                            <span className="leading-relaxed">
-                              Must be <strong>flying</strong> over <em>250 miles</em> or{' '}
-                              <strong>driving</strong> over <em>50 miles</em> from UT Dallas
-                              Engineering and Computer Science West (2520 Rutford Ave, Richardson,
-                              TX 75080)
-                            </span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="text-[#7A9E7E] font-bold mr-3 mt-1">•</span>
-                            <span className="leading-relaxed">
-                              Must be <strong>non-UT Dallas</strong> student
-                            </span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="text-[#7A9E7E] font-bold mr-3 mt-1">•</span>
-                            <span className="leading-relaxed">
-                              Submit a travel reimbursement application before the deadline (
-                              <strong>October 4th 2025 @ 11:59pm CST</strong>)
-                            </span>
-                          </li>
-                        </ul>
-                      </div>
+                  {/* Travel Reimbursement Info */}
+                  {registrationSection == 1 && (
+                    <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
+                      <h2 className="sm:text-2xl text-xl sm:mb-3 mb-1 poppins-bold mt-2 text-center">
+                        Before You Continue
+                      </h2>
+                      <div className="text-center mb-6">
+                        <h3 className="text-xl font-semibold mb-4 text-[#2D5016]">
+                          Travel Reimbursement Information
+                        </h3>
 
-                      {/* Reimbursement Types */}
-                      <div className="space-y-4 text-left">
-                        {/* Gas Reimbursements */}
-                        <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
-                          <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
-                            ⛽ Gas Reimbursements
-                          </h4>
-                          <p className="text-sm text-[#2D5016] mb-2 leading-relaxed">
-                            Gas reimbursements are usually capped at $50 per person travelling
-                            depending on distance. If traveling in a group, the maximum we will
-                            reimburse is $50 per person up to $200.
-                          </p>
-                          <p className="text-xs text-[#2D5016] font-semibold">
-                            <strong>Full Reimbursements are not guaranteed.</strong>
-                          </p>
-                        </div>
-
-                        {/* Bus Reimbursements */}
-                        <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
-                          <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
-                            🚌 Bus Reimbursements
-                          </h4>
-                          <p className="text-sm text-[#2D5016] mb-2 leading-relaxed">
-                            We do not provide bus service from any university to our campus. If you
-                            decide to take a bus (greyhound, etc.) we will reimburse the cost of the
-                            bus ticket up to $50.
-                          </p>
-                        </div>
-
-                        {/* Flight Reimbursements */}
-                        <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-400">
-                          <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
-                            ✈️ Flight Reimbursements
-                          </h4>
-                          <p className="text-sm text-[#2D5016] mb-2 leading-relaxed">
-                            Flight reimbursements are handled on a case by case basis. Generally
-                            these reimbursements will be in the range of $50-150.{' '}
-                            <em>However, more can be allotted based on team travel.</em>
-                          </p>
-                          <p className="text-xs text-[#2D5016] font-semibold">
+                        {/* Apply Section */}
+                        <div className="bg-[#2D5016] p-6 rounded-lg mb-6 text-white">
+                          <h4 className="text-lg font-bold mb-3">📃 Apply!</h4>
+                          <p className="mb-4 text-sm leading-relaxed">
                             <strong>
-                              We highly recommend you apply with a team if you are requesting Flight
-                              Reimbursements.
+                              If you are applying with a team, please make sure everyone on the team
+                              applies!
                             </strong>
                           </p>
+                          <div className="text-center">
+                            <a
+                              href="https://hackutd.notion.site/HackUTD-2025-Lost-in-the-Pages-Travel-Reimbursement-13e0d994cbb981c5a336f1dda3e5d3be"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-block bg-white text-[#2D5016] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200"
+                            >
+                              View Travel Reimbursement Policy
+                            </a>
+                          </div>
+                        </div>
+
+                        {/* Eligibility Section */}
+                        <div className="bg-gray-50 p-6 rounded-lg mb-6 text-left">
+                          <h4 className="text-lg font-bold mb-3 text-[#2D5016]">✅ Eligibility</h4>
+                          <ul className="text-[#2D5016] space-y-3 mb-4">
+                            <li className="flex items-start">
+                              <span className="text-[#7A9E7E] font-bold mr-3 mt-1">•</span>
+                              <span className="leading-relaxed">
+                                Must be <strong>flying</strong> over <em>250 miles</em> or{' '}
+                                <strong>driving</strong> over <em>50 miles</em> from UT Dallas
+                                Engineering and Computer Science West (2520 Rutford Ave, Richardson,
+                                TX 75080)
+                              </span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="text-[#7A9E7E] font-bold mr-3 mt-1">•</span>
+                              <span className="leading-relaxed">
+                                Must be <strong>non-UT Dallas</strong> student
+                              </span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="text-[#7A9E7E] font-bold mr-3 mt-1">•</span>
+                              <span className="leading-relaxed">
+                                Submit a travel reimbursement application before the deadline (
+                                <strong>October 4th 2025 @ 11:59pm CST</strong>)
+                              </span>
+                            </li>
+                          </ul>
+                        </div>
+
+                        {/* Reimbursement Types */}
+                        <div className="space-y-4 text-left">
+                          {/* Gas Reimbursements */}
+                          <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                            <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
+                              ⛽ Gas Reimbursements
+                            </h4>
+                            <p className="text-sm text-[#2D5016] mb-2 leading-relaxed">
+                              Gas reimbursements are usually capped at $50 per person travelling
+                              depending on distance. If traveling in a group, the maximum we will
+                              reimburse is $50 per person up to $200.
+                            </p>
+                            <p className="text-xs text-[#2D5016] font-semibold">
+                              <strong>Full Reimbursements are not guaranteed.</strong>
+                            </p>
+                          </div>
+
+                          {/* Bus Reimbursements */}
+                          <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                            <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
+                              🚌 Bus Reimbursements
+                            </h4>
+                            <p className="text-sm text-[#2D5016] mb-2 leading-relaxed">
+                              We do not provide bus service from any university to our campus. If
+                              you decide to take a bus (greyhound, etc.) we will reimburse the cost
+                              of the bus ticket up to $50.
+                            </p>
+                          </div>
+
+                          {/* Flight Reimbursements */}
+                          <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-400">
+                            <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
+                              ✈️ Flight Reimbursements
+                            </h4>
+                            <p className="text-sm text-[#2D5016] mb-2 leading-relaxed">
+                              Flight reimbursements are handled on a case by case basis. Generally
+                              these reimbursements will be in the range of $50-150.{' '}
+                              <em>However, more can be allotted based on team travel.</em>
+                            </p>
+                            <p className="text-xs text-[#2D5016] font-semibold">
+                              <strong>
+                                We highly recommend you apply with a team if you are requesting
+                                Flight Reimbursements.
+                              </strong>
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Important Notes */}
+                        <div className="bg-yellow-50 p-4 rounded-lg mt-6 text-left border-l-4 border-yellow-400">
+                          <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
+                            ⚖️ Important Terms
+                          </h4>
+                          <ul className="text-sm text-[#2D5016] space-y-1">
+                            <li>
+                              • All travel assistance is based on a{' '}
+                              <strong>first-come-first-serve application process</strong>
+                            </li>
+                            <li>
+                              • Travel reimbursement acceptance guarantees you and your team
+                              acceptance to HackUTD
+                            </li>
+                            <li>
+                              • We will be in touch by October 8th with a decision regarding
+                              reimbursement
+                            </li>
+                            <li>
+                              • Reimbursements will start to be processed after verifying that
+                              projects were submitted and presented
+                            </li>
+                          </ul>
+                        </div>
+
+                        {/* Contact Info */}
+                        <div className="mt-6 text-center">
+                          <p className="text-sm text-[#2D5016] mb-2">
+                            Questions? Contact us at{' '}
+                            <a
+                              href="mailto:hello@hackutd.co"
+                              className="text-[#7A9E7E] hover:text-[#2D5016] underline"
+                            >
+                              hello@hackutd.co
+                            </a>
+                          </p>
                         </div>
                       </div>
+                    </section>
+                  )}
 
-                      {/* Important Notes */}
-                      <div className="bg-yellow-50 p-4 rounded-lg mt-6 text-left border-l-4 border-yellow-400">
-                        <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
-                          ⚖️ Important Terms
-                        </h4>
-                        <ul className="text-sm text-[#2D5016] space-y-1">
-                          <li>
-                            • All travel assistance is based on a{' '}
-                            <strong>first-come-first-serve application process</strong>
-                          </li>
-                          <li>
-                            • Travel reimbursement acceptance guarantees you and your team
-                            acceptance to HackUTD
-                          </li>
-                          <li>
-                            • We will be in touch by October 8th with a decision regarding
-                            reimbursement
-                          </li>
-                          <li>
-                            • Reimbursements will start to be processed after verifying that
-                            projects were submitted and presented
-                          </li>
-                        </ul>
+                  {/* School Questions */}
+                  {registrationSection == 2 && (
+                    <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
+                      <h2 className="sm:text-2xl text-xl sm:mb-3 mb-1 poppins-bold mt-2">
+                        School Info
+                      </h2>
+                      <div className="flex flex-col md:px-4 poppins-regular ">
+                        {schoolQuestions.map((obj, idx) => (
+                          <DisplayRegistrationQuestion
+                            key={idx}
+                            obj={obj}
+                            isEditMode={isEditMode}
+                          />
+                        ))}
+                        {values['major'] === 'Other' && (
+                          <DisplayRegistrationQuestion
+                            key={1000}
+                            obj={{
+                              textInputQuestions: [
+                                {
+                                  id: 'majorManual',
+                                  name: 'majorManual',
+                                  question: 'What is your major?',
+                                  required: values['major'] === 'Other',
+                                  initialValue: '',
+                                },
+                              ],
+                            }}
+                            isEditMode={isEditMode}
+                          />
+                        )}
+                        {values['university'] === 'Other' && (
+                          <DisplayRegistrationQuestion
+                            key={1000}
+                            obj={{
+                              textInputQuestions: [
+                                {
+                                  id: 'universityManual',
+                                  name: 'universityManual',
+                                  question: 'What is your university?',
+                                  required: values['university'] === 'Other',
+                                  initialValue: '',
+                                },
+                              ],
+                            }}
+                            isEditMode={isEditMode}
+                          />
+                        )}
                       </div>
+                    </section>
+                  )}
 
-                      {/* Contact Info */}
-                      <div className="mt-6 text-center">
-                        <p className="text-sm text-[#2D5016] mb-2">
-                          Questions? Contact us at{' '}
-                          <a
-                            href="mailto:hello@hackutd.co"
-                            className="text-[#7A9E7E] hover:text-[#2D5016] underline"
+                  {/* Hackathon Questions */}
+                  {registrationSection == 3 && (
+                    <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
+                      <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
+                        Hackathon Experience
+                      </h2>
+                      <div className="flex flex-col poppins-regular md:px-4">
+                        {hackathonExperienceQuestions.map((obj, idx) => (
+                          <DisplayRegistrationQuestion
+                            key={idx}
+                            obj={obj}
+                            isEditMode={isEditMode}
+                          />
+                        ))}
+                        {values['heardFrom'] === 'Other' && (
+                          <DisplayRegistrationQuestion
+                            key={1000}
+                            obj={{
+                              textInputQuestions: [
+                                {
+                                  id: 'heardFromManual',
+                                  name: 'heardFromManual',
+                                  question: 'Where did you hear about HackUTD?',
+                                  required: values['heardFrom'] === 'Other',
+                                  initialValue: '',
+                                },
+                              ],
+                            }}
+                            isEditMode={isEditMode}
+                          />
+                        )}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* Short Answer Questions */}
+                  {registrationSection == 4 && (
+                    <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
+                      <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
+                        Short Answer Questions
+                      </h2>
+                      <div className="flex flex-col poppins-regular md:px-4">
+                        {shortAnswerQuestions.map((obj, idx) => (
+                          <DisplayRegistrationQuestion
+                            key={idx}
+                            obj={obj}
+                            isEditMode={isEditMode}
+                          />
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* Event Info Questions */}
+                  {registrationSection == 5 && (
+                    <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
+                      <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
+                        Event Info
+                      </h2>
+                      <div className="flex flex-col poppins-regular md:px-4">
+                        {eventInfoQuestions.map((obj, idx) => (
+                          <DisplayRegistrationQuestion
+                            key={idx}
+                            obj={obj}
+                            isEditMode={isEditMode}
+                          />
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* Sponsor Info Questions */}
+                  {registrationSection == 6 && (
+                    <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016] relative">
+                      <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
+                        Sponsor Info
+                      </h2>
+                      <div className="flex flex-col poppins-regular md:px-4">
+                        {sponsorInfoQuestions.map((obj, idx) => (
+                          <DisplayRegistrationQuestion
+                            key={idx}
+                            obj={obj}
+                            isEditMode={isEditMode}
+                          />
+                        ))}
+                      </div>
+                      {/* Resume Upload */}
+                      <div className="mt-8 md:px-4 poppins-regular">
+                        <div className="flex items-center">
+                          Upload your resume{' '}
+                          <span className="text-gray-600 ml-2 text-[8px]">optional</span>
+                        </div>
+                        <br />
+                        <input
+                          onChange={(e) => handleResumeFileChange(e)}
+                          ref={resumeFileRef}
+                          name="resume"
+                          type="file"
+                          formEncType="multipart/form-data"
+                          accept=".pdf, .doc, .docx, image/png, image/jpeg, .txt, .tex, .rtf"
+                          className="hidden"
+                        />
+                        <div className="flex items-center gap-x-3 poppins-regular w-full border border-[#2D5016] rounded-md">
+                          <button
+                            className="md:p-2 p-1 bg-[#7A9E7E] text-white h-full rounded-l-md border-none"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              resumeFileRef.current?.click();
+                            }}
                           >
-                            hello@hackutd.co
+                            Upload new resume...
+                          </button>
+                          <p className="text-[#2D5016]">
+                            {resumeFile ? resumeFile.name : 'No file selected.'}
+                          </p>
+                        </div>
+                        <p className="poppins-regular text-xs text-[#2D5016]">
+                          Accepted file types: .pdf, .doc, .docx, .png, .jpeg, .txt, .tex, .rtf
+                        </p>
+                        {partialProfile?.resume && (
+                          <div className="my-4 w-fit">
+                            <Link href={partialProfile.resume} target="_blank">
+                              <div className="bg-[#7A9E7E] md:p-2 p-1 text-white rounded-lg">
+                                Click to view your current resume
+                              </div>
+                            </Link>
+                          </div>
+                        )}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* Teammate Questions */}
+                  {registrationSection == 7 && (
+                    <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
+                      <h2 className="sm:text-2xl text-xl font-semibold sm:mb-3 mb-1">
+                        Teammate Questions
+                      </h2>
+                      <p className="text-md my-6 font-bold">
+                        Emails of teammates should be the same as the email they registered with!
+                      </p>
+                      <div className="flex flex-col">
+                        {teammateQuestions.map((obj, idx) => (
+                          <DisplayRegistrationQuestion
+                            key={idx}
+                            obj={obj}
+                            isEditMode={isEditMode}
+                          />
+                        ))}
+                      </div>
+
+                      {/* Review and Application Process */}
+                      <div className="bg-blue-50 p-4 rounded-lg mt-6 text-left border-l-4 border-blue-400">
+                        <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
+                          📝 Please Review Your Submission
+                        </h4>
+                        <p className="text-sm text-[#2D5016] leading-relaxed">
+                          Before submitting your application, please take a moment to review all the
+                          information you&apos;ve provided.{' '}
+                          <strong>
+                            All applications are reviewed based on the essay questions and how they
+                            were answered.
+                          </strong>{' '}
+                          Our selection process evaluates each applicant&apos;s responses to the
+                          essay questions, their thoughtfulness, creativity, and potential
+                          contribution to the hackathon community.{' '}
+                          <a
+                            href="https://medium.com/@hackUTD/applying-to-hackutd-ripple-effect-1a85143a22da"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800 underline"
+                          >
+                            Find more information here from last year&apos;s event
                           </a>
+                          .
                         </p>
                       </div>
-                    </div>
-                  </section>
-                )}
 
-                {/* School Questions */}
-                {registrationSection == 2 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
-                    <h2 className="sm:text-2xl text-xl sm:mb-3 mb-1 poppins-bold mt-2">
-                      School Info
-                    </h2>
-                    <div className="flex flex-col md:px-4 poppins-regular ">
-                      {schoolQuestions.map((obj, idx) => (
-                        <DisplayRegistrationQuestion key={idx} obj={obj} />
-                      ))}
-                      {values['major'] === 'Other' && (
-                        <DisplayRegistrationQuestion
-                          key={1000}
-                          obj={{
-                            textInputQuestions: [
-                              {
-                                id: 'majorManual',
-                                name: 'majorManual',
-                                question: 'What is your major?',
-                                required: values['major'] === 'Other',
-                                initialValue: '',
-                              },
-                            ],
-                          }}
-                        />
-                      )}
-                      {values['university'] === 'Other' && (
-                        <DisplayRegistrationQuestion
-                          key={1001}
-                          obj={{
-                            textInputQuestions: [
-                              {
-                                id: 'universityManual',
-                                name: 'universityManual',
-                                question: 'What is your university?',
-                                required: values['university'] === 'Other',
-                                initialValue: '',
-                              },
-                            ],
-                          }}
-                        />
-                      )}
-                    </div>
-                  </section>
-                )}
-
-                {/* Hackathon Questions */}
-                {registrationSection == 3 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
-                    <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
-                      Hackathon Experience
-                    </h2>
-                    <div className="flex flex-col poppins-regular md:px-4">
-                      {hackathonExperienceQuestions.map((obj, idx) => (
-                        <DisplayRegistrationQuestion key={idx} obj={obj} />
-                      ))}
-                      {values['heardFrom'] === 'Other' && (
-                        <DisplayRegistrationQuestion
-                          key={1000}
-                          obj={{
-                            textInputQuestions: [
-                              {
-                                id: 'heardFromManual',
-                                name: 'heardFromManual',
-                                question: 'Where did you hear about HackUTD?',
-                                required: values['heardFrom'] === 'Other',
-                                initialValue: '',
-                              },
-                            ],
-                          }}
-                        />
-                      )}
-                    </div>
-                  </section>
-                )}
-
-                {/* Short Answer Questions */}
-                {registrationSection == 4 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
-                    <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
-                      Short Answer Questions
-                    </h2>
-                    <div className="flex flex-col poppins-regular md:px-4">
-                      {shortAnswerQuestions.map((obj, idx) => (
-                        <DisplayRegistrationQuestion key={idx} obj={obj} />
-                      ))}
-                    </div>
-                  </section>
-                )}
-
-                {/* Event Info Questions */}
-                {registrationSection == 5 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
-                    <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
-                      Event Info
-                    </h2>
-                    <div className="flex flex-col poppins-regular md:px-4">
-                      {eventInfoQuestions.map((obj, idx) => (
-                        <DisplayRegistrationQuestion key={idx} obj={obj} />
-                      ))}
-                    </div>
-                  </section>
-                )}
-
-                {/* Sponsor Info Questions */}
-                {registrationSection == 6 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016] relative">
-                    <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
-                      Sponsor Info
-                    </h2>
-                    <div className="flex flex-col poppins-regular md:px-4">
-                      {sponsorInfoQuestions.map((obj, idx) => (
-                        <DisplayRegistrationQuestion key={idx} obj={obj} />
-                      ))}
-                    </div>
-                    {/* Resume Upload */}
-                    <div className="mt-8 md:px-4 poppins-regular">
-                      <div className="flex items-center">
-                        Upload your resume{' '}
-                        <span className="text-gray-600 ml-2 text-[8px]">optional</span>
-                      </div>
-                      <br />
-                      <input
-                        onChange={(e) => handleResumeFileChange(e)}
-                        ref={resumeFileRef}
-                        name="resume"
-                        type="file"
-                        formEncType="multipart/form-data"
-                        accept=".pdf, .doc, .docx, image/png, image/jpeg, .txt, .tex, .rtf"
-                        className="hidden"
-                      />
-                      <div className="flex items-center gap-x-3 poppins-regular w-full border border-[#2D5016] rounded-md">
+                      {/* Submit */}
+                      <div className="mt-8 text-white">
                         <button
-                          className="md:p-2 p-1 bg-[#7A9E7E] text-white h-full rounded-l-md border-none"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            resumeFileRef.current?.click();
-                          }}
+                          disabled={isSubmitting}
+                          type="submit"
+                          className="mr-auto cursor-pointer px-4 py-2 rounded-lg bg-[#7A9E7E] hover:brightness-90"
                         >
-                          Upload new resume...
+                          {isEditMode ? 'Update Application' : 'Submit'}
                         </button>
-                        <p className="text-[#2D5016]">
-                          {resumeFile ? resumeFile.name : 'No file selected.'}
-                        </p>
+                        {!isValid && (
+                          <div className="text-red-600 poppins-regular">
+                            Error: The form has invalid fields. Please go through the form again to
+                            make sure that every required fields are filled out.
+                          </div>
+                        )}
                       </div>
-                      <p className="poppins-regular text-xs text-[#2D5016]">
-                        Accepted file types: .pdf, .doc, .docx, .png, .jpeg, .txt, .tex, .rtf
-                      </p>
-                      {partialProfile?.resume && (
-                        <div className="my-4 w-fit">
-                          <Link href={partialProfile.resume} target="_blank">
-                            <div className="bg-[#7A9E7E] md:p-2 p-1 text-white rounded-lg">
-                              Click to view your current resume
-                            </div>
-                          </Link>
-                        </div>
-                      )}
-                    </div>
-                  </section>
-                )}
+                    </section>
+                  )}
+                </Form>
 
-                {/* Teammate Questions */}
-                {registrationSection == 7 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
-                    <h2 className="sm:text-2xl text-xl font-semibold sm:mb-3 mb-1">
-                      Teammate Questions
-                    </h2>
-                    <p className="text-md my-6 font-bold">
-                      Emails of teammates should be the same as the email they registered with!
-                    </p>
-                    <div className="flex flex-col">
-                      {teammateQuestions.map((obj, idx) => (
-                        <DisplayRegistrationQuestion key={idx} obj={obj} />
-                      ))}
-                    </div>
-
-                    {/* Review and Application Process */}
-                    <div className="bg-blue-50 p-4 rounded-lg mt-6 text-left border-l-4 border-blue-400">
-                      <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
-                        📝 Please Review Your Submission
-                      </h4>
-                      <p className="text-sm text-[#2D5016] leading-relaxed">
-                        Before submitting your application, please take a moment to review all the
-                        information you&apos;ve provided.{' '}
-                        <strong>
-                          All applications are reviewed based on the essay questions and how they
-                          were answered.
-                        </strong>{' '}
-                        Our selection process evaluates each applicant&apos;s responses to the essay
-                        questions, their thoughtfulness, creativity, and potential contribution to
-                        the hackathon community.{' '}
-                        <a
-                          href="https://medium.com/@hackUTD/applying-to-hackutd-ripple-effect-1a85143a22da"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-800 underline"
-                        >
-                          Find more information here from last year&apos;s event
-                        </a>
-                        .
-                      </p>
-                    </div>
-
-                    {/* Submit */}
-                    <div className="mt-8 text-white">
-                      <button
-                        disabled={isSubmitting}
-                        type="submit"
-                        className="mr-auto cursor-pointer px-4 py-2 rounded-lg bg-[#7A9E7E] hover:brightness-90"
-                      >
-                        Submit
-                      </button>
-                      {!isValid && (
-                        <div className="text-red-600 poppins-regular">
-                          Error: The form has invalid fields. Please go through the form again to
-                          make sure that every required fields are filled out.
-                        </div>
-                      )}
-                    </div>
-                  </section>
-                )}
-              </Form>
-
-              {/* Pagniation buttons */}
-              <section
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr 1fr',
-                }}
-                className={`lg:block ${
-                  registrationSection == 0
-                    ? 'justify-end'
-                    : registrationSection >= 7
-                    ? 'justify-start'
-                    : 'justify-between'
-                } lg:pb-4 pb-8 lg:px-4 sm:px-8 px-6 text-primaryDark font-semibold text-primaryDark font-semibold text-md`}
-              >
-                {registrationSection > 0 && (
-                  <div
-                    style={{ gridArea: '1 / 1 / 2 / 2' }}
-                    // className="lg:fixed 2xl:bottom-8 2xl:left-8 bottom-6 left-6 inline cursor-pointer select-none"
-                    onClick={() => {
-                      setRegistrationSection(registrationSection - 1);
-                    }}
-                  >
-                    <div
-                      style={{ width: 'fit-content' }}
-                      className="hidden md:inline-flex cursor-pointer select-none bg-[#2D5016] text-white rounded-[30px] py-3 pl-2 pr-4 text-xs md:text-lg border-2 border-[#2D5016]"
-                    >
-                      <ChevronLeftIcon className="text-white" />
-                      prev page
-                    </div>
-                    <div
-                      style={{ width: 'fit-content' }}
-                      className="md:hidden cursor-pointer select-none bg-[#2D5016] text-white rounded-[30px] py-3 pl-2 pr-4 text-xs md:text-lg border-2 border-[#2D5016]"
-                    >
-                      <ChevronLeftIcon className="text-white" />
-                      prev
-                    </div>
-                  </div>
-                )}
-
-                <div
-                  className="flex justify-center items-center"
-                  style={{ gridArea: '1 / 2 / 2 / 3' }}
+                {/* Pagniation buttons */}
+                <section
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr 1fr',
+                  }}
+                  className={`lg:block ${
+                    registrationSection == 0
+                      ? 'justify-end'
+                      : registrationSection >= 7
+                      ? 'justify-start'
+                      : 'justify-between'
+                  } lg:pb-4 pb-8 lg:px-4 sm:px-8 px-6 text-primaryDark font-semibold text-primaryDark font-semibold text-md`}
                 >
-                  {Array.from({ length: 8 }).map((_, i) => (
+                  {registrationSection > 0 && (
                     <div
-                      key={i}
+                      style={{ gridArea: '1 / 1 / 2 / 2' }}
+                      // className="lg:fixed 2xl:bottom-8 2xl:left-8 bottom-6 left-6 inline cursor-pointer select-none"
+                      onClick={() => {
+                        setRegistrationSection(registrationSection - 1);
+                      }}
+                    >
+                      <div
+                        style={{ width: 'fit-content' }}
+                        className={`hidden md:inline-flex cursor-pointer select-none text-white rounded-[30px] py-3 pl-2 pr-4 text-xs md:text-lg border-2 ${
+                          isSavingApplication
+                            ? 'bg-gray-400 border-gray-400'
+                            : 'bg-[#2D5016] border-[#2D5016]'
+                        }`}
+                      >
+                        <ChevronLeftIcon className="text-white" />
+                        {isSavingApplication ? 'Saving...' : 'prev page'}
+                      </div>
+                      <div
+                        style={{ width: 'fit-content' }}
+                        className={`md:hidden cursor-pointer select-none text-white rounded-[30px] py-3 pl-2 pr-4 text-xs md:text-lg border-2 ${
+                          isSavingApplication
+                            ? 'bg-gray-400 border-gray-400'
+                            : 'bg-[#2D5016] border-[#2D5016]'
+                        }`}
+                      >
+                        <ChevronLeftIcon className="text-white" />
+                        {isSavingApplication ? 'Saving...' : 'prev'}
+                      </div>
+                    </div>
+                  )}
+
+                  <div
+                    className="flex justify-center items-center"
+                    style={{ gridArea: '1 / 2 / 2 / 3' }}
+                  >
+                    {Array.from({ length: 8 }).map((_, i) => (
+                      <div
+                        key={i}
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          if (isSavingApplication) return;
+
+                          // Only allow jumping to pages if current page is complete or if going backwards
+                          if (i > registrationSection && !validateCurrentPage(values)) {
+                            alert(
+                              'Please fill out all required fields on the current page before proceeding.',
+                            );
+                            return;
+                          }
+
+                          // Always auto-save in edit mode when navigating
+                          if (isEditMode || dirty || resumeFileUpdated) {
+                            setIsSavingApplication(true);
+                            await handleSaveProfile(values, registrationSection, resetForm);
+                            setIsSavingApplication(false);
+                          }
+                          setRegistrationSection(i);
+                        }}
+                        style={{
+                          backgroundColor: registrationSection == i ? '#4C4950' : '#9F9EA7',
+                        }}
+                        className="rounded-full w-3 h-3 mr-2 cursor-pointer"
+                      />
+                    ))}
+                  </div>
+
+                  {registrationSection < 7 && (
+                    <div
+                      className="flex justify-end "
+                      style={{ gridArea: '1 / 3 / 2 / 4' }}
                       onClick={async (e) => {
                         e.preventDefault();
-                        if (isSavingApplication) return;
+                        if (isSavingApplication) {
+                          return;
+                        }
 
-                        // Only allow jumping to pages if current page is complete or if going backwards
-                        if (i > registrationSection && !validateCurrentPage(values)) {
+                        // Validate current page before proceeding
+                        if (!validateCurrentPage(values)) {
                           alert(
-                            'Please fill out all required fields on the current page before proceeding.',
+                            'Please fill out all required fields before proceeding to the next page.',
                           );
                           return;
                         }
 
-                        if (dirty || resumeFileUpdated) {
+                        // Always auto-save in edit mode when navigating
+                        if (isEditMode || dirty || resumeFileUpdated) {
                           setIsSavingApplication(true);
                           await handleSaveProfile(values, registrationSection, resetForm);
                           setIsSavingApplication(false);
                         }
-                        setRegistrationSection(i);
+                        setRegistrationSection(registrationSection + 1);
                       }}
-                      style={{ backgroundColor: registrationSection == i ? '#4C4950' : '#9F9EA7' }}
-                      className="rounded-full w-3 h-3 mr-2 cursor-pointer"
-                    />
-                  ))}
-                </div>
-
-                {registrationSection < 7 && (
-                  <div
-                    className="flex justify-end "
-                    style={{ gridArea: '1 / 3 / 2 / 4' }}
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      if (isSavingApplication) {
-                        return;
-                      }
-
-                      // Validate current page before proceeding
-                      if (!validateCurrentPage(values)) {
-                        alert(
-                          'Please fill out all required fields before proceeding to the next page.',
-                        );
-                        return;
-                      }
-
-                      if (dirty || resumeFileUpdated) {
-                        setIsSavingApplication(true);
-                        await handleSaveProfile(values, registrationSection, resetForm);
-                        setIsSavingApplication(false);
-                      }
-                      setRegistrationSection(registrationSection + 1);
-                    }}
-                  >
-                    <div
-                      style={{ width: 'fit-content' }}
-                      className="hidden md:inline-flex cursor-pointer select-none bg-[#2D5016] text-white text-xs md:text-lg rounded-[30px] py-3 pr-2 pl-4 border-2 border-[#2D5016]"
                     >
-                      next page
-                      <ChevronRightIcon />
+                      <div
+                        style={{ width: 'fit-content' }}
+                        className={`hidden md:inline-flex cursor-pointer select-none text-white text-xs md:text-lg rounded-[30px] py-3 pr-2 pl-4 border-2 ${
+                          isSavingApplication
+                            ? 'bg-gray-400 border-gray-400'
+                            : 'bg-[#2D5016] border-[#2D5016]'
+                        }`}
+                      >
+                        {isSavingApplication ? 'Saving...' : 'next page'}
+                        <ChevronRightIcon />
+                      </div>
+                      <div
+                        style={{ width: 'fit-content' }}
+                        className={`md:hidden cursor-pointer select-none text-white text-xs md:text-lg rounded-[30px] py-3 pr-2 pl-4 border-2 ${
+                          isSavingApplication
+                            ? 'bg-gray-400 border-gray-400'
+                            : 'bg-[#2D5016] border-[#2D5016]'
+                        }`}
+                      >
+                        {isSavingApplication ? 'Saving...' : 'next'}
+                        <ChevronRightIcon />
+                      </div>
                     </div>
-                    <div
-                      style={{ width: 'fit-content' }}
-                      className="md:hidden cursor-pointer select-none bg-[#2D5016] text-white text-xs md:text-lg rounded-[30px] py-3 pr-2 pl-4 border-2 border-[#2D5016]"
-                    >
-                      next
-                      <ChevronRightIcon />
-                    </div>
-                  </div>
-                )}
+                  )}
+                </section>
+                <Snackbar
+                  open={displayProfileSavedToaster}
+                  autoHideDuration={5000}
+                  onClose={() => setDisplayProfileSavedToaster(false)}
+                  message={isEditMode ? 'Application auto-saved successfully' : 'Profile saved'}
+                />
               </section>
-              <Snackbar
-                open={displayProfileSavedToaster}
-                autoHideDuration={5000}
-                onClose={() => setDisplayProfileSavedToaster(false)}
-                message="Profile saved"
-              />
-            </section>
-            <ApplicationAutosaveHandler
-              currentPage={registrationSection}
-              defaultResumeUrl={partialProfile?.resume || ''}
-              resumeFile={resumeFileUpdated ? resumeFile : null}
-              updatePartialProfile={updatePartialProfile}
-            />
-          </>
-        )}
+              {/* ApplicationAutosaveHandler is not needed for edit mode since we handle auto-save in navigation */}
+              {!isEditMode && (
+                <ApplicationAutosaveHandler
+                  currentPage={registrationSection}
+                  defaultResumeUrl={
+                    effectivePartialProfile?.resume || effectiveProfile?.resume || ''
+                  }
+                  resumeFile={resumeFileUpdated ? resumeFile : null}
+                  updatePartialProfile={updatePartialProfile}
+                />
+              )}
+            </>
+          );
+        }}
       </Formik>
     </div>
   );

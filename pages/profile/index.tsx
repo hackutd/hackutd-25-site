@@ -14,6 +14,7 @@ import { useAuthContext } from '@/lib/user/AuthContext';
 import { getFileExtension } from '@/lib/util';
 
 import DeleteProfileDialog from '@/components/profile/DeleteProfileDialog';
+import EditApplicationDisclaimerDialog from '@/components/profile/EditApplicationDisclaimerDialog';
 import QRCode from '@/components/dashboard/QRCode';
 import Loading from '@/components/icon/Loading';
 
@@ -36,6 +37,7 @@ export default function ProfilePage() {
   } = useAuthContext();
   const [uploading, setUploading] = useState<boolean>(false);
   const [showAppDeleteModal, setShowAppDeleteModal] = useState<boolean>(false);
+  const [showEditAppDisclaimer, setShowEditAppDisclaimer] = useState<boolean>(false);
   const resumeRef = useRef(null);
 
   const isValidUrl = (s: string) => {
@@ -96,6 +98,15 @@ export default function ProfilePage() {
 
   const handleHomeClick = () => {
     router.push('/');
+  };
+
+  const handleEditApplication = () => {
+    setShowEditAppDisclaimer(true);
+  };
+
+  const handleContinueToEdit = () => {
+    setShowEditAppDisclaimer(false);
+    router.push('/profile/application/edit');
   };
 
   const textFieldOverrides: TextFieldProps = {
@@ -206,6 +217,11 @@ export default function ProfilePage() {
           closeModalHandler={() => setShowAppDeleteModal(false)}
           showDialog={showAppDeleteModal}
           confirmDeletionHandler={deleteApplicationHandler}
+        />
+        <EditApplicationDisclaimerDialog
+          open={showEditAppDisclaimer}
+          onClose={() => setShowEditAppDisclaimer(false)}
+          onContinue={handleContinueToEdit}
         />
 
         <div className="bg-white min-w-3/4 py-12 px-16 rounded-xl flex flex-col md:flex-row 2xl:gap-x-14 gap-x-12 2xl:justify-center">
@@ -324,6 +340,12 @@ export default function ProfilePage() {
                         View Resume
                       </Link>
                     )}
+                    <button
+                      className="font-fredoka transition py-3 font-semibold px-6 text-sm text-center whitespace-nowrap text-white w-min bg-[#2D5016] rounded-full cursor-pointer hover:brightness-110"
+                      onClick={handleEditApplication}
+                    >
+                      Edit Application
+                    </button>
                     <button
                       className="font-fredoka transition py-3 font-semibold px-6 text-sm text-center whitespace-nowrap text-white w-min bg-red-400 rounded-full cursor-pointer hover:brightness-110"
                       onClick={() => setShowAppDeleteModal(true)}

@@ -19,6 +19,7 @@ interface Props {
     question: string;
   };
   type: string;
+  isEditMode?: boolean;
 }
 /**
  *Text input question Component
@@ -37,6 +38,9 @@ function RegistrationQuestion(props: Props) {
           {!props.question.required && (
             <span className="text-gray-600 ml-2 text-[8px]">optional</span>
           )}
+          {props.isEditMode && props.question.name === 'preferredEmail' && (
+            <span className="text-gray-500 ml-2 text-xs">(cannot be changed)</span>
+          )}
         </label>
         <Field name={props.question.name} type="text">
           {({ field }: FieldProps) => (
@@ -45,8 +49,16 @@ function RegistrationQuestion(props: Props) {
               id={props.question.id}
               variant="outlined"
               type="text"
+              disabled={props.isEditMode && props.question.name === 'preferredEmail'}
               sx={{
                 fieldset: { borderColor: '#79747E' },
+                ...(props.isEditMode &&
+                  props.question.name === 'preferredEmail' && {
+                    backgroundColor: '#f5f5f5',
+                    '& .MuiInputBase-input.Mui-disabled': {
+                      color: '#666',
+                    },
+                  }),
               }}
               InputProps={{
                 classes: {

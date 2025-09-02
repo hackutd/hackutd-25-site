@@ -7,7 +7,7 @@ import RegistrationQuestion from './RegistrationQuestion';
 /**
  *Display registration questions Component
  */
-function DisplayRegistrationQuestion(props: { obj: QuestionTypes }) {
+function DisplayRegistrationQuestion(props: { obj: QuestionTypes; isEditMode?: boolean }) {
   return (
     <Fragment>
       {/* Display text input questions */}
@@ -19,7 +19,12 @@ function DisplayRegistrationQuestion(props: { obj: QuestionTypes }) {
         }}
       >
         {props.obj.textInputQuestions?.map((inputObj) => (
-          <RegistrationQuestion key={inputObj.id} type="text" question={inputObj} />
+          <RegistrationQuestion
+            key={inputObj.id}
+            type="text"
+            question={inputObj}
+            isEditMode={props.isEditMode}
+          />
         ))}
       </div>
       {/* Display number input questions */}
