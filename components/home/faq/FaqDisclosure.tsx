@@ -44,7 +44,7 @@ export default function FaqDisclosure({ question, answer, isOpen, toggleDisclosu
         style={{
           boxShadow: '0 5px 16px 0 rgb(8,52,15,0.06)',
         }}
-        className="transition duration-500 ease-in-out bg-white rounded-md p-4"
+        className="transition duration-500 ease-in-out bg-[#231140] rounded-md p-4 border border-white"
       >
         {/* Button to toggle the FAQ */}
         <Disclosure.Button as="div">
@@ -52,19 +52,19 @@ export default function FaqDisclosure({ question, answer, isOpen, toggleDisclosu
             className="w-full flex justify-between items-center p-2 text-[#6F6C90] font-medium"
             onClick={toggleDisclosure}
           >
-            <h1 style={{ fontFamily: 'Fredoka', color: '#170F49' }} className="text-left text-lg">
+            <h1 style={{ fontFamily: 'DM-Sans', color: '#FFFFFF' }} className="text-left text-lg">
               {question}
             </h1>
 
             {/* Plus/Minus icon with background transition */}
             <div
-              style={{ backgroundColor: !isOpen ? '#F7F7FB' : '#F2F3FF' }}
+              style={{ backgroundColor: !isOpen ? '#5F5FFF' : '#4d4dddff' }}
               className="p-3 rounded-md transition duration-500 ease-in-out"
             >
               {!isOpen ? (
-                <PlusIcon className="transition transform duration-300 ease-in-out w-5 h-5" />
+                <PlusIcon className="transition transform duration-300 ease-in-out w-5 h-5 text-[#FFFFFF]" />
               ) : (
-                <MinusIcon className="transition transform duration-300 ease-in-out w-5 h-5 text-[#5D5A88]" />
+                <MinusIcon className="transition transform duration-300 ease-in-out w-5 h-5 text-[#FFFFFF]" />
               )}
             </div>
           </button>
@@ -80,7 +80,7 @@ export default function FaqDisclosure({ question, answer, isOpen, toggleDisclosu
           }}
         >
           <Disclosure.Panel
-            style={{ color: '#6F6C90' }}
+            style={{ color: '#dfdcdcff', fontFamily: 'DM-Sans' }}
             className="my-2 py-2 px-2 text-left text-sm"
             static
           >
