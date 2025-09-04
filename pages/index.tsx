@@ -104,12 +104,9 @@ export default function Home({
           <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
         </div>
 
-        {/* 
-          NOTE: Commented out because we have not decided prized for 2025 yet! - Ayro
-           <div className="my-72">
+        <div className="my-72">
           <HomeChallengesComponent challenges={challenges} />
-        </div>          
-          */}
+        </div>
 
         <div className="my-72">
           <HomeFaq answeredQuestions={answeredQuestion} />

@@ -46,15 +46,15 @@ export default function Challenge({ challenges }: Props) {
         <div className={styles.content}>
           <div
             style={{ textShadow: '0 4px 4px rgba(0, 0, 0, 0.25)' }}
-            className="font-fredoka font-bold md:text-4xl text-2xl text-center text-[#05149C]"
+            className="font-[DM-Sans] font-bold md:text-4xl text-2xl text-center bg-gradient-to-r from-[#FFFCC0] to-[#FF9C9C] bg-clip-text text-transparent"
           >
             Challenge Tracks
           </div>
           <div
             style={{ textShadow: '0 4px 4px rgba(0, 0, 0, 0.25)' }}
-            className="text-center text-5xl font-bold text-[#05149C] p-4 font-fredoka uppercase"
+            className="font-[DM-Sans] font-bold md:text-3xl text-2xl text-center bg-gradient-to-r from-[#FFFCC0] to-[#FF9C9C] bg-clip-text text-transparent "
           >
-            Choose your track to get started
+            Participate in up to 2 of our challenge tracks
           </div>
 
           {/* Challenge Tracks */}
