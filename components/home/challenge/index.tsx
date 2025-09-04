@@ -45,14 +45,24 @@ export default function Challenge({ challenges }: Props) {
       <section className={`${styles.container} m-auto pb-[20rem] relative`}>
         <div className={styles.content}>
           <div
-            style={{ textShadow: '0 4px 4px rgba(0, 0, 0, 0.25)' }}
-            className="font-[DM-Sans] font-bold md:text-4xl text-2xl text-center bg-gradient-to-r from-[#FFFCC0] to-[#FF9C9C] bg-clip-text text-transparent"
+            style={{
+              background: 'linear-gradient(354.75deg, #FFD29B 4.2%, #FFD29B 37.67%, #FF5757 95.8%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+            className="font-[youngSerif] font-bold md:text-4xl text-2xl text-center "
           >
             Challenge Tracks
           </div>
           <div
-            style={{ textShadow: '0 4px 4px rgba(0, 0, 0, 0.25)' }}
-            className="font-[DM-Sans] font-bold md:text-3xl text-2xl text-center bg-gradient-to-r from-[#FFFCC0] to-[#FF9C9C] bg-clip-text text-transparent "
+            style={{
+              background: 'linear-gradient(354.75deg, #FFD29B 4.2%, #FFD29B 37.67%, #FF5757 95.8%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+            className="font-[youngSerif] font-bold md:text-3xl text-2xl text-center  "
           >
             Participate in up to 2 of our challenge tracks
           </div>

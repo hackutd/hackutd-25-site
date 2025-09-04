@@ -52,7 +52,10 @@ export default function FaqDisclosure({ question, answer, isOpen, toggleDisclosu
             className="w-full flex justify-between items-center p-2 text-[#6F6C90] font-medium"
             onClick={toggleDisclosure}
           >
-            <h1 style={{ fontFamily: 'DM-Sans', color: '#FFFFFF' }} className="text-left text-lg">
+            <h1
+              style={{ fontFamily: 'youngSerif', color: '#FFFFFF' }}
+              className="text-left text-lg"
+            >
               {question}
             </h1>
 
