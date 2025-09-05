@@ -39,12 +39,12 @@ html {
 
 /* Mobile optimizations */
 @media (max-width: 768px) {
-  /* Prevent scrolling only on home page for mobile */
+  /* Allow normal scrolling on mobile */
   body.home-page {
-    overflow: hidden !important;
-    position: fixed !important;
+    overflow: auto !important;
+    position: relative !important;
     width: 100% !important;
-    height: 100% !important;
+    height: auto !important;
   }
   
   /* Optimize background loading on mobile */
