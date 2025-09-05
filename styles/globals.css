@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Young+Serif&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
@@ -38,12 +39,12 @@ html {
 
 /* Mobile optimizations */
 @media (max-width: 768px) {
-  /* Prevent scrolling only on home page for mobile */
+  /* Allow normal scrolling on mobile */
   body.home-page {
-    overflow: hidden !important;
-    position: fixed !important;
+    overflow: auto !important;
+    position: relative !important;
     width: 100% !important;
-    height: 100% !important;
+    height: auto !important;
   }
   
   /* Optimize background loading on mobile */
