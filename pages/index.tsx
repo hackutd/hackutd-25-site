@@ -103,7 +103,7 @@ export default function Home({
         /> */}
         <HomeHero />
 
-        {/* <div className="my-72">
+        <div className="my-72">
           <HomeAboutText />
         </div>
 
@@ -134,7 +134,7 @@ export default function Home({
         <div className="my-72">
           <HomeSponsors />
         </div>
-        <HomeFooter /> */}
+        <HomeFooter />
       </div>
     </>
   );
