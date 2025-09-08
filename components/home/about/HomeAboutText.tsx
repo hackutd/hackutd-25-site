@@ -85,12 +85,12 @@ const HomeAboutText = () => {
       id="what-is-hackutd"
     >
       <div className="flex justify-center relative w-full z-10">
-        <img src="/assets/aboutbanner.png" alt="HackUTD" className="z-10" />
+        <img src="/assets/aboutbanner.png" alt="HackUTD" className="z-10 rotate-180" />
         <h1
           ref={titleRef}
-          className="mb-[50px] sm:mb-[80px] absolute inset-0 flex items-center justify-center 
+          className="mt-[50px] sm:mt-[70px] absolute inset-0 flex items-center justify-center 
                   text-2xl sm:text-3xl md:text-4xl font-light 
-                  bg-gradient-to-t from-[#531285] to-[#C694FF] bg-clip-text z-50 text-transparent"
+                  bg-gradient-to-t from-[#531285] to-[#C694FF] bg-clip-text z-50 text-transparent font-serif"
         >
           What Is HackUTD?
         </h1>
@@ -99,7 +99,7 @@ const HomeAboutText = () => {
       <div className="relative w-full flex justify-center items-center -mt-24 z-0">
         <p
           ref={explanationRef}
-          className="text-xl text-center text-white max-w-4xl mb-16 font-fredoka relative px-[40px] opacity-0 bg-black/20 pt-[100px] pb-[50px] rounded-2xl backdrop-blur-sm"
+          className="text-xl text-center text-white max-w-4xl mb-16 font-fredoka relative px-[40px] opacity-0 bg-black/50 pt-[100px] pb-[50px] rounded-2xl backdrop-blur-sm shadow-lg shadow-[#93004C66]"
         >
           HackUTD, the largest university hackathon in Texas, is a weekend-long event where students
           build apps, hardware, and more. HackUTD provides a venue for self-expression and
