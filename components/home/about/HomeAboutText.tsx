@@ -25,9 +25,9 @@ const HomeAboutText = () => {
             titleText.innerHTML = titleLetters
               .map((letter) => {
                 if (letter === ' ') {
-                  return `<span style="display:inline-block">&nbsp;</span>`;
+                  return `<span class="inline-block">&nbsp;</span>`;
                 }
-                return `<span>${letter}</span>`;
+                return `<span class="bg-gradient-to-t from-[#531285] to-[#C694FF] bg-clip-text text-transparent inline-block">${letter}</span>`;
               })
               .join('');
 
@@ -85,11 +85,12 @@ const HomeAboutText = () => {
       id="what-is-hackutd"
     >
       <div className="flex justify-center relative w-full z-10">
-        <img src="/assets/aboutbanner.png" alt="HackUTD" className="" />
+        <img src="/assets/aboutbanner.png" alt="HackUTD" className="z-10" />
         <h1
           ref={titleRef}
-          className="mb-[80px] absolute inset-0 flex items-center justify-center 
-               text-2xl sm:text-3xl md:text-4xl font-light text-[#351918]"
+          className="mb-[50px] sm:mb-[80px] absolute inset-0 flex items-center justify-center 
+                  text-2xl sm:text-3xl md:text-4xl font-light 
+                  bg-gradient-to-t from-[#531285] to-[#C694FF] bg-clip-text z-50 text-transparent"
         >
           What Is HackUTD?
         </h1>
