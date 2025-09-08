@@ -86,6 +86,18 @@ export default function ProfilePage() {
       .join(' ');
   };
 
+  const handleSignInOut = async () => {
+    if (isSignedIn) {
+      await signOut();
+    } else {
+      router.push('/auth');
+    }
+  };
+
+  const handleHomeClick = () => {
+    router.push('/');
+  };
+
   const textFieldOverrides: TextFieldProps = {
     InputLabelProps: {
       classes: {
@@ -95,7 +107,7 @@ export default function ProfilePage() {
     InputProps: {
       classes: {
         input: '!text-black [-webkit-text-fill-color:unset!important]',
-        notchedOutline: '!border-[#79747E]',
+        notchedOutline: '!border-[#2D5016]',
       },
     },
   };
@@ -195,10 +207,11 @@ export default function ProfilePage() {
           showDialog={showAppDeleteModal}
           confirmDeletionHandler={deleteApplicationHandler}
         />
+
         <div className="bg-white min-w-3/4 py-12 px-16 rounded-xl flex flex-col md:flex-row 2xl:gap-x-14 gap-x-12 2xl:justify-center">
           {/* QR Code */}
           <div className="">
-            <div className="bg-[#E0FDFF] rounded-lg p-8 h-min w-min mx-auto">
+            <div className="bg-[#8FBC8F] rounded-lg p-8 h-min w-min mx-auto">
               {/* Dark represents dots, Light represents the background */}
               <QRCode
                 data={'hack:' + user.id}
@@ -208,7 +221,7 @@ export default function ProfilePage() {
                 // darkColor="#173950"
                 // lightColor="#0000"
               />
-              <div className="text-center text-[#170F49] text-md font-semibold">
+              <div className="text-center text-[#2D5016] text-md font-semibold">
                 {profile?.user.group ? profile?.user.group : 'Group TBD'}
               </div>
             </div>
@@ -218,17 +231,17 @@ export default function ProfilePage() {
                 <h1
                   className={`font-fredoka text-xl font-semibold ${
                     profile?.status === 'Accepted'
-                      ? 'text-[#5DC55B]'
+                      ? 'text-[#90EE90]'
                       : profile?.status === 'Rejected'
                       ? 'text-[#DE3163]'
-                      : 'text-[#5C67C9]'
+                      : 'text-[#2D5016]'
                   }`}
                 >
                   {profile?.status ? profile?.status : 'In Review'}
                 </h1>
                 <div className="text-xs md:flex pt-2 md:pt-0">
                   {profile?.updatedAt && (
-                    <p className="text-nowrap mr-4 text-[#4A5156] font-semibold">
+                    <p className="text-nowrap mr-4 text-[#2D5016] font-semibold">
                       Application {hasPartialProfile ? 'last worked on' : 'last submitted on'}{' '}
                       {hasPartialProfile
                         ? new Date(partialProfile?.updatedAt).toLocaleDateString()
@@ -237,7 +250,7 @@ export default function ProfilePage() {
                   )}
                   {/* <Link
                     href="/profile/application/edit"
-                    className="text-[#40B7BA] font-bold underline text-nowrap"
+                    className="text-[#7A9E7E] font-bold underline text-nowrap"
                   >
                     <p className="">
                       {hasPartialProfile ? 'Continue Editing Application' : 'Edit Application'}
@@ -245,8 +258,8 @@ export default function ProfilePage() {
                   </Link> */}
                 </div>
               </div>
-              <p className="text-lg text-nowrap mr-4 text-[#4A5156] font-bold underline">
-                Decisions will be out by TBD
+              <p className="text-lg text-nowrap mr-4 text-[#2D5016] font-bold underline">
+                Decisions will be out by November 1st 2025
               </p>
             </div>
 
@@ -278,7 +291,7 @@ export default function ProfilePage() {
                 {profile?.website && profile.website !== '' && (
                   <div className="flex items-center justify-center w-10 h-10 rounded-full">
                     <a href={prettyPrintWebsite(profile.website)} target="_blank" rel="noreferrer">
-                      <LanguageRoundedIcon className="text-[#5C67C9] !w-10 !h-10" />
+                      <LanguageRoundedIcon className="text-[#2D5016] !w-10 !h-10" />
                     </a>
                   </div>
                 )}
@@ -297,14 +310,14 @@ export default function ProfilePage() {
                     />
                     <label
                       id="resume_label"
-                      className="font-fredoka transition py-3 font-semibold px-6 text-sm text-center whitespace-nowrap text-white w-min bg-[#5D5A88] rounded-full cursor-pointer hover:brightness-110"
+                      className="font-fredoka transition py-3 font-semibold px-6 text-sm text-center whitespace-nowrap text-white w-min bg-[#7A9E7E] rounded-full cursor-pointer hover:brightness-110"
                       htmlFor="resume"
                     >
                       {profile.resume ? 'Update' : 'Add'} Resume
                     </label>
                     {profile.resume && (
                       <Link
-                        className="font-fredoka transition py-3 font-semibold px-6 text-sm text-center whitespace-nowrap text-white w-min bg-[#5D5A88] rounded-full cursor-pointer hover:brightness-110"
+                        className="font-fredoka transition py-3 font-semibold px-6 text-sm text-center whitespace-nowrap text-white w-min bg-[#7A9E7E] rounded-full cursor-pointer hover:brightness-110"
                         href={profile.resume}
                         target="__blank__"
                       >
@@ -327,7 +340,7 @@ export default function ProfilePage() {
 
           {/* Info */}
           <div className="w-full">
-            <h1 className="text-center font-fredoka font-semibold text-5xl md:mt-0 mt-10 text-[#5D5A88]">{`${profile?.user.firstName} ${profile?.user.lastName}`}</h1>
+            <h1 className="text-center font-fredoka font-semibold text-5xl md:mt-0 mt-10 text-[#2D5016]">{`${profile?.user.firstName} ${profile?.user.lastName}`}</h1>
 
             <div className="w-full grid gap-8 grid-cols-1 md:grid-cols-2 mt-8">
               <TextField

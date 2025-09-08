@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import gsap from 'gsap';
 
 import { SectionReferenceContext } from '@/lib/context/section';
 import { RequestHelper } from '@/lib/request-helper';
@@ -24,27 +23,24 @@ export default function FaqCore({ fetchedFaqs }: { fetchedFaqs: AnsweredQuestion
   const { faqRef } = useContext(SectionReferenceContext);
   const faqContainerRef = useRef(null); // Ref for the FAQ container
 
-  // GSAP animation on FAQ items when they come into view
+  // CSS-based animation on FAQ items when they come into view
   useEffect(() => {
     const handleIntersection = (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          gsap.to(entry.target, {
-            opacity: 1,
-            y: 0,
-            stagger: 0.1,
-            duration: 1,
-            ease: 'power3.out',
-          });
+          entry.target.classList.add('faq-animate-in');
         }
       });
     };
 
-    const observer = new IntersectionObserver(handleIntersection, { threshold: 0.1 });
+    const observer = new IntersectionObserver(handleIntersection, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px',
+    });
+
     if (faqContainerRef.current) {
       const faqBoxes = faqContainerRef.current.querySelectorAll('.faq-box');
       faqBoxes.forEach((box) => {
-        gsap.set(box, { opacity: 0, y: 50 }); // Initial hidden state for each FAQ item
         observer.observe(box);
       });
     }
@@ -72,6 +68,18 @@ export default function FaqCore({ fetchedFaqs }: { fetchedFaqs: AnsweredQuestion
           @keyframes moveLeftRight {
             0% { transform: translateX(0); }
             100% { transform: translateX(8px); }
+          }
+
+          .faq-box {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform;
+          }
+
+          .faq-box.faq-animate-in {
+            opacity: 1;
+            transform: translateY(0);
           }
         `}
       </style>

@@ -57,14 +57,24 @@ export default function AdminHeader() {
             User Dashboard
           </NavLink>
           {checkUserPermission(user, allowedRoles) && (
-            <NavLink
-              href="/admin/stats"
-              exact={true}
-              activeOptions={'border-b-4 border-primaryDark text-complementaryDark'}
-              className="ml-4 py-2"
-            >
-              Stats at a Glance
-            </NavLink>
+            <>
+              <NavLink
+                href="/admin/stats"
+                exact={true}
+                activeOptions={'border-b-4 border-primaryDark text-complementaryDark'}
+                className="ml-4 py-2"
+              >
+                Stats at a Glance
+              </NavLink>
+              <NavLink
+                href="/admin/leaderboard"
+                exact={true}
+                activeOptions={'border-b-4 border-primaryDark text-complementaryDark'}
+                className="ml-4 py-2"
+              >
+                Admin Leaderboard
+              </NavLink>
+            </>
           )}
           <NavLink
             href="/admin/waitlist"

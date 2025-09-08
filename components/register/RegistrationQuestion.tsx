@@ -33,6 +33,7 @@ function RegistrationQuestion(props: Props) {
           className="flex items-center mt-4 poppins-regular mb-1"
         >
           {props.question.question}
+          {props.question.required && <span className="text-red-500 ml-1">*</span>}
           {!props.question.required && (
             <span className="text-gray-600 ml-2 text-[8px]">optional</span>
           )}
@@ -72,6 +73,7 @@ function RegistrationQuestion(props: Props) {
           className="flex items-center mt-4 poppins-regular mb-1"
         >
           {props.question.question}
+          {props.question.required && <span className="text-red-500 ml-1">*</span>}
           {!props.question.required && (
             <span className="text-gray-600 ml-2 text-[8px]">optional</span>
           )}
@@ -116,6 +118,7 @@ function RegistrationQuestion(props: Props) {
           className="flex items-center mt-4 poppins-regular mb-1"
         >
           {props.question.question}
+          {props.question.required && <span className="text-red-500 ml-1">*</span>}
           {!props.question.required && (
             <span className="text-gray-600 ml-2 text-[8px]">optional</span>
           )}
@@ -164,6 +167,7 @@ function RegistrationQuestion(props: Props) {
           className="flex items-center mt-4 poppins-regular mb-1"
         >
           {props.question.question}
+          {props.question.required && <span className="text-red-500 ml-1">*</span>}
           {!props.question.required && (
             <span className="text-gray-600 ml-2 text-[8px]">optional</span>
           )}
@@ -216,6 +220,7 @@ function RegistrationQuestion(props: Props) {
           className="flex items-center mt-4 mb-1 poppins-regular"
         >
           {props.question.question}
+          {props.question.required && <span className="text-red-500 ml-1">*</span>}
           {!props.question.required && (
             <span className="text-gray-600 ml-2 text-[8px]">optional</span>
           )}
@@ -250,6 +255,7 @@ function RegistrationQuestion(props: Props) {
           className="flex items-center mt-4 poppins-regular mb-1"
         >
           {props.question.question}
+          {props.question.required && <span className="text-red-500 ml-1">*</span>}
           {!props.question.required && (
             <span className="text-gray-600 ml-2 text-[8px]">optional</span>
           )}
