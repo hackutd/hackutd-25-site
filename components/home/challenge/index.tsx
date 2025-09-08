@@ -67,7 +67,7 @@ export default function Challenge({ challenges }: Props) {
             Participate in up to 2 of our challenge tracks
           </div>
 
-          {/* Challenge Tracks */}
+          {/* Challenge Tracks TODO: Fix structure of columns to be smaller  */}
           <div className="flex pt-14 px-16 flex-wrap lg:flex-nowrap gap-4">
             {CHALLENGE_TRACKS.map((track, idx) => (
               <HomeChallengeTrackCard key={idx} challengeTrack={track} blockType={idx % 3} />
@@ -75,7 +75,7 @@ export default function Challenge({ challenges }: Props) {
           </div>
 
           {/* TODO: enable this after get challenge data */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:p-10 items-center gap-x-6 gap-y-6 mt-6 mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:p-10 items-center gap-x-6 gap-y-6 mt-6 mx-auto max-w-10xl">
             {challenges.map((challenge, idx) => (
               <HomeChallengesCard key={idx} challenge={challenge} blockType={idx % 2} />
             ))}
