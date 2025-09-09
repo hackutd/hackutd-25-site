@@ -5,6 +5,23 @@ interface TierTitleProps {
 }
 
 export default function TierTitle({ tierName }: TierTitleProps) {
+  const tierBorderImages = {
+    title: '/assets/tierBorders/title.webp',
+    platinum: '/assets/tierBorders/plat.webp',
+    gold: '/assets/tierBorders/gold.webp',
+    silver: '/assets/tierBorders/silver.webp',
+    bronze: '/assets/tierBorders/bronze.webp',
+  } as const;
+
+  // Ensure higher tiers render larger borders
+  const tierBorderWidths = {
+    title: '90%',
+    platinum: '80%',
+    gold: '100%',
+    silver: '80%',
+    bronze: '70%',
+  } as const;
+
   const linearGradients = {
     title: 'linear-gradient(to right, #FFFAEB 20%, #F7CE79 40%, #F5A3B6 60%, #54DDE8 99%)',
     platinum: 'linear-gradient(to bottom, #54DDE8 60%, #289B9E 100%)',
@@ -30,34 +47,55 @@ export default function TierTitle({ tierName }: TierTitleProps) {
   };
 
   return (
-    <div className="mx-auto">
-      <div
-        className={clsx('relative font-normal text-6xl font-fredokaOne', {
-          ['text-8xl']: tierName === 'title',
-        })}
-      >
-        {/* https://stackoverflow.com/questions/3802218/how-do-i-combine-css-text-shadow-and-background-image-webkit-gradient */}
-
-        {/* Under layer for shadow */}
-        <h1
-          style={{
-            textShadow: textShadows[tierName],
-          }}
-          className="text-transparent"
+    <div className="mx-auto w-full flex justify-center">
+      <div className="relative w-full max-w-[90vw] sm:max-w-[560px] md:max-w-[720px]">
+        <div
+          className="relative mx-auto"
+          style={{ width: tierBorderWidths[tierName as keyof typeof tierBorderWidths] }}
         >
-          {tierName.toUpperCase()}
-        </h1>
+          {/* Border image behind the text */}
+          <img
+            src={tierBorderImages[tierName as keyof typeof tierBorderImages]}
+            alt={`${tierName} border`}
+            className="w-full h-auto select-none pointer-events-none"
+            aria-hidden
+          />
 
-        {/* Upper layer for text and linear gradient */}
-        <h1
-          style={{
-            backgroundImage: linearGradients[tierName],
-            WebkitTextStroke: textStrokes[tierName],
-          }}
-          className="absolute top-0 w-full text-transparent bg-clip-text"
-        >
-          {tierName.toUpperCase()}
-        </h1>
+          {/* Centered overlay with text */}
+          <div className="absolute inset-0 grid place-items-center px-4 sm:px-6">
+            <div
+              className={clsx(
+                'relative font-normal text-4xl sm:text-6xl font-fredokaOne text-center',
+                {
+                  ['text-6xl sm:text-8xl']: tierName === 'title',
+                },
+              )}
+            >
+              {/* https://stackoverflow.com/questions/3802218/how-do-i-combine-css-text-shadow-and-background-image-webkit-gradient */}
+
+              {/* Under layer for shadow */}
+              <h1
+                style={{
+                  textShadow: textShadows[tierName as keyof typeof textShadows],
+                }}
+                className="text-transparent"
+              >
+                {tierName.toUpperCase()}
+              </h1>
+
+              {/* Upper layer for text and linear gradient */}
+              <h1
+                style={{
+                  backgroundImage: linearGradients[tierName as keyof typeof linearGradients],
+                  WebkitTextStroke: textStrokes[tierName as keyof typeof textStrokes],
+                }}
+                className="absolute top-0 left-0 right-0 text-transparent bg-clip-text"
+              >
+                {tierName.toUpperCase()}
+              </h1>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
