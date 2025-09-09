@@ -1,7 +1,6 @@
 import { Disclosure } from '@headlessui/react';
 import { PlusIcon, MinusIcon } from '@heroicons/react/solid';
 import Markdown from 'react-markdown';
-import { useState, useRef, useEffect } from 'react';
 
 /**
  *
@@ -26,25 +25,13 @@ interface Props {
  *
  */
 export default function FaqDisclosure({ question, answer, isOpen, toggleDisclosure }: Props) {
-  const [maxHeight, setMaxHeight] = useState('0px');
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  // Dynamically adjust the max-height for smooth transition
-  useEffect(() => {
-    if (isOpen) {
-      setMaxHeight(`${contentRef.current?.scrollHeight}px`);
-    } else {
-      setMaxHeight('0px');
-    }
-  }, [isOpen]);
-
   return (
     <Disclosure>
       <div
         style={{
           boxShadow: '0 5px 16px 0 rgb(8,52,15,0.06)',
         }}
-        className="transition duration-500 ease-in-out bg-[#231140] rounded-md p-4 border border-white"
+        className="bg-[#231140] rounded-md p-4 border border-white"
       >
         {/* Button to toggle the FAQ */}
         <Disclosure.Button as="div">
@@ -59,46 +46,41 @@ export default function FaqDisclosure({ question, answer, isOpen, toggleDisclosu
               {question}
             </h1>
 
-            {/* Plus/Minus icon with background transition */}
+            {/* Plus/Minus icon */}
             <div
               style={{ backgroundColor: !isOpen ? '#5F5FFF' : '#4d4dddff' }}
-              className="p-3 rounded-md transition duration-500 ease-in-out"
+              className="p-3 rounded-md"
             >
               {!isOpen ? (
-                <PlusIcon className="transition transform duration-300 ease-in-out w-5 h-5 text-[#FFFFFF]" />
+                <PlusIcon className="w-5 h-5 text-[#FFFFFF]" />
               ) : (
-                <MinusIcon className="transition transform duration-300 ease-in-out w-5 h-5 text-[#FFFFFF]" />
+                <MinusIcon className="w-5 h-5 text-[#FFFFFF]" />
               )}
             </div>
           </button>
         </Disclosure.Button>
 
-        {/* Smooth scroll effect for the FAQ content */}
-        <div
-          ref={contentRef}
-          style={{
-            maxHeight: maxHeight,
-            transition: 'max-height 0.5s ease', // Smooth height transition
-            overflow: 'hidden', // Hide the content when it's not fully expanded
-          }}
-        >
-          <Disclosure.Panel
-            style={{ color: '#dfdcdcff', fontFamily: 'DM-Sans' }}
-            className="my-2 py-2 px-2 text-left text-sm"
-            static
-          >
-            <Markdown
-              components={{
-                a(props) {
-                  const { node, ...rest } = props;
-                  return <a className="underline underline-offset-8" {...rest} />;
-                },
-              }}
+        {/* FAQ content */}
+        {isOpen && (
+          <div>
+            <Disclosure.Panel
+              style={{ color: '#dfdcdcff', fontFamily: 'DM-Sans' }}
+              className="my-2 py-2 px-2 text-left text-sm"
+              static
             >
-              {answer}
-            </Markdown>
-          </Disclosure.Panel>
-        </div>
+              <Markdown
+                components={{
+                  a(props) {
+                    const { node, ...rest } = props;
+                    return <a className="underline underline-offset-8" {...rest} />;
+                  },
+                }}
+              >
+                {answer}
+              </Markdown>
+            </Disclosure.Panel>
+          </div>
+        )}
       </div>
     </Disclosure>
   );
