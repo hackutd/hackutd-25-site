@@ -65,9 +65,9 @@ export default function TierTitle({ tierName }: TierTitleProps) {
           <div className="absolute inset-0 grid place-items-center px-4 sm:px-6">
             <div
               className={clsx(
-                'relative font-normal text-4xl sm:text-6xl font-fredokaOne text-center',
+                'relative font-normal text-3xl sm:text-6xl font-youngSerif text-center',
                 {
-                  ['text-6xl sm:text-8xl']: tierName === 'title',
+                  ['text-5xl sm:text-8xl']: tierName === 'title',
                 },
               )}
             >
