@@ -2,30 +2,29 @@ import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import AppHeader from '../AppHeader';
 import Image from 'next/image';
 
+const MOBILE_LAYERS = ['/assets/topDrawing/mobileBG-optimized.jpg'];
+
+const DESKTOP_LAYERS = [
+  '/assets/topDrawing/frontSideTrees.webp',
+  '/assets/topDrawing/fox.webp',
+  '/assets/topDrawing/deer.webp',
+  '/assets/topDrawing/cat.webp',
+  '/assets/topDrawing/bird.webp',
+  '/assets/topDrawing/bgGrass.webp',
+  '/assets/topDrawing/bgTrees.webp',
+  '/assets/topDrawing/foreground.webp',
+  '/assets/topDrawing/bg.webp',
+  '/assets/topDrawing/bgClouds.webp',
+  '/assets/topDrawing/moon.webp',
+  '/assets/topDrawing/sky.webp',
+];
 const useHeroImageCache = () => {
   const [cachedImages, setCachedImages] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const cachedImagesRef = useRef<Set<string>>(new Set());
-  const [isMobile, setIsMobile] = useState(true);
-
-  const MOBILE_LAYERS = ['/assets/topDrawing/mobileBG-optimized.jpg'];
-
-  const DESKTOP_LAYERS = [
-    '/assets/topDrawing/frontSideTrees.webp',
-    '/assets/topDrawing/fox.webp',
-    '/assets/topDrawing/deer.webp',
-    '/assets/topDrawing/cat.webp',
-    '/assets/topDrawing/bird.webp',
-    '/assets/topDrawing/bgGrass.webp',
-    '/assets/topDrawing/bgTrees.webp',
-    '/assets/topDrawing/foreground.webp',
-    '/assets/topDrawing/bg.webp',
-    '/assets/topDrawing/bgClouds.webp',
-    '/assets/topDrawing/moon.webp',
-    '/assets/topDrawing/sky.webp',
-  ];
 
   // Detect mobile on mount
+  /*
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const mql = window.matchMedia('(max-width: 768px)');
@@ -36,7 +35,25 @@ const useHeroImageCache = () => {
     return () => mql.removeEventListener('change', update);
   }, []);
 
-  const preloadImages = useCallback(
+  */
+
+  // Initialize mobile state immediately to prevent flash
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(max-width: 768px)').matches;
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mql = window.matchMedia('(max-width: 768px)');
+    const update = () => setIsMobile(mql.matches);
+    mql.addEventListener('change', update);
+    return () => mql.removeEventListener('change', update);
+  }, []);
+
+  //Tring to make loading progressive istead of all 12 having to load at once before setIsLoaind goes to false
+  /*
+const preloadImages = useCallback(
     async (imageUrls: string[]) => {
       // Only preload images for current device type to reduce initial load
       const currentLayers = isMobile ? MOBILE_LAYERS : DESKTOP_LAYERS;
@@ -73,6 +90,60 @@ const useHeroImageCache = () => {
       } catch (error) {
         console.error('Error preloading images:', error);
       } finally {
+        setIsLoading(false);
+      }
+    },
+    [isMobile],
+  );
+
+*/
+
+  //attempting other fixes here for second issue
+  const preloadImages = useCallback(
+    async (imageUrls: string[]) => {
+      const currentLayers = isMobile ? MOBILE_LAYERS : DESKTOP_LAYERS;
+      const imagesToLoad = imageUrls.filter((url) => currentLayers.includes(url));
+      const newCachedImages = new Set(cachedImagesRef.current);
+      const uncachedImages = imagesToLoad.filter((url) => !newCachedImages.has(url));
+
+      if (uncachedImages.length === 0) {
+        setIsLoading(false);
+        return;
+      }
+
+      // Simple approach: For mobile, load immediately. For desktop, load first 3 images then show
+      const priorityCount = isMobile ? 1 : 3; // Load just first few images
+      const priorityImages = uncachedImages.slice(0, priorityCount);
+      const remainingImages = uncachedImages.slice(priorityCount);
+
+      try {
+        // Load priority images
+        const priorityPromises = priorityImages.map((url) => {
+          return new Promise<void>((resolve) => {
+            const img = new window.Image();
+            img.onload = () => {
+              newCachedImages.add(url);
+              cachedImagesRef.current.add(url);
+              resolve();
+            };
+            img.onerror = () => {
+              console.warn(`Failed to load image: ${url}`);
+              resolve();
+            };
+            img.src = url;
+          });
+        });
+
+        await Promise.all(priorityPromises);
+        setCachedImages(new Set(newCachedImages));
+        setIsLoading(false); // Show UI after priority images
+
+        // Load remaining in background
+        if (remainingImages.length > 0) {
+          // Your original loading code for remaining images
+        }
+      } catch (error) {
+        console.error('Error preloading images:', error);
         setIsLoading(false);
       }
     },
