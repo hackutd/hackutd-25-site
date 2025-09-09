@@ -1,7 +1,28 @@
 export default function HomeVideoStats() {
   return (
     <section className="z-10 relative md:h-[370px]">
-      <div className="flex flex-col justify-center items-center md:flex-row mx-auto py-[3rem]">
+      <div className="flex flex-col justify-center items-center mx-auto py-[3rem]">
+        <div className="flex justify-center relative w-full z-10">
+          <img src="/assets/statsScroll.png" alt="HackUTD" className="z-10 w-[60vw]" />
+          <div
+            className="mt-[300px] absolute inset-0 flex-col items-center justify-center 
+                     z-50"
+          >
+            <div className="flex flex-col md:flex-row justify-center items-center text-center md:space-x-20 space-y-6 md:space-y-0">
+              At our last hackathon, we had the pleasure of hosting...
+            </div>
+            <div className="flex flex-col md:flex-row justify-center items-center text-center md:space-x-20 space-y-6 md:space-y-0">
+              1200+ Hackers
+            </div>
+            <div className="flex flex-col md:flex-row justify-center items-center text-center md:space-x-20 space-y-6 md:space-y-0">
+              30+ Universities
+            </div>
+            <div className="flex flex-col md:flex-row justify-center items-center text-center md:space-x-20 space-y-6 md:space-y-0">
+              200+ Projects
+            </div>
+          </div>
+        </div>
+
         {/* Video */}
         <div className="w-full aspect-video flex justify-center">
           <iframe
@@ -12,21 +33,6 @@ export default function HomeVideoStats() {
             allowFullScreen
           ></iframe>
         </div>
-
-        {/* Stats */}
-        {/* <div>
-          {stats.map((stat, index) => (
-            <div
-              key={stat.data}
-              className={`${
-                index % 2 === 0 ? 'lg:ml-40 md:ml-20 ml-14' : 'md:mr-8 mr-24'
-              } text-center md:my-6 my-4`}
-            >
-              <p className="font-bold text-2xl text-primaryDark lg:text-5xl">{stat.data}</p>
-              <p className="font-medium text-lg lg:text-3xl">{stat.object}</p>
-            </div>
-          ))}
-        </div> */}
       </div>
     </section>
   );
