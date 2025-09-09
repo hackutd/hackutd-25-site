@@ -2,7 +2,7 @@ export default function HomeVideoStats() {
   return (
     <section className="z-10 relative md:h-[370px]">
       <div className="flex flex-col justify-center items-center mx-auto py-[3rem]">
-        <div className="flex justify-center relative w-full z-10">
+        <div className="flex justify-center relative w-full z-10 ml-[40vw]">
           <img src="/assets/statsScroll.png" alt="HackUTD" className="z-10 w-[60vw]" />
           <div
             className="mt-[300px] absolute inset-0 flex-col items-center justify-center 
