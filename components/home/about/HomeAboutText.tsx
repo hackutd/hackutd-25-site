@@ -75,7 +75,7 @@ const HomeAboutText = () => {
   return (
     <div
       ref={containerRef}
-      className="relative py-12 flex flex-col items-center justify-center font-jua"
+      className="relative -mt-36 flex flex-col items-center justify-center font-jua"
       style={{
         // background: '#F2F3FF',
         backgroundSize: '100% 100%',
