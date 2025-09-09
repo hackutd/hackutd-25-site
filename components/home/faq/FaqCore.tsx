@@ -106,7 +106,7 @@ export default function FaqCore({ fetchedFaqs }: { fetchedFaqs: AnsweredQuestion
             </div>
           </div>
           {/* FAQ for lg-md */}
-          <div className="hidden lg:grid lg:grid-cols-2 gap-4">
+          <div className="hidden lg:grid lg:grid-cols-2 gap-4" ref={faqContainerRef}>
             <div className="w-full my-3 pl-[8vw] space-y-4">
               {faqs.map(
                 ({ question, answer }, idx) =>
