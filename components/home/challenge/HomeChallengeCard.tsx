@@ -41,24 +41,27 @@ export default function HomeChallengesCard({ challenge, blockType }: Props) {
           {/* Challenge Name */}
           <div className="flex justify-center">
             <h1 className="font-montserrat font-semibold text-xl mt-4 text-center border-b-2 border-[#59BFFF] w-fit">
-              <span className="uppercase text-[#FFFFFF]">
+              <span className="uppercase text-[#FFFFFF] font-[DM-sans]">
                 presented by {challenge.organization}
               </span>
             </h1>
           </div>
           {/* Company Name */}
-          <h1 className="font-dmSans text-2xl text-[#59BFFF] my-4 uppercase text-center">
+          <h1
+            className="font-dmSans text-2xl text-[#59BFFF] my-4 uppercase text-center"
+            style={{ fontFamily: 'youngSerif' }}
+          >
             {challenge.title}
           </h1>
           {/* Description */}
           <div className="mb-8 max-w-fit">
             {challenge.prizes.map((prize, idx) => (
-              <p key={idx} className="text-md text-balance text-[#FFFFFF]">
+              <p key={idx} className="text-md text-balance text-[#FFFFFF] font-[DM-sans]">
                 {PRIZE_INDEX[idx]}: {challenge.prizes[idx]}
               </p>
             ))}
           </div>
-          <div className="text-[#FFFFFF]">{challenge.description}</div>
+          <div className="text-[#FFFFFF] font-[DM-sans]">{challenge.description}</div>
         </div>
       </div>
     </motion.div>
