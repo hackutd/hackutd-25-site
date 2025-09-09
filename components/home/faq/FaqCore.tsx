@@ -89,15 +89,17 @@ export default function FaqCore({ fetchedFaqs }: { fetchedFaqs: AnsweredQuestion
       </Head>
       <div className="top-6">
         <div className="pt-[8rem]">
-          <div className="bg-white mx-[8vw] p-10 rounded-lg flex justify-between font-fredoka">
+          <div className="bg-[#231140] mx-[8vw] p-10 rounded-lg flex justify-between font-[youngSerif] border border-white">
             <div className="pt-3">
-              <h1 className="text-3xl mb-4 font-bold text-[#5D5A88]">FAQ</h1>
-              <p>Can’t find what you’re looking for? Connect with our team at hello@hackutd.co</p>
+              <h1 className="text-3xl mb-4 font-bold text-[#5F5FFF]">FAQ</h1>
+              <p className="text-[#FFFFFF] text-md " style={{ fontFamily: 'DM Sans' }}>
+                Can’t find what you’re looking for? Connect with our team at hello@hackutd.co
+              </p>
             </div>
             <div className="flex items-center">
               <Link
                 href="mailto:hello@hackutd.co"
-                className="bg-[#EAE6F2] text-[#5D5A88] p-3 rounded-2xl"
+                className="bg-[#5F5FFF] text-[#FFFFFF] p-3 rounded-2xl"
               >
                 Ask A Question!
               </Link>
