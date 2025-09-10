@@ -21,7 +21,10 @@ export default function FaqCore({ fetchedFaqs }: { fetchedFaqs: AnsweredQuestion
     fetchedFaqs.map(() => false),
   );
   const { faqRef } = useContext(SectionReferenceContext);
-  const faqContainerRef = useRef(null); // Ref for the FAQ container
+
+  // CHANGE: Split into separate refs for desktop and mobile
+  const faqDesktopRef = useRef(null);
+  const faqMobileRef = useRef(null);
 
   // CSS-based animation on FAQ items when they come into view
   useEffect(() => {
@@ -38,12 +41,16 @@ export default function FaqCore({ fetchedFaqs }: { fetchedFaqs: AnsweredQuestion
       rootMargin: '0px 0px -50px 0px',
     });
 
-    if (faqContainerRef.current) {
-      const faqBoxes = faqContainerRef.current.querySelectorAll('.faq-box');
-      faqBoxes.forEach((box) => {
-        observer.observe(box);
-      });
-    }
+    // CHANGE: Observe both desktop and mobile containers
+    const containers = [faqDesktopRef.current, faqMobileRef.current];
+    containers.forEach((container) => {
+      if (container) {
+        const faqBoxes = container.querySelectorAll('.faq-box');
+        faqBoxes.forEach((box) => {
+          observer.observe(box);
+        });
+      }
+    });
 
     return () => observer.disconnect();
   }, []);
@@ -93,7 +100,7 @@ export default function FaqCore({ fetchedFaqs }: { fetchedFaqs: AnsweredQuestion
             <div className="pt-3">
               <h1 className="text-3xl mb-4 font-bold text-[#5F5FFF]">FAQ</h1>
               <p className="text-[#FFFFFF] text-md " style={{ fontFamily: 'DM Sans' }}>
-                Can’t find what you’re looking for? Connect with our team at hello@hackutd.co
+                Can`t find what you`re looking for? Connect with our team at hello@hackutd.co
               </p>
             </div>
             <div className="flex items-center">
@@ -106,7 +113,7 @@ export default function FaqCore({ fetchedFaqs }: { fetchedFaqs: AnsweredQuestion
             </div>
           </div>
           {/* FAQ for lg-md */}
-          <div className="hidden lg:grid lg:grid-cols-2 gap-4">
+          <div className="hidden lg:grid lg:grid-cols-2 gap-4" ref={faqDesktopRef}>
             <div className="w-full my-3 pl-[8vw] space-y-4">
               {faqs.map(
                 ({ question, answer }, idx) =>
@@ -148,7 +155,7 @@ export default function FaqCore({ fetchedFaqs }: { fetchedFaqs: AnsweredQuestion
           </div>
           {/* FAQ for mobile */}
           <div className="lg:hidden">
-            <div className="mx-[8vw] my-3 space-y-4">
+            <div className="mx-[8vw] my-3 space-y-4" ref={faqMobileRef}>
               {faqs.map(({ question, answer }, idx) => (
                 <div key={idx} className="faq-box">
                   <FaqDisclosure
