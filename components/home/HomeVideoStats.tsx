@@ -5,13 +5,13 @@ export default function HomeVideoStats() {
         <div className="flex justify-center relative w-full z-10 ml-[40vw]">
           <img src="/assets/statsScroll.png" alt="HackUTD" className="z-10 w-[60vw]" />
           <div
-            className="mt-[20vw] absolute inset-0 flex-col items-center justify-center 
+            className="mt-[18vw] absolute inset-0 flex-col items-center justify-center 
                      z-50"
           >
             <div className="flex flex-col md:flex-row justify-center items-center text-center md:space-x-20 space-y-6 md:space-y-0">
               At our last hackathon, we had the pleasure of hosting...
             </div>
-            <div className="flex flex-col md:flex-row justify-center items-center text-center md:space-x-20 space-y-6 md:space-y-0">
+            <div className=" mt-[3vw] flex flex-col md:flex-row justify-center items-center text-center md:space-x-20 space-y-6 md:space-y-0">
               1200+ Hackers
             </div>
             <div className="flex flex-col md:flex-row justify-center items-center text-center md:space-x-20 space-y-6 md:space-y-0">
