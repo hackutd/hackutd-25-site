@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef } from 'react';
 
 import { SectionReferenceContext } from '@/lib/context/section';
+import gsap from 'gsap';
 
 const HomeAboutText = () => {
   const { aboutRef } = useContext(SectionReferenceContext);
@@ -49,7 +50,6 @@ const HomeAboutText = () => {
               { opacity: 1, y: 0, duration: 1.5, ease: 'power3.out', delay: 1.5 },
             );
 
-
             observer.unobserve(entry.target);
           }
         });
@@ -90,7 +90,6 @@ const HomeAboutText = () => {
       }}
       id="what-is-hackutd"
     >
-
       <div className="flex justify-center relative w-full z-10">
         <img src="/assets/aboutbanner.png" alt="HackUTD" className="z-10 rotate-180" />
         <h1
