@@ -24,11 +24,14 @@ export default function HomeFooter() {
   };
 
   return (
-    <section className="md:text-base text-xs bg-[#7B81FF] text-white py-10">
+    <section
+      className="md:text-base text-xs bg-gradient-to-br from-purple-900/95 to-purple-950/95 backdrop-blur-sm border-t border-purple-700/50 py-10 font-dmSans"
+      style={{ color: 'white' }}
+    >
       <div className="container mx-auto flex flex-wrap justify-between items-start">
         {/* HackUTD Section */}
         <div className="flex-1 p-4">
-          <h1 className="font-bold text-2xl">HackPortal</h1>
+          <h1 className="font-bold text-2xl">HackUTD 2025</h1>
           <p style={{ whiteSpace: 'nowrap', wordBreak: 'keep-all', textUnderlineOffset: '2px' }}>
             Contact Us
           </p>
@@ -164,8 +167,8 @@ export default function HomeFooter() {
           {/* Wrap input and button in a container */}
           <div className="flex flex-col gap-4">
             <input
-              style={{ backgroundColor: '#E2E2E2', color: 'black' }}
-              className="border-0 rounded p-2"
+              className="border-0 rounded p-2 bg-white backdrop-blur-sm border border-white/20 focus:border-white/40 focus:outline-none transition-colors"
+              style={{ color: '#4F4F4F' }}
               placeholder="Email"
               type="text"
               name="email"
@@ -177,7 +180,8 @@ export default function HomeFooter() {
               onClick={async () => {
                 await handleSubmitEmail(userEmail);
               }}
-              className="mb-10 md:mb-0 w-full rounded-lg text-white px-6 py-2 bg-complementary"
+              className="mb-10 md:mb-0 w-full rounded-lg px-6 py-2 bg-[#9C1B1D] hover:bg-purple-700 transition-colors border border-purple-500/50"
+              style={{ color: '#FFFFFF' }}
             >
               Subscribe
             </button>
@@ -185,8 +189,8 @@ export default function HomeFooter() {
         </div>
       </div>
       {/* Copyright Notice */}
-      <div className="absolute bottom-0 w-full text-center py-2">
-        <p>All Copyrights are reserved by HackUTD &lt;3</p>
+      <div className="absolute bottom-0 w-full text-center py-2 bg-black/20 backdrop-blur-sm border-t border-white/10">
+        <p style={{ color: '#FFFFFF' }}>All Copyrights are reserved by HackUTD &lt;3</p>
       </div>
     </section>
   );

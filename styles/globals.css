@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Young+Serif&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
@@ -28,12 +29,100 @@ body, html {
   background-repeat: no-repeat;
   min-height: 100vh;
   background-color: #2a2342;
+  overscroll-behavior: auto;
+}
+
+/* Custom overscroll color to match footer theme */
+html {
+  background: linear-gradient(to bottom right, #581c87, #1e1b4b);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  /* Allow normal scrolling on mobile */
+  body.home-page {
+    overflow: auto !important;
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Optimize background loading on mobile */
+  body {
+    background-attachment: scroll !important;
+    background-size: cover !important;
+    background-color: #2a2342 !important;
+    contain: layout style paint;
+  }
+  
+  /* Optimize for mobile memory */
+  * {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: auto;
+  }
+  
+  /* Reduce animations on mobile */
+  .animate-pulse,
+  .animate-bounce {
+    animation: none !important;
+  }
+  
+  /* Optimize transitions */
+  * {
+    transition-duration: 0.15s !important;
+    transition-timing-function: ease-out !important;
+  }
+  
+  /* Reduce box shadows on mobile */
+  .shadow-lg,
+  .shadow-xl,
+  .shadow-2xl {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  }
+  
+  /* Optimize backdrop blur */
+  .backdrop-blur-sm,
+  .backdrop-blur-md,
+  .backdrop-blur-lg {
+    backdrop-filter: blur(4px) !important;
+  }
+  
+  /* Disable complex CSS effects on mobile */
+  .drop-shadow-2xl {
+    filter: none !important;
+  }
+  
+  /* Optimize images */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    contain: layout style paint;
+  }
+  
+  /* Reduce layout thrashing */
+  .min-h-\[100svh\] {
+    min-height: 100vh !important;
+  }
+  
+  /* Disable complex gradients on mobile */
+  .bg-gradient-to-r,
+  .bg-gradient-to-l,
+  .bg-gradient-to-t,
+  .bg-gradient-to-b {
+    background: #2a2342 !important;
+  }
+  
+  /* Optimize sections */
+  section {
+    contain: layout style paint;
+  }
 }
 
 @font-face {
   font-family: 'wavehaus';
   src: url('/fonts/Wavehaus-66Book.ttf') format('truetype');
-  font-display: auto;
+  font-display: swap;
 }
 
 @font-face {
@@ -41,19 +130,20 @@ body, html {
   src: url('/fonts/DS-DIGI.TTF') format('truetype');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 .MuiTypography-root {
   font-family: 'wavehaus' !important;
   src: url('/fonts/Wavehaus-66Book.ttf') format('truetype') !important;
-  font-display: auto !important;
+  font-display: swap !important;
   font-weight: 600 !important;
 }
 
 .Target-root {
   font-family: 'wavehaus' !important;
   src: url('/fonts/Wavehaus-66Book.ttf') format('truetype') !important;
-  font-display: auto !important;
+  font-display: swap !important;
 }
 
 a.link {
@@ -223,39 +313,4 @@ a.link {
 .swiper-button-prev:after,
 .swiper-button-next:after {
   display: block;
-  font-size: 1rem !important;
-  font-weight: 600;
-  color: #7b81ff;
-}
-
-.swiper-pagination-bullet,
-.swiper-pagination-bullet-tracks {
-  background-color: #4c4950 !important;
-  opacity: 1;
-}
-
-#popup.show {
-  opacity: 0;
-  transition: opacity 0.5s ease-in;
-  transition-delay: 3s;
-}
-
-@keyframes inAnimation {
-  0% {
-    opacity: 0;
-    visibility: hidden;
-  }
-  100% {
-    opacity: 1;
-    visibility: visible;
-  }
-}
-@keyframes outAnimation {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    visibility: hidden;
-  }
 }

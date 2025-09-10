@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import gsap from 'gsap';
 
 import { SectionReferenceContext } from '@/lib/context/section';
 
@@ -19,6 +18,7 @@ const HomeAboutText = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const titleText = titleRef.current;
+
             gsap.set(titleText, { opacity: 1 });
 
             const titleLetters = titleText.innerText.split('');
@@ -49,13 +49,15 @@ const HomeAboutText = () => {
               { opacity: 1, y: 0, duration: 1.5, ease: 'power3.out', delay: 1.5 },
             );
 
+
             observer.unobserve(entry.target);
           }
         });
       };
 
       const observer = new IntersectionObserver(handleIntersection, {
-        threshold: 1,
+        threshold: 0.3,
+        rootMargin: '0px 0px -100px 0px',
       });
 
       if (containerRef.current) {
@@ -68,7 +70,11 @@ const HomeAboutText = () => {
         }
       };
     } else {
-      gsap.set([titleRef.current, explanationRef.current], { opacity: 1, y: 0 });
+      // Mobile: show immediately
+      const titleText = titleRef.current;
+      const explanationText = explanationRef.current;
+      if (titleText) titleText.classList.add('title-animate-in');
+      if (explanationText) explanationText.classList.add('explanation-animate-in');
     }
   }, []);
 
@@ -84,6 +90,7 @@ const HomeAboutText = () => {
       }}
       id="what-is-hackutd"
     >
+
       <div className="flex justify-center relative w-full z-10">
         <img src="/assets/aboutbanner.png" alt="HackUTD" className="z-10 rotate-180" />
         <h1

@@ -8,7 +8,7 @@ export const hackPortalConfig: HackPortalConfig = {
   //  which hold all the questions of that type
   //add extra questions types(even ones already used) to question topics and add more questions under each question type
   //questions are displayed on page in order
-  groupNames: ['Duck', 'Corgi', 'Capybara', 'Frog'],
+  groupNames: ['Bird', 'Cat', 'Deer', 'Fox'],
   registrationFields: {
     //Question Topic
     generalQuestions: [
@@ -242,7 +242,7 @@ export const hackPortalConfig: HackPortalConfig = {
             id: 'hackathonExperience',
             name: 'hackathonExperience',
             min: '0',
-            max: '100',
+            max: '1000',
             pattern: '[0-9]+',
             initialValue: null,
           },
@@ -278,7 +278,7 @@ export const hackPortalConfig: HackPortalConfig = {
           },
           {
             //Heard from question
-            question: 'Where did you hear about HackPortal?',
+            question: 'Where did you hear about HackUTD?',
             required: true,
             id: 'heardFrom',
             name: 'heardFrom',
@@ -319,7 +319,7 @@ export const hackPortalConfig: HackPortalConfig = {
         textAreaQuestions: [
           {
             //Why do you want to attend question
-            question: 'Why do you want to attend HackPortal?',
+            question: 'Why do you want to attend HackUTD?',
             id: 'whyAttend',
             name: 'whyAttend',
             required: true,
@@ -328,7 +328,8 @@ export const hackPortalConfig: HackPortalConfig = {
           },
           {
             //How many hackathons submitted question
-            question: 'How many hackathons have you submitted to and what did you learn from them?',
+            question:
+              'Tell us about a personal project or idea you were excited about? What made it meaningful to you?',
             id: 'hackathonNumber',
             name: 'hackathonNumber',
             required: true,
@@ -337,8 +338,7 @@ export const hackPortalConfig: HackPortalConfig = {
           },
           {
             //What do you hope to learn from HackPortal as a first timer question
-            question:
-              'If you haven’t been to a hackathon, what do you hope to learn from HackPortal?',
+            question: 'Describe a time you taught yourself something new to complete a project?',
             id: 'hackathonFirstTimer',
             name: 'hackathonFirstTimer',
             required: true,
@@ -347,7 +347,7 @@ export const hackPortalConfig: HackPortalConfig = {
           },
           {
             //What are you looking forward to question
-            question: 'What are you looking forward to do at HackPortal?',
+            question: 'What is something not on your resume that you are proud of?',
             id: 'lookingForward',
             name: 'lookingForward',
             required: true,

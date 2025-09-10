@@ -321,22 +321,19 @@ export default function ViewHackerApplication({
       <div className="my-6 w-full border-2 border-gray-200 rounded-md" />
       {/* FRQ */}
       <div className="flex flex-col w-full">
+        <FRQInfo k={'Why do you want to attend HackUTD?'} v={currentApplicant.whyAttend} />
         <FRQInfo
-          k={'Why do you want to attend HackUTD Ripple Effect?'}
-          v={currentApplicant.whyAttend}
-        />
-        <FRQInfo
-          k={'How many hackathons have you submitted to and what did you learn from them?'}
+          k={
+            'Tell us about a personal project or idea you were excited about? What made it meaningful to you?'
+          }
           v={currentApplicant.hackathonNumber}
         />
         <FRQInfo
-          k={
-            "If you haven't been to a hackathon, what do you hope to learn from HackUTD Ripple Effect?"
-          }
+          k={'Describe a time you taught yourself something new to complete a project?'}
           v={currentApplicant.hackathonFirstTimer}
         />
         <FRQInfo
-          k={'What are you looking forward to at HackUTD Ripple Effect?'}
+          k={'What is something not on your resume that you are proud of?'}
           v={currentApplicant.lookingForward}
         />
       </div>

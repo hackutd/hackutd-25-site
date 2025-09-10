@@ -189,6 +189,13 @@
 }
 
 @font-face {
+  font-family: 'YoungSerif';
+  src: url('YoungSerif-Regular.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
   font-family: 'Roboto';
   src: url('Roboto-Bold.ttf') format('truetype');
   font-weight: 700;
@@ -199,6 +206,13 @@
   font-family: 'Roboto';
   src: url('Roboto-Black.ttf') format('truetype');
   font-weight: 900;
+  font-style: normal;
+}
+
+
+.youngSerif {
+  font-family: 'YoungSerif';
+  font-weight: 500;
   font-style: normal;
 }
 
