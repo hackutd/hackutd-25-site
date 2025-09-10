@@ -75,6 +75,14 @@ export default function Home({
                 url('/assets/pathDrawing/pathOutline.webp'), url('/assets/pathDrawing/bg.webp') !important;
             }
           }
+          .light-purple-bg {
+            background-color: #e6e6fa !important;
+            background-image: none !important;
+          }
+          div.light-purple-bg {
+            background-color: #e6e6fa !important;
+            background-image: none !important;
+          }
         `}</style>
       </Head>
       <div
@@ -101,24 +109,35 @@ export default function Home({
             backgroundRepeat: 'no-repeat',
           }}
         /> */}
+
         <HomeHero />
 
-        <div className="my-72">
+        <div className="my-[40rem]">
           <HomeAboutText />
         </div>
 
-        <div className="my-72">
+        <div className="my-[40rem]">
           <HomeVideoStats />
         </div>
 
-        <div className="my-72">
+        <div className="my-[40rem] mb-[128rem]">
           <HackUTDCountdown />
         </div>
 
-        <div className="my-72">
+        <div className="my-72 -mt-[32rem]">
           <KeynoteSpeaker />
         </div>
+      </div>
 
+      <div
+        className="overflow-x-hidden w-full"
+        style={{
+          backgroundColor: '#0B0B1B',
+          backgroundImage: 'url("/assets/sponsorsBG/leaves.PNG")',
+          backgroundRepeat: 'repeat',
+          backgroundSize: 'auto',
+        }}
+      >
         <div className="my-72">
           <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
         </div>
@@ -134,8 +153,8 @@ export default function Home({
         <div className="my-72">
           <HomeSponsors />
         </div>
-        <HomeFooter />
       </div>
+      <HomeFooter />
     </>
   );
 }
