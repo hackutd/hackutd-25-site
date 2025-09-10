@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef } from 'react';
 
 import { SectionReferenceContext } from '@/lib/context/section';
+import gsap from 'gsap';
 
 const HomeAboutText = () => {
   const { aboutRef } = useContext(SectionReferenceContext);
@@ -18,11 +19,36 @@ const HomeAboutText = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const titleText = titleRef.current;
-            const explanationText = explanationRef.current;
 
-            // Add animation classes
-            titleText.classList.add('title-animate-in');
-            explanationText.classList.add('explanation-animate-in');
+            gsap.set(titleText, { opacity: 1 });
+
+            const titleLetters = titleText.innerText.split('');
+            titleText.innerHTML = titleLetters
+              .map((letter) => {
+                if (letter === ' ') {
+                  return `<span class="inline-block">&nbsp;</span>`;
+                }
+                return `<span class="bg-gradient-to-t from-[#531285] to-[#C694FF] bg-clip-text text-transparent inline-block">${letter}</span>`;
+              })
+              .join('');
+
+            gsap.fromTo(
+              titleText.children,
+              { opacity: 0, y: 50 },
+              {
+                opacity: 1,
+                y: 0,
+                stagger: 0.1,
+                ease: 'power3.out',
+                duration: 1,
+              },
+            );
+
+            gsap.fromTo(
+              explanationRef.current,
+              { opacity: 0, y: 100 },
+              { opacity: 1, y: 0, duration: 1.5, ease: 'power3.out', delay: 1.5 },
+            );
 
             observer.unobserve(entry.target);
           }
@@ -55,7 +81,7 @@ const HomeAboutText = () => {
   return (
     <div
       ref={containerRef}
-      className="relative py-12 flex flex-col items-center justify-center font-jua"
+      className="relative -mt-36 flex flex-col items-center justify-center font-jua"
       style={{
         // background: '#F2F3FF',
         backgroundSize: '100% 100%',
@@ -64,48 +90,29 @@ const HomeAboutText = () => {
       }}
       id="what-is-hackutd"
     >
-      <style>
-        {`
-          .title-animate {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 1s ease-out, transform 1s ease-out;
-            will-change: opacity, transform;
-          }
+      <div className="flex justify-center relative w-full z-10">
+        <img src="/assets/aboutbanner.png" alt="HackUTD" className="z-10 rotate-180" />
+        <h1
+          ref={titleRef}
+          className="mt-[50px] sm:mt-[70px] absolute inset-0 flex items-center justify-center 
+                  text-2xl sm:text-3xl md:text-4xl font-light 
+                  bg-gradient-to-t from-[#531285] to-[#C694FF] bg-clip-text z-50 text-transparent font-serif"
+        >
+          What Is HackUTD?
+        </h1>
+      </div>
 
-          .title-animate-in {
-            opacity: 1;
-            transform: translateY(0);
-          }
-
-          .explanation-animate {
-            opacity: 0;
-            transform: translateY(100px);
-            transition: opacity 1.5s ease-out 1.5s, transform 1.5s ease-out 1.5s;
-            will-change: opacity, transform;
-          }
-
-          .explanation-animate-in {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        `}
-      </style>
-
-      <h1
-        ref={titleRef}
-        className="text-5xl font-bold mb-3 text-center relative font-jua z-10 text-[#FFF] title-animate"
-      >
-        About HackPortal?
-      </h1>
-
-      <div className="relative w-full flex justify-center items-center z-10">
+      <div className="relative w-full flex justify-center items-center -mt-24 z-0">
         <p
           ref={explanationRef}
-          className="text-xl text-center text-[#616161] max-w-2xl mb-16 font-fredoka relative z-10 px-6 md:px-0 explanation-animate"
+          className="text-xl text-center text-white max-w-4xl mb-16 font-fredoka relative px-[40px] opacity-0 bg-black/50 pt-[100px] pb-[50px] rounded-2xl backdrop-blur-sm shadow-lg shadow-[#93004C66]"
         >
-          Hackathons are 24-hour gatherings where students collaborate to create innovative
-          projects, forge new connections, and compete for prizes.
+          HackUTD, the largest university hackathon in Texas, is a weekend-long event where students
+          build apps, hardware, and more. HackUTD provides a venue for self-expression and
+          creativity through technology. People with varying technical backgrounds from universities
+          all over the US come together, form teams around a problem or idea, and collaboratively
+          build a unique solution from scratch. Whether youre a frequent hackathon attendee or just
+          getting started, we&apos;d love to see what you can make!
         </p>
       </div>
     </div>
