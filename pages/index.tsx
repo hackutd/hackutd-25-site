@@ -75,14 +75,6 @@ export default function Home({
                 url('/assets/pathDrawing/pathOutline.webp'), url('/assets/pathDrawing/bg.webp') !important;
             }
           }
-          .light-purple-bg {
-            background-color: #e6e6fa !important;
-            background-image: none !important;
-          }
-          div.light-purple-bg {
-            background-color: #e6e6fa !important;
-            background-image: none !important;
-          }
         `}</style>
       </Head>
       <div
