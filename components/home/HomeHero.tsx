@@ -10,21 +10,6 @@ const useHeroImageCache = () => {
 
   const MOBILE_LAYERS = ['/assets/topDrawing/mobileBG-optimized.jpg'];
 
-  const DESKTOP_LAYERS = [
-    '/assets/topDrawing/frontSideTrees.webp',
-    '/assets/topDrawing/fox.webp',
-    '/assets/topDrawing/deer.webp',
-    '/assets/topDrawing/cat.webp',
-    '/assets/topDrawing/bird.webp',
-    '/assets/topDrawing/bgGrass.webp',
-    '/assets/topDrawing/bgTrees.webp',
-    '/assets/topDrawing/foreground.webp',
-    '/assets/topDrawing/bg.webp',
-    '/assets/topDrawing/bgClouds.webp',
-    '/assets/topDrawing/moon.webp',
-    '/assets/topDrawing/sky.webp',
-  ];
-
   // Detect mobile on mount
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -39,7 +24,7 @@ const useHeroImageCache = () => {
   const preloadImages = useCallback(
     async (imageUrls: string[]) => {
       // Only preload images for current device type to reduce initial load
-      const currentLayers = isMobile ? MOBILE_LAYERS : DESKTOP_LAYERS;
+      const currentLayers = MOBILE_LAYERS;
       const imagesToLoad = imageUrls.filter((url) => currentLayers.includes(url));
 
       const newCachedImages = new Set(cachedImagesRef.current);
@@ -83,7 +68,7 @@ const useHeroImageCache = () => {
     if (typeof window === 'undefined') return;
 
     // Only preload current device images initially
-    const currentLayers = isMobile ? MOBILE_LAYERS : DESKTOP_LAYERS;
+    const currentLayers = MOBILE_LAYERS;
     preloadImages(currentLayers);
   }, [isMobile, preloadImages]);
 
@@ -91,58 +76,92 @@ const useHeroImageCache = () => {
     cachedImages,
     isLoading,
     MOBILE_LAYERS,
-    DESKTOP_LAYERS,
     isMobile,
     preloadImages,
   };
 };
 
 export default function HomeHero() {
-  const { cachedImages, isLoading, MOBILE_LAYERS, DESKTOP_LAYERS, isMobile } = useHeroImageCache();
-
-  const layers = isMobile ? MOBILE_LAYERS : DESKTOP_LAYERS;
-
-  const bgStyle = useMemo<React.CSSProperties>(() => {
-    if (isLoading) {
-      return {
-        backgroundColor: '#2a2342',
-      };
-    }
-
-    // Mobile optimization: use lightweight background for better performance
-    if (isMobile) {
-      return {
-        backgroundImage: `url('${layers[0]}')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'scroll',
-        backgroundColor: '#2a2342', // fallback color
-      };
-    }
-
-    // Desktop: use layered backgrounds
-    const urls = layers.map((u) => `url('${u}')`).join(', ');
-    const repeats = layers.map(() => 'no-repeat').join(', ');
-    const sizes = layers.map(() => 'cover').join(', ');
-    const positions = layers.map(() => 'center').join(', ');
-
-    return {
-      backgroundImage: urls,
-      backgroundRepeat: repeats,
-      backgroundSize: sizes,
-      backgroundPosition: positions,
-      backgroundAttachment: 'scroll',
-    };
-  }, [layers, isLoading, isMobile]);
+  const { cachedImages, isLoading, MOBILE_LAYERS, isMobile } = useHeroImageCache();
 
   return (
-    <section className="min-h-[100svh] bg-white flex flex-col-reverse md:flex-col">
+    <section className="min-h-[100svh] flex flex-col-reverse md:flex-col">
       {/* Header above the hero */}
       {/* <AppHeader /> */}
       {/* <AppHeader /> */}
 
-      <div className="relative w-full min-h-[100svh]" style={bgStyle}>
+      <div className="relative w-full min-h-[100svh] max-h-[100svh] overflow-hidden">
+        <div
+          className="absolute inset-0 z-0 hidden xl:block pointer-events-none"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            contain: 'layout style paint',
+            isolation: 'isolate',
+          }}
+        >
+          <Image
+            src="/assets/topDrawing/fox.webp"
+            alt="Fox"
+            fill
+            className="object-contain object-center"
+            priority
+            sizes="100vw"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              objectFit: 'contain',
+              objectPosition: 'center',
+            }}
+          />
+          <Image
+            src="/assets/topDrawing/deer.webp"
+            alt="Deer"
+            fill
+            className="object-contain object-center"
+            priority
+            sizes="100vw"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              objectFit: 'contain',
+              objectPosition: 'center',
+            }}
+          />
+          <Image
+            src="/assets/topDrawing/cat.webp"
+            alt="Cat"
+            fill
+            className="object-contain object-center"
+            priority
+            sizes="100vw"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              objectFit: 'contain',
+              objectPosition: 'center',
+              transform: 'translateY(8%)',
+            }}
+          />
+          <Image
+            src="/assets/topDrawing/bird.webp"
+            alt="Bird"
+            fill
+            className="object-contain object-center"
+            priority
+            sizes="100vw"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              objectFit: 'contain',
+              objectPosition: 'center',
+            }}
+          />
+        </div>
+
         {/* MLH sticker */}
         <div className="relative z-10 shrink-0 w-full flex">
           <div className="absolute top-0 right-4 z-20 transition-all">

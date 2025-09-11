@@ -80,17 +80,13 @@ export default function Home({
       <div
         className="overflow-x-hidden w-full bg-fallback"
         style={{
-          backgroundImage: isMobile
-            ? `url("/assets/pathDrawing/bg.webp")`
-            : `url("/assets/pathDrawing/bushLeft.webp"),
-                            url("/assets/pathDrawing/pathOutline.webp"),
-                            url("/assets/pathDrawing/bg.webp")`,
-          backgroundColor: isMobile ? '#2a2342' : 'transparent',
+          backgroundImage: `url("/assets/bgConnected.webp")`,
+          backgroundColor: 'transparent',
           backgroundSize: 'cover',
-          backgroundRepeat: 'repeat',
-          zIndex: 2,
-          // Mobile optimization
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center center',
           backgroundAttachment: 'scroll',
+          zIndex: 2,
         }}
       >
         {/* <div
@@ -104,19 +100,19 @@ export default function Home({
 
         <HomeHero />
 
-        <div className="my-[40rem]">
+        <div className={`${isMobile ? 'my-32' : 'my-[40rem]'}`}>
           <HomeAboutText />
         </div>
 
-        <div className="my-[40rem]">
+        <div className={`${isMobile ? 'my-32' : 'my-[40rem]'}`}>
           <HomeVideoStats />
         </div>
 
-        <div className="my-[40rem] mb-[128rem]">
+        <div className={`${isMobile ? 'my-32 mb-32' : 'my-[40rem] mb-[128rem]'}`}>
           <HackUTDCountdown />
         </div>
 
-        <div className="my-72 -mt-[32rem]">
+        <div className={`${isMobile ? 'my-32 -mt-16' : 'my-72 -mt-[32rem]'}`}>
           <KeynoteSpeaker />
         </div>
       </div>
