@@ -106,10 +106,10 @@ html {
   }
   
   /* Disable complex gradients on mobile */
-  .bg-gradient-to-r,
-  .bg-gradient-to-l,
-  .bg-gradient-to-t,
-  .bg-gradient-to-b {
+  .bg-gradient-to-r:not(.banner-gradient),
+  .bg-gradient-to-l:not(.banner-gradient),
+  .bg-gradient-to-t:not(.banner-gradient),
+  .bg-gradient-to-b:not(.banner-gradient) {
     background: #2a2342 !important;
   }
   
