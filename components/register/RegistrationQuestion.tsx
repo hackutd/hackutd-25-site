@@ -10,14 +10,17 @@ import {
   textAreaQuestion,
 } from '@/hackportal.config';
 
+interface RegistrationQuestion {
+  question: string;
+  id: string;
+  name: string;
+  required: boolean;
+  initialValue: any;
+  description?: string;
+}
+
 interface Props {
-  question: {
-    name: string;
-    required: boolean;
-    id: string;
-    initialValue: any;
-    question: string;
-  };
+  question: RegistrationQuestion;
   type: string;
 }
 /**
