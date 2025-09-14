@@ -2,6 +2,7 @@ export default function HomeVideoStats() {
   return (
     <section className="z-10 relative md:h-[370px]">
       <div className="flex flex-col justify-center items-center mx-auto py-[3rem]">
+        {/* Stats */}
         <div className="flex justify-center relative w-full z-10 ml-[40vw]">
           <img src="/assets/statsScroll.png" alt="HackUTD" className="z-10 w-[60vw]" />
           <div
@@ -24,14 +25,24 @@ export default function HomeVideoStats() {
         </div>
 
         {/* Video */}
-        <div className="w-full aspect-video flex justify-center">
-          <iframe
+        <div className="flex justify-center relative w-full z-10 ml-[40vw]">
+          <img src="/assets/aboutbanner.png" alt="HackUTD" className="z-10 rotate-180" />
+          <h1
+            className="mt-[50px] sm:mt-[70px] absolute inset-0 flex items-center justify-center 
+                    text-2xl sm:text-3xl md:text-4xl font-light 
+                    bg-gradient-to-t from-[#FFC273] to-[#8C180D] font-medium bg-clip-text z-50 text-transparent font-serif"
+          >
+            See our Teaser
+          </h1>
+        </div>
+        <div className="w-[40vw] -mt-[60px] ml-[40vw] aspect-video flex justify-center bg-black bg-opacity-50">
+          {/* <iframe
             className="w-7/8 md:w-[800px] md:h-[450px]"
             src="https://www.youtube.com/embed/dMVtL2OmB60?si=ZKpc1VRAM6i-XmQQ"
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-          ></iframe>
+          ></iframe> */}
         </div>
       </div>
     </section>
