@@ -4,15 +4,11 @@ import Head from 'next/head';
 
 import HomeChallengesComponent from '@/components/home/challenge';
 import HomeHero from '@/components/home/HomeHero';
-import HackUTDCountdown from '@/components/home/countdown';
-import HomeAboutText from '@/components/home/about/HomeAboutText';
 import HomeSchedule from '@/components/home/HomeSchedule';
 import HomeFaq from '@/components/home/faq';
 import HomeSponsors from '@/components/home/sponsors';
 import HomeFooter from '@/components/home/HomeFooter';
-import KeynoteSpeaker from '@/components/home/speakers';
 import { RequestHelper } from '@/lib/request-helper';
-import HomeVideoStats from '@/components/home/HomeVideoStats';
 
 interface Props {
   answeredQuestion: AnsweredQuestion[];
@@ -77,18 +73,7 @@ export default function Home({
           }
         `}</style>
       </Head>
-      <div
-        className="overflow-x-hidden w-full bg-fallback"
-        style={{
-          backgroundImage: `url("/assets/bgConnected.webp")`,
-          backgroundColor: 'transparent',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center center',
-          backgroundAttachment: 'scroll',
-          zIndex: 2,
-        }}
-      >
+      <div>
         {/* <div
           className="fixed top-0 left-0 w-full h-full z-20 pointer-events-none"
           style={{
@@ -99,22 +84,6 @@ export default function Home({
         /> */}
 
         <HomeHero />
-
-        <div className={`${isMobile ? 'my-24' : 'my-[30rem]'}`}>
-          <HomeAboutText />
-        </div>
-
-        <div className={`${isMobile ? 'my-32' : 'my-[40rem]'}`}>
-          <HomeVideoStats />
-        </div>
-
-        <div className={`${isMobile ? 'my-32 mb-32' : 'my-[40rem] mb-[128rem]'}`}>
-          <HackUTDCountdown />
-        </div>
-
-        <div className={`${isMobile ? 'my-32 -mt-16' : 'my-72 -mt-[32rem]'}`}>
-          <KeynoteSpeaker />
-        </div>
       </div>
 
       <div
