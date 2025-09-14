@@ -26,7 +26,7 @@ export default function HomeVideoStats() {
 
         {/* Video */}
         <div className="flex justify-center relative w-full z-10 ml-[40vw]">
-          <img src="/assets/teaserBanner.png" alt="HackUTD" className="z-10" />
+          <img src="/assets/teaserBanner.png" alt="HackUTD" className="z-10 w-[37vw]" />
           <h1
             className="mt-[50px] sm:-mt-[70px] absolute inset-0 flex items-center justify-center 
                     text-2xl sm:text-3xl md:text-4xl font-light 
