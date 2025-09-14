@@ -1,9 +1,16 @@
 export default function HomeVideoStats() {
   return (
     <section className="z-10 relative md:h-[370px]">
+      {/* Background Images */}
+      <img
+        src="/assets/bushRight.png"
+        alt="HackUTD"
+        className="absolute right-0 top-0 -mt-[240px] z-0 lg:w-[60vw]"
+      />
+      {/* Foreground Elements */}
       <div className="flex flex-col justify-center items-center mx-auto py-[3rem] ml-7 lg:ml-[40vw]">
         {/* Stats */}
-        <div className="flex justify-center relative w-full z-10">
+        <div className="flex mt-[200px] justify-center relative w-full z-10">
           <img src="/assets/statsScroll.png" alt="HackUTD" className="z-10 lg:w-[60vw]" />
           <div
             className=" mt-[26vw] md:mt-[250px] lg:mt-[17.3vw] absolute inset-0 flex-row lg:flex-col items-center justify-center 
