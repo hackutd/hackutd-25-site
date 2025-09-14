@@ -28,16 +28,20 @@ export default function HomeVideoStats() {
 
         {/* Video */}
         <div className="flex justify-center relative w-full z-10">
-          <img src="/assets/teaserBanner.png" alt="HackUTD" className="z-10 w-[37vw]" />
+          <img
+            src="/assets/teaserBanner.png"
+            alt="HackUTD"
+            className="z-10 w-[80%] md:w-[70%] lg:w-[37vw]"
+          />
           <h1
-            className="mt-[50px] sm:-mt-[70px] absolute inset-0 flex items-center justify-center 
-                    text-2xl sm:text-3xl lg:text-4xl font-light 
+            className="-mt-[47px] md:-mt-[50px] lg:-mt-[70px] absolute inset-0 flex items-center justify-center 
+                    text-2xl md:text-4xl lg:text-4xl font-light 
                     bg-gradient-to-t from-[#FFC273] to-[#8C180D] font-medium bg-clip-text z-50 text-transparent font-serif"
           >
             See our Teaser
           </h1>
         </div>
-        <div className="w-[40vw] -mt-[120px] aspect-video flex justify-center bg-black bg-opacity-50">
+        <div className="w-[50vw] md:w-[40vw] -mt-[17vw] lg:-mt-[120px] aspect-video flex justify-center bg-black bg-opacity-50">
           {/* <iframe
             className="w-7/8 md:w-[800px] md:h-[450px]"
             src="https://www.youtube.com/embed/dMVtL2OmB60?si=ZKpc1VRAM6i-XmQQ"
