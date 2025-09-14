@@ -5,20 +5,20 @@ export default function HomeVideoStats() {
         <div className="flex justify-center relative w-full z-10 ml-[40vw]">
           <img src="/assets/statsScroll.png" alt="HackUTD" className="z-10 w-[60vw]" />
           <div
-            className="mt-[18vw] absolute inset-0 flex-col items-center justify-center 
+            className="mt-[17.3vw] absolute inset-0 flex-col items-center justify-center 
                      z-50"
           >
-            <div className="flex flex-col md:flex-row justify-center items-center text-center md:space-x-20 space-y-6 md:space-y-0">
+            <div className="flex flex-col md:flex-row justify-center items-center text-center font-medium text-lg text-[#351918] md:space-x-20 space-y-6 md:space-y-0">
               At our last hackathon, we had the pleasure of hosting...
             </div>
-            <div className=" mt-[3vw] flex flex-col md:flex-row justify-center items-center text-center md:space-x-20 space-y-6 md:space-y-0">
-              1200+ Hackers
+            <div className=" mt-[3vw] flex flex-col md:flex-row justify-center items-center text-center text-3xl md:space-x-20 space-y-6 md:space-y-0">
+              <span className="font-medium text-[#351918]">1200+&nbsp;</span>Hackers
             </div>
-            <div className="flex flex-col md:flex-row justify-center items-center text-center md:space-x-20 space-y-6 md:space-y-0">
-              30+ Universities
+            <div className="mt-1 flex flex-col md:flex-row justify-center items-center text-center text-3xl md:space-x-20 space-y-6 md:space-y-0">
+              <span className="font-medium text-[#351918]">30+&nbsp;</span>Universities
             </div>
-            <div className="flex flex-col md:flex-row justify-center items-center text-center md:space-x-20 space-y-6 md:space-y-0">
-              200+ Projects
+            <div className="mt-1 flex flex-col md:flex-row justify-center items-center text-center text-3xl md:space-x-20 space-y-6 md:space-y-0">
+              <span className="font-medium text-[#351918]">200+&nbsp;</span>Projects
             </div>
           </div>
         </div>
