@@ -100,7 +100,7 @@ export default function Home({
 
         <HomeHero />
 
-        <div className={`${isMobile ? 'my-32' : 'my-[40rem]'}`}>
+        <div className={`${isMobile ? 'my-24' : 'my-[30rem]'}`}>
           <HomeAboutText />
         </div>
 
@@ -126,21 +126,21 @@ export default function Home({
           backgroundSize: 'auto',
         }}
       >
-        <div className="my-72">
+        {/* <div className="my-72">
           <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
         </div>
 
         <div className="my-72">
           <HomeChallengesComponent challenges={challenges} />
-        </div>
+        </div> */}
 
         <div className="my-72">
           <HomeFaq answeredQuestions={answeredQuestion} />
         </div>
 
-        <div className="my-72">
+        {/* <div className="my-72">
           <HomeSponsors />
-        </div>
+        </div> */}
       </div>
       <HomeFooter />
     </>

@@ -89,7 +89,7 @@ const HomeAboutText = () => {
   return (
     <div
       ref={containerRef}
-      className="relative mt-32 md:-mt-20 flex flex-col items-center md:items-start justify-center font-jua md:pl-16"
+      className="relative mt-24 md:-mt-24 flex flex-col items-center md:items-start justify-center font-jua md:pl-16"
       style={{
         background: 'transparent',
         backgroundSize: '100% 100%',
@@ -101,6 +101,20 @@ const HomeAboutText = () => {
       }}
       id="what-is-hackutd"
     >
+      {/* Pink Flower Tree - positioned left, higher than fox, behind about container */}
+      <div
+        className="absolute left-0 top-0 pointer-events-none"
+        style={{
+          zIndex: 10,
+          transform: 'translateY(-20%)',
+        }}
+      >
+        <img
+          src="/assets/pathDrawing/pinkFlowerTree.webp"
+          alt="Pink Flower Tree"
+          className="max-w-xs md:max-w-lg lg:max-w-xl h-auto opacity-80"
+        />
+      </div>
       <div className="flex justify-center md:justify-start relative w-full z-10">
         <div className="flex flex-col items-center md:items-start w-full max-w-4xl">
           <div className="relative flex justify-center w-full -mb-20" style={{ zIndex: 100 }}>
@@ -131,7 +145,8 @@ const HomeAboutText = () => {
           <div className="relative w-full z-0 flex justify-center">
             <p
               ref={explanationRef}
-              className="text-xl text-center md:text-left text-white max-w-sm md:max-w-4xl mb-16 font-fredoka relative px-[20px] md:px-[40px] opacity-0 bg-black/50 pt-[100px] pb-[50px] rounded-2xl backdrop-blur-sm shadow-lg shadow-[#93004C66]"
+              className="text-xl text-center md:text-left text-white max-w-sm md:max-w-4xl mb-16 font-fredoka relative px-[20px] md:px-[40px] opacity-0 pt-[100px] pb-[50px] rounded-2xl backdrop-blur-sm shadow-lg"
+              style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
             >
               HackUTD, the largest university hackathon in Texas, is a weekend-long event where
               students build apps, hardware, and more. HackUTD provides a venue for self-expression
@@ -140,6 +155,15 @@ const HomeAboutText = () => {
               collaboratively build a unique solution from scratch. Whether youre a frequent
               hackathon attendee or just getting started, we&apos;d love to see what you can make!
             </p>
+          </div>
+
+          {/* Fox image below the about text */}
+          <div className="relative w-full flex justify-center -mt-4">
+            <img
+              src="/assets/pathDrawing/fox.webp"
+              alt="Fox"
+              className="max-w-sm md:max-w-2xl lg:max-w-4xl h-auto"
+            />
           </div>
         </div>
       </div>
