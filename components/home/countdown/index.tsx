@@ -39,9 +39,9 @@ const HackCountdown: React.FC<Props> = ({ targetDate }) => {
   });
 
   return (
-    <section className="relative w-screen flex justify-center items-start overflow-x-hidden">
+    <section className="relative w-screen flex justify-center items-start overflow-x-hidden mt-16 md:mt-32">
       <div className="relative w-screen flex flex-col justify-center items-center overflow-x-hidden">
-        <div className="relative w-[95vw] md:w-[600px] h-auto aspect-[2.4/1] z-20 translate-y-12 md:translate-y-40 xl:translate-y-48 2xl:translate-y-[64rem]">
+        <div className="relative w-[95vw] md:w-[600px] h-auto aspect-[2.4/1] z-20 translate-y-12 md:translate-y-64 xl:translate-y-72 2xl:translate-y-[80rem]">
           <Image
             src="/assets/KeynoteSpeakerRoll.svg"
             alt="Countdown banner"

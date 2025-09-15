@@ -29,13 +29,13 @@ body, html {
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
-  background-color: #2a2342;
+  background-color: transparent;
   overscroll-behavior: auto;
 }
 
 /* Custom overscroll color to match footer theme */
 html {
-  background: linear-gradient(to bottom right, #581c87, #1e1b4b);
+  background: transparent;
 }
 
 /* Mobile optimizations */
@@ -52,7 +52,7 @@ html {
   body {
     background-attachment: scroll !important;
     background-size: cover !important;
-    background-color: #2a2342 !important;
+    background-color: transparent !important;
     contain: layout style paint;
   }
   
@@ -111,7 +111,7 @@ html {
   .bg-gradient-to-l:not(.banner-gradient),
   .bg-gradient-to-t:not(.banner-gradient),
   .bg-gradient-to-b:not(.banner-gradient) {
-    background: #2a2342 !important;
+    background: transparent !important;
   }
   
   /* Optimize sections */

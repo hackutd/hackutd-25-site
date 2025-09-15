@@ -167,7 +167,7 @@ export default function HomeHero() {
                   background: isMobile
                     ? '#EABF73'
                     : 'linear-gradient(135deg, #EABF73 0%, #D4A574 100%)',
-                  color: '#1e1b4b',
+                  color: '#1a1a2e',
                   border: isMobile ? '1px solid #EABF73' : '1px solid rgba(234, 191, 115, 0.4)',
                   textShadow: '0 1px 2px rgba(0,0,0,0.1)',
                   boxShadow: isMobile
@@ -219,6 +219,28 @@ export default function HomeHero() {
       </div>
 
       <div className={`my-32 mb-32 md:my-[60rem] md:mb-[128rem]`}>
+        {/* Cliff image behind countdown */}
+        <div className="absolute z-0" style={{ left: '-8rem', marginTop: '20rem' }}>
+          <div className="md:hidden">
+            <Image
+              src="/assets/pathDrawing/cliff.webp"
+              alt="Cliff"
+              width={300}
+              height={400}
+              className="w-80 h-96"
+            />
+          </div>
+          <div className="hidden md:block">
+            <Image
+              src="/assets/pathDrawing/cliff.webp"
+              alt="Cliff"
+              width={400}
+              height={600}
+              className="w-[50rem] h-[40rem] md:w-[60rem] md:h-[50rem]"
+            />
+          </div>
+        </div>
+
         <HackUTDCountdown />
       </div>
 

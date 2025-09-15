@@ -17,10 +17,7 @@ const HomeAboutText = () => {
     if (titleText) {
       titleText.style.opacity = '1';
       titleText.innerHTML = 'What Is HackUTD?';
-      titleText.style.background = 'linear-gradient(to top, #531285, #C694FF)';
-      titleText.style.WebkitBackgroundClip = 'text';
-      titleText.style.WebkitTextFillColor = 'transparent';
-      titleText.style.backgroundClip = 'text';
+      titleText.style.color = '#531285';
     }
 
     if (explanationText) {
@@ -70,14 +67,11 @@ const HomeAboutText = () => {
               ref={titleRef}
               className="mt-[50px] sm:mt-[70px] 2xl:mt-[100px] absolute inset-0 flex items-center justify-center
                       text-2xl sm:text-3xl md:text-4xl xl:text-4xl 2xl:text-6xl font-light 
-                      bg-gradient-to-t from-[#531285] to-[#C694FF] bg-clip-text text-transparent font-serif banner-gradient"
+                      font-serif"
               style={{
                 zIndex: 100,
                 opacity: 1,
-                background: 'linear-gradient(to top, #531285, #C694FF)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
+                color: '#531285',
               }}
             >
               What Is HackUTD?

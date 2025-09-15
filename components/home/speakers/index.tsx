@@ -14,7 +14,7 @@ export default function HomeSpeakers() {
     fetchData();
   }, []);
   return (
-    <section className="overflow-x-auto min-h-[24rem] pb-20 bg-cover bg-center lg:mt-[80rem] 2xl:mt-[160rem]">
+    <section className="overflow-x-auto min-h-[24rem] pb-20 bg-cover bg-center lg:mt-[20rem] 2xl:mt-[30rem]">
       <div className="relative w-full min-h-screen flex flex-col justify-center items-center overflow-x-hidden px-4">
         {/* Keynote Speaker Banner (Remains unchanged as it is responsive) */}
         <div className="relative w-full max-w-[500px] h-[170px] 2xl:max-w-[800px] 2xl:h-[300px] z-20">
@@ -26,7 +26,10 @@ export default function HomeSpeakers() {
             className="w-full h-full"
           />
           <div className="absolute inset-0 flex items-center justify-center">
-            <h1 className="text-2xl md:text-4xl 2xl:text-6xl font-bold text-center font-Young-Serif text-transparent bg-gradient-to-b from-[#FF834E] to-[#7D1F00] bg-clip-text px-4 -mt-4">
+            <h1
+              className="text-2xl md:text-4xl 2xl:text-6xl font-bold text-center font-Young-Serif px-4 -mt-4"
+              style={{ color: '#531285' }}
+            >
               Keynote Speaker
             </h1>
           </div>
