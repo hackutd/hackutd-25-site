@@ -13,20 +13,20 @@ export default function HomeVideoStats() {
         <div className="flex justify-center relative w-full z-20 -mt-[20vw] xl:-mt-[20vw] 2xl:-mt-64">
           <img src="/assets/statsScroll.png" alt="HackUTD" className="z-10 lg:w-[60vw]" />
           <div
-            className=" mt-[26vw] md:mt-[320px] lg:mt-[270px] 2xl:mt-[450px] absolute inset-0 flex-row lg:flex-col items-center justify-center 
+            className=" mt-[26vw] md:mt-[320px] lg:mt-[220px] 2xl:mt-[400px] absolute inset-0 flex-row lg:flex-col items-center justify-center 
                      z-50"
           >
-            <div className="flex justify-center items-center text-center font-medium text-sm w-[50%] md:w-full ml-[22vw] md:ml-0 md:text-lg 2xl:text-2xl text-[#351918] md:space-x-20 space-y-6 md:space-y-0">
+            <div className="flex justify-center items-center text-center font-medium text-sm w-[50%] md:w-full ml-[22vw] md:ml-0 md:text-lg lg:text-base 2xl:text-xl text-[#351918] md:space-x-20 space-y-6 md:space-y-0">
               At our last hackathon, we had the pleasure of hosting...
             </div>
             <div className="flex md:flex-col justify-center flex-wrap w-[60%] lg:w-full gap-x-4 ml-[18vw] mt-2 lg:ml-0 lg:mt-4 2xl:mt-8">
-              <div className="flex flex-row justify-center items-center text-center text-md md:text-2xl lg:text-3xl 2xl:text-5xl lg:space-x-20 space-y-6 lg:space-y-0">
+              <div className="flex flex-row justify-center items-center text-center text-md md:text-2xl lg:text-2xl 2xl:text-5xl lg:space-x-20 space-y-6 lg:space-y-0">
                 <span className="font-medium text-[#351918]">1200+&nbsp;</span>Hackers
               </div>
-              <div className="lg:mt-1 2xl:mt-2 flex flex-row justify-center items-center text-center text-md md:text-2xl lg:text-3xl 2xl:text-5xl md:space-x-20 space-y-6 md:space-y-0">
+              <div className="lg:mt-1 2xl:mt-2 flex flex-row justify-center items-center text-center text-md md:text-2xl lg:text-2xl 2xl:text-5xl md:space-x-20 space-y-6 md:space-y-0">
                 <span className="font-medium text-[#351918]">30+&nbsp;</span>Universities
               </div>
-              <div className="lg:mt-1 2xl:mt-2 flex flex-row justify-center items-center text-center text-md md:text-2xl lg:text-3xl 2xl:text-5xl md:space-x-20 space-y-6 md:space-y-0">
+              <div className="lg:mt-1 2xl:mt-2 flex flex-row justify-center items-center text-center text-md md:text-2xl lg:text-2xl 2xl:text-5xl md:space-x-20 space-y-6 md:space-y-0">
                 <span className="font-medium text-[#351918]">200+&nbsp;</span>Projects
               </div>
             </div>

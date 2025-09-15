@@ -162,7 +162,7 @@ const HomeAboutText = () => {
             <img
               src="/assets/pathDrawing/fox.webp"
               alt="Fox"
-              className="w-80 md:w-96 lg:w-[500px] xl:w-[500px] 2xl:w-[600px] h-auto"
+              className="w-80 md:w-96 lg:w-[500px] xl:w-[500px] 2xl:w-[600px] h-auto lg:-mt-16"
             />
           </div>
         </div>
