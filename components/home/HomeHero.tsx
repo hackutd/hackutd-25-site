@@ -263,7 +263,7 @@ export default function HomeHero() {
         <HomeAboutText />
       </div>
 
-      <div className={`my-32 md:my-[40rem]`}>
+      <div className={`my-8 md:my-12`}>
         <HomeVideoStats />
       </div>
 
