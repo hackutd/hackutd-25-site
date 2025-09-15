@@ -13,7 +13,7 @@ export default function HomeVideoStats() {
         <div className="flex justify-center relative w-full z-20 -mt-[20vw] xl:-mt-[20vw] 2xl:-mt-64">
           <img src="/assets/statsScroll.png" alt="HackUTD" className="z-10 lg:w-[60vw]" />
           <div
-            className=" mt-[26vw] md:mt-[320px] lg:mt-[220px] 2xl:mt-[400px] absolute inset-0 flex-row lg:flex-col items-center justify-center 
+            className=" mt-[26vw] md:mt-[320px] lg:mt-[180px] 2xl:mt-[400px] absolute inset-0 flex-row lg:flex-col items-center justify-center 
                      z-50"
           >
             <div className="flex justify-center items-center text-center font-medium text-sm w-[50%] md:w-full ml-[22vw] md:ml-0 md:text-lg lg:text-base 2xl:text-xl text-[#351918] md:space-x-20 space-y-6 md:space-y-0">
@@ -34,14 +34,14 @@ export default function HomeVideoStats() {
         </div>
 
         {/* Video */}
-        <div className="flex justify-center relative w-full z-30 mt-4 md:mt-0 xl:mt-0 2xl:mt-16">
+        <div className="flex justify-center relative w-full z-30 mt-4 md:mt-0 lg:-mt-8 xl:mt-0 2xl:mt-16">
           <img
             src="/assets/teaserBanner.png"
             alt="HackUTD"
-            className="z-20 w-[90%] sm:w-[80%] md:w-[70%] lg:w-[37vw] max-w-[600px]"
+            className="z-20 w-[90%] sm:w-[80%] md:w-[70%] lg:w-[37vw] max-w-[600px] lg:-mt-4"
           />
           <h1
-            className="-mt-[40px] sm:-mt-[47px] md:-mt-[50px] lg:-mt-[70px] absolute inset-0 flex items-center justify-center 
+            className="-mt-[40px] sm:-mt-[47px] md:-mt-[50px] lg:-mt-[60px] absolute inset-0 flex items-center justify-center 
                     text-xl sm:text-2xl md:text-4xl lg:text-4xl font-light 
                     bg-gradient-to-t from-[#FFC273] to-[#8C180D] font-medium bg-clip-text z-50 text-transparent font-serif px-4"
           >
