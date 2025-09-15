@@ -121,12 +121,12 @@ const HomeAboutText = () => {
             <img
               src="/assets/aboutbanner.png"
               alt="HackUTD"
-              className="z-10 rotate-180 w-auto h-auto xl:scale-150"
+              className="z-10 rotate-180 w-auto h-auto xl:scale-125"
               style={{ zIndex: 10 }}
             />
             <h1
               ref={titleRef}
-              className="mt-[50px] sm:mt-[70px] 2xl:mt-[80px] absolute inset-0 flex items-center justify-center
+              className="mt-[50px] sm:mt-[70px] 2xl:mt-[100px] absolute inset-0 flex items-center justify-center
                       text-2xl sm:text-3xl md:text-4xl xl:text-4xl 2xl:text-6xl font-light 
                       bg-gradient-to-t from-[#531285] to-[#C694FF] bg-clip-text text-transparent font-serif banner-gradient"
               style={{
@@ -162,7 +162,7 @@ const HomeAboutText = () => {
             <img
               src="/assets/pathDrawing/fox.webp"
               alt="Fox"
-              className="w-80 md:w-96 lg:w-[500px] xl:w-[500px] 2xl:w-[600px] h-auto lg:-mt-16"
+              className="w-80 md:w-96 lg:w-[500px] xl:w-[500px] 2xl:w-[600px] h-auto md:-mt-12 lg:-mt-16"
             />
           </div>
         </div>

@@ -314,3 +314,18 @@ a.link {
 .swiper-button-next:after {
   display: block;
 }
+
+/* Custom breakpoint for 533-640px range */
+@media (min-width: 533px) and (max-width: 639px) {
+  .stats-text-533-640 {
+    font-size: 18px !important;
+  }
+  
+  .stats-numbers-533-640 {
+    font-size: 20px !important;
+  }
+  
+  .stats-position-533-640 {
+    margin-top: 26vw !important;
+  }
+}
