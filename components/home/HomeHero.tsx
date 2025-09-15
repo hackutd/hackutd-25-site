@@ -259,7 +259,7 @@ export default function HomeHero() {
       </section>
 
       {/* Other components that use the same background */}
-      <div className={`my-24 md:my-[30rem]`}>
+      <div className={`my-24 md:my-[30rem] 2xl:my-[50rem]`}>
         <HomeAboutText />
       </div>
 

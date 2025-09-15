@@ -89,7 +89,7 @@ const HomeAboutText = () => {
   return (
     <div
       ref={containerRef}
-      className="relative mt-24 md:-mt-24 flex flex-col items-center md:items-start justify-center font-jua md:pl-16"
+      className="relative mt-4 md:mt-0 flex flex-col items-center md:items-start justify-center font-jua md:pl-16"
       style={{
         background: 'transparent',
         backgroundSize: '100% 100%',
@@ -112,22 +112,22 @@ const HomeAboutText = () => {
         <img
           src="/assets/pathDrawing/pinkFlowerTree.webp"
           alt="Pink Flower Tree"
-          className="max-w-xs md:max-w-lg lg:max-w-xl h-auto opacity-80"
+          className="w-48 md:w-80 lg:w-96 xl:w-96 2xl:w-[600px] h-auto opacity-80"
         />
       </div>
       <div className="flex justify-center md:justify-start relative w-full z-10">
-        <div className="flex flex-col items-center md:items-start w-full max-w-4xl">
+        <div className="flex flex-col items-center md:items-start w-full max-w-4xl xl:max-w-4xl 2xl:max-w-7xl">
           <div className="relative flex justify-center w-full -mb-20" style={{ zIndex: 100 }}>
             <img
               src="/assets/aboutbanner.png"
               alt="HackUTD"
-              className="z-10 rotate-180"
+              className="z-10 rotate-180 w-auto h-auto xl:scale-150"
               style={{ zIndex: 10 }}
             />
             <h1
               ref={titleRef}
-              className="mt-[50px] sm:mt-[70px] absolute inset-0 flex items-center justify-center
-                      text-2xl sm:text-3xl md:text-4xl font-light 
+              className="mt-[50px] sm:mt-[70px] 2xl:mt-[80px] absolute inset-0 flex items-center justify-center
+                      text-2xl sm:text-3xl md:text-4xl xl:text-4xl 2xl:text-6xl font-light 
                       bg-gradient-to-t from-[#531285] to-[#C694FF] bg-clip-text text-transparent font-serif banner-gradient"
               style={{
                 zIndex: 100,
@@ -145,7 +145,7 @@ const HomeAboutText = () => {
           <div className="relative w-full z-0 flex justify-center">
             <p
               ref={explanationRef}
-              className="text-xl text-center md:text-left text-white max-w-sm md:max-w-4xl mb-16 font-fredoka relative px-[20px] md:px-[40px] opacity-0 pt-[100px] pb-[50px] rounded-2xl backdrop-blur-sm shadow-lg"
+              className="text-xl xl:text-xl 2xl:text-3xl text-center md:text-left text-white max-w-sm md:max-w-4xl xl:max-w-4xl 2xl:max-w-6xl mb-16 font-fredoka relative px-[20px] md:px-[40px] xl:px-[40px] 2xl:px-[60px] opacity-0 pt-[100px] pb-[50px] xl:pt-[100px] xl:pb-[50px] 2xl:pt-[120px] 2xl:pb-[70px] rounded-2xl backdrop-blur-sm shadow-lg"
               style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
             >
               HackUTD, the largest university hackathon in Texas, is a weekend-long event where
@@ -162,7 +162,7 @@ const HomeAboutText = () => {
             <img
               src="/assets/pathDrawing/fox.webp"
               alt="Fox"
-              className="max-w-sm md:max-w-2xl lg:max-w-4xl h-auto"
+              className="w-80 md:w-96 lg:w-[500px] xl:w-[500px] 2xl:w-[600px] h-auto"
             />
           </div>
         </div>
