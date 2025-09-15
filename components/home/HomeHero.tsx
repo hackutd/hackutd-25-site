@@ -107,77 +107,6 @@ export default function HomeHero() {
         {/* <AppHeader /> */}
 
         <div className="relative w-full min-h-[100svh] max-h-[100svh] overflow-hidden">
-          <div
-            className="absolute inset-0 z-0 hidden xl:block pointer-events-none"
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              contain: 'layout style paint',
-              isolation: 'isolate',
-            }}
-          >
-            <Image
-              src="/assets/topDrawing/fox.webp"
-              alt="Fox"
-              fill
-              className="object-contain object-center"
-              priority
-              sizes="100vw"
-              style={{
-                position: 'absolute',
-                inset: 0,
-                objectFit: 'contain',
-                objectPosition: 'center',
-              }}
-            />
-            <Image
-              src="/assets/topDrawing/deer.webp"
-              alt="Deer"
-              fill
-              className="object-contain object-center"
-              priority
-              sizes="100vw"
-              style={{
-                position: 'absolute',
-                inset: 0,
-                objectFit: 'contain',
-                objectPosition: 'center',
-              }}
-            />
-            <Image
-              src="/assets/topDrawing/cat.webp"
-              alt="Cat"
-              fill
-              className="object-contain object-center"
-              priority
-              sizes="100vw"
-              style={{
-                position: 'absolute',
-                inset: 0,
-                objectFit: 'contain',
-                objectPosition: 'center',
-                transform: 'translateY(8%)',
-              }}
-            />
-            <Image
-              src="/assets/topDrawing/bird.webp"
-              alt="Bird"
-              fill
-              className="object-contain object-center"
-              priority
-              sizes="100vw"
-              style={{
-                position: 'absolute',
-                inset: 0,
-                objectFit: 'contain',
-                objectPosition: 'center',
-              }}
-            />
-          </div>
-
           {/* MLH sticker */}
           <div className="relative z-10 shrink-0 w-full flex">
             <div className="absolute top-0 right-4 z-20 transition-all">
@@ -257,6 +186,28 @@ export default function HomeHero() {
           </div>
         </div>
       </section>
+
+      {/* Poyo image positioned to overlap with about section */}
+      <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
+        <div className="md:hidden" style={{ marginTop: '-20rem' }}>
+          <Image
+            src="/assets/topDrawing/poyo.webp"
+            alt="Poyo"
+            width={120}
+            height={120}
+            className="w-24 h-24"
+          />
+        </div>
+        <div className="hidden md:block" style={{ marginTop: '15rem' }}>
+          <Image
+            src="/assets/topDrawing/poyo.webp"
+            alt="Poyo"
+            width={240}
+            height={240}
+            className="w-48 h-48 md:w-64 md:h-64"
+          />
+        </div>
+      </div>
 
       {/* Other components that use the same background */}
       <div className={`my-24 md:my-[30rem] xl:my-[60rem] 2xl:my-[70rem]`}>
