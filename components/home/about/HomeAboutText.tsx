@@ -10,79 +10,21 @@ const HomeAboutText = () => {
   const containerRef = useRef(null); // Reference for entire container to observe
 
   useEffect(() => {
-    // TODO: update this to use the media query
-    const isDesktopView = window.matchMedia('(min-width: 1024px)').matches;
+    // Show content immediately without animations
+    const titleText = titleRef.current;
+    const explanationText = explanationRef.current;
 
-    if (isDesktopView) {
-      const handleIntersection = (entries, observer) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const titleText = titleRef.current;
+    if (titleText) {
+      titleText.style.opacity = '1';
+      titleText.innerHTML = 'What Is HackUTD?';
+      titleText.style.background = 'linear-gradient(to top, #531285, #C694FF)';
+      titleText.style.WebkitBackgroundClip = 'text';
+      titleText.style.WebkitTextFillColor = 'transparent';
+      titleText.style.backgroundClip = 'text';
+    }
 
-            gsap.set(titleText, { opacity: 1 });
-
-            const titleLetters = titleText.innerText.split('');
-            titleText.innerHTML = titleLetters
-              .map((letter) => {
-                if (letter === ' ') {
-                  return `<span class="inline-block">&nbsp;</span>`;
-                }
-                return `<span class="bg-gradient-to-t from-[#531285] to-[#C694FF] bg-clip-text text-transparent inline-block">${letter}</span>`;
-              })
-              .join('');
-
-            gsap.fromTo(
-              titleText.children,
-              { opacity: 0, y: 50 },
-              {
-                opacity: 1,
-                y: 0,
-                stagger: 0.1,
-                ease: 'power3.out',
-                duration: 1,
-              },
-            );
-
-            gsap.fromTo(
-              explanationRef.current,
-              { opacity: 0, y: 100 },
-              { opacity: 1, y: 0, duration: 1.5, ease: 'power3.out', delay: 1.5 },
-            );
-
-            observer.unobserve(entry.target);
-          }
-        });
-      };
-
-      const observer = new IntersectionObserver(handleIntersection, {
-        threshold: 0.3,
-        rootMargin: '0px 0px -100px 0px',
-      });
-
-      if (containerRef.current) {
-        observer.observe(containerRef.current);
-      }
-
-      return () => {
-        if (containerRef.current) {
-          observer.unobserve(containerRef.current);
-        }
-      };
-    } else {
-      // Mobile: show immediately without GSAP animation
-      const titleText = titleRef.current;
-      const explanationText = explanationRef.current;
-      if (titleText) {
-        titleText.style.opacity = '1';
-        // Ensure text content is preserved without GSAP manipulation
-        titleText.innerHTML = 'What Is HackUTD?';
-        // Ensure gradient is applied
-        titleText.style.background = 'linear-gradient(to top, #531285, #C694FF)';
-        titleText.style.WebkitBackgroundClip = 'text';
-        titleText.style.WebkitTextFillColor = 'transparent';
-        titleText.style.backgroundClip = 'text';
-      }
-      if (explanationText) explanationText.classList.add('explanation-animate-in');
+    if (explanationText) {
+      explanationText.style.opacity = '1';
     }
   }, []);
 
@@ -145,7 +87,7 @@ const HomeAboutText = () => {
           <div className="relative w-full z-0 flex justify-center">
             <p
               ref={explanationRef}
-              className="text-xl xl:text-xl 2xl:text-3xl text-center md:text-left text-white max-w-sm md:max-w-4xl xl:max-w-4xl 2xl:max-w-6xl mb-16 font-fredoka relative px-[20px] md:px-[40px] xl:px-[40px] 2xl:px-[60px] opacity-0 pt-[100px] pb-[50px] xl:pt-[100px] xl:pb-[50px] 2xl:pt-[120px] 2xl:pb-[70px] rounded-2xl backdrop-blur-sm shadow-lg"
+              className="text-xl xl:text-xl 2xl:text-3xl text-center md:text-left text-white max-w-sm md:max-w-4xl xl:max-w-4xl 2xl:max-w-6xl mb-16 font-fredoka relative px-[20px] md:px-[40px] xl:px-[40px] 2xl:px-[60px] pt-[100px] pb-[50px] xl:pt-[100px] xl:pb-[50px] 2xl:pt-[120px] 2xl:pb-[70px] rounded-2xl backdrop-blur-sm shadow-lg"
               style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
             >
               HackUTD, the largest university hackathon in Texas, is a weekend-long event where
