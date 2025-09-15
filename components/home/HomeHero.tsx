@@ -259,19 +259,19 @@ export default function HomeHero() {
       </section>
 
       {/* Other components that use the same background */}
-      <div className={`my-24 md:my-[30rem] 2xl:my-[50rem]`}>
+      <div className={`my-24 md:my-[30rem] xl:my-[60rem] 2xl:my-[70rem]`}>
         <HomeAboutText />
       </div>
 
-      <div className={`my-8 md:my-12`}>
+      <div className={`my-8 md:my-12 xl:my-24`}>
         <HomeVideoStats />
       </div>
 
-      <div className={`my-32 mb-32 md:my-[40rem] md:mb-[128rem]`}>
+      <div className={`my-32 mb-32 md:my-[60rem] md:mb-[128rem]`}>
         <HackUTDCountdown />
       </div>
 
-      <div className={`my-32 -mt-16 md:my-72 md:-mt-[32rem]`}>
+      <div className={`my-32 -mt-16 md:my-72 xl:my-80 md:-mt-[32rem] xl:-mt-[20rem]`}>
         <KeynoteSpeaker />
       </div>
     </div>

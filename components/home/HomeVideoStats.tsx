@@ -48,17 +48,10 @@ export default function HomeVideoStats() {
             See our Teaser
           </h1>
         </div>
-        <div className="w-[70vw] sm:w-[60vw] md:w-[40vw] -mt-[15vw] sm:-mt-[17vw] md:-mt-[4vw] lg:-mt-[120px] z-20 aspect-video flex justify-center items-center bg-black bg-opacity-30 rounded-lg md:hidden lg:flex">
+        <div className="w-[70vw] sm:w-[60vw] md:w-[40vw] -mt-[15vw] sm:-mt-[17vw] md:-mt-[4vw] lg:-mt-[120px] z-20 aspect-video flex justify-center items-center bg-black bg-opacity-30 rounded-lg">
           <div className="font - youngSerif text-white text-lg sm:text-2xl md:text-4xl font-bold text-center px-4">
             Coming Soon
           </div>
-          {/* <iframe
-            className="w-7/8 md:w-[800px] md:h-[450px]"
-            src="https://www.youtube.com/embed/dMVtL2OmB60?si=ZKpc1VRAM6i-XmQQ"
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe> */}
         </div>
       </div>
     </section>
