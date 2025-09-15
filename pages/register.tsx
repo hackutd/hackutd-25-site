@@ -379,6 +379,63 @@ export default function Register({ allowedRegistrations }: Props) {
     return errors;
   };
 
+  // Function to validate current page
+  const validateCurrentPage = (values) => {
+    let errors = {};
+
+    switch (registrationSection) {
+      case 0: // General Questions
+        for (let obj of generalQuestions) {
+          errors = setErrors(obj, values, errors);
+        }
+        break;
+      case 1: // Travel Reimbursement (no required fields)
+        break;
+      case 2: // School Questions
+        for (let obj of schoolQuestions) {
+          errors = setErrors(obj, values, errors);
+        }
+        // Check manual fields if "Other" is selected
+        if (values['major'] === 'Other' && !values['majorManual']) {
+          errors['majorManual'] = 'Required';
+        }
+        if (values['university'] === 'Other' && !values['universityManual']) {
+          errors['universityManual'] = 'Required';
+        }
+        break;
+      case 3: // Hackathon Experience
+        for (let obj of hackathonExperienceQuestions) {
+          errors = setErrors(obj, values, errors);
+        }
+        if (values['heardFrom'] === 'Other' && !values['heardFromManual']) {
+          errors['heardFromManual'] = 'Required';
+        }
+        break;
+      case 4: // Short Answer Questions
+        for (let obj of shortAnswerQuestions) {
+          errors = setErrors(obj, values, errors);
+        }
+        break;
+      case 5: // Event Info
+        for (let obj of eventInfoQuestions) {
+          errors = setErrors(obj, values, errors);
+        }
+        break;
+      case 6: // Sponsor Info (resume is optional)
+        for (let obj of sponsorInfoQuestions) {
+          errors = setErrors(obj, values, errors);
+        }
+        break;
+      case 7: // Teammate Questions
+        for (let obj of teammateQuestions) {
+          errors = setErrors(obj, values, errors);
+        }
+        break;
+    }
+
+    return Object.keys(errors).length === 0;
+  };
+
   return (
     <div
       className="flex flex-col flex-grow mt-0 mb-0"
@@ -471,6 +528,7 @@ export default function Register({ allowedRegistrations }: Props) {
           if (values['heardFrom'] === 'Other' && values['heardFromManual'] === '') {
             errors['heardFromManual'] = 'Required';
           }
+
           return errors;
         }}
         onSubmit={async (values, { setSubmitting }) => {
@@ -482,19 +540,8 @@ export default function Register({ allowedRegistrations }: Props) {
       >
         {({ values, isValid, isSubmitting, dirty, resetForm }) => (
           <>
-            <section className="pl-4 relative mb-4 z-[9999] hidden md:flex">
-              <button
-                onClick={async (e) => {
-                  e.preventDefault();
-                  if (dirty) await handleSaveProfile(values, registrationSection, resetForm);
-                  await router.push('/');
-                }}
-              >
-                <div className="mt-2 cursor-pointer items-center inline-flex text-white font-bold bg-[#5D5A88] rounded-[30px] pr-4 pl-1 py-2 border-2 border-white">
-                  <ChevronLeftIcon className="text-white" fontSize={'large'} />
-                  Home
-                </div>
-              </button>
+            <section className="pl-4 relative mb-4 z-[100] hidden md:flex">
+              <div className="mt-2 h-12"></div>
             </section>
             <section className="relative">
               {/* Field component automatically hooks input to form values. Use name attribute to match corresponding value */}
@@ -505,9 +552,9 @@ export default function Register({ allowedRegistrations }: Props) {
               >
                 {/* General Questions */}
                 {registrationSection == 0 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-4 py-10 px-8 mb-8 text-[#5D5A88]">
+                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-4 py-10 px-8 mb-8 text-[#2D5016]">
                     <header>
-                      <h1 className="text-[#5D5A88] lg:text-4xl sm:text-3xl text-2xl font-bold text-center mt-2 md:mt-8 mb-4 poppins-bold">
+                      <h1 className="text-[#2D5016] lg:text-4xl sm:text-3xl text-2xl font-bold text-center mt-2 md:mt-8 mb-4 poppins-bold">
                         Hacker Application
                       </h1>
                       <div
@@ -525,24 +572,162 @@ export default function Register({ allowedRegistrations }: Props) {
                         ))}
                       </div>
                     </div>
-                    <div className="flex justify-end">
-                      <button
-                        disabled={!dirty}
-                        onClick={async (e) => {
-                          e.preventDefault();
-                          await handleSaveProfile(values, registrationSection, resetForm);
-                        }}
-                        className="bg-[#5D5A88] rounded-lg p-3 text-white font-bold"
-                      >
-                        Save Profile
-                      </button>
+                  </section>
+                )}
+
+                {/* Travel Reimbursement Info */}
+                {registrationSection == 1 && (
+                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
+                    <h2 className="sm:text-2xl text-xl sm:mb-3 mb-1 poppins-bold mt-2 text-center">
+                      Before You Continue
+                    </h2>
+                    <div className="text-center mb-6">
+                      <h3 className="text-xl font-semibold mb-4 text-[#2D5016]">
+                        Travel Reimbursement Information
+                      </h3>
+
+                      {/* Apply Section */}
+                      <div className="bg-[#2D5016] p-6 rounded-lg mb-6 text-white">
+                        <h4 className="text-lg font-bold mb-3">📃 Apply!</h4>
+                        <p className="mb-4 text-sm leading-relaxed">
+                          <strong>
+                            If you are applying with a team, please make sure everyone on the team
+                            applies!
+                          </strong>
+                        </p>
+                        <div className="text-center">
+                          <a
+                            href="https://hackutd.notion.site/HackUTD-2025-Lost-in-the-Pages-Travel-Reimbursement-13e0d994cbb981c5a336f1dda3e5d3be"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block bg-white text-[#2D5016] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200"
+                          >
+                            View Travel Reimbursement Policy
+                          </a>
+                        </div>
+                      </div>
+
+                      {/* Eligibility Section */}
+                      <div className="bg-gray-50 p-6 rounded-lg mb-6 text-left">
+                        <h4 className="text-lg font-bold mb-3 text-[#2D5016]">✅ Eligibility</h4>
+                        <ul className="text-[#2D5016] space-y-3 mb-4">
+                          <li className="flex items-start">
+                            <span className="text-[#7A9E7E] font-bold mr-3 mt-1">•</span>
+                            <span className="leading-relaxed">
+                              Must be <strong>flying</strong> over <em>250 miles</em> or{' '}
+                              <strong>driving</strong> over <em>50 miles</em> from UT Dallas
+                              Engineering and Computer Science West (2520 Rutford Ave, Richardson,
+                              TX 75080)
+                            </span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="text-[#7A9E7E] font-bold mr-3 mt-1">•</span>
+                            <span className="leading-relaxed">
+                              Must be <strong>non-UT Dallas</strong> student
+                            </span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="text-[#7A9E7E] font-bold mr-3 mt-1">•</span>
+                            <span className="leading-relaxed">
+                              Submit a travel reimbursement application before the deadline (
+                              <strong>October 4th 2025 @ 11:59pm CST</strong>)
+                            </span>
+                          </li>
+                        </ul>
+                      </div>
+
+                      {/* Reimbursement Types */}
+                      <div className="space-y-4 text-left">
+                        {/* Gas Reimbursements */}
+                        <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                          <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
+                            ⛽ Gas Reimbursements
+                          </h4>
+                          <p className="text-sm text-[#2D5016] mb-2 leading-relaxed">
+                            Gas reimbursements are usually capped at $50 per person travelling
+                            depending on distance. If traveling in a group, the maximum we will
+                            reimburse is $50 per person up to $200.
+                          </p>
+                          <p className="text-xs text-[#2D5016] font-semibold">
+                            <strong>Full Reimbursements are not guaranteed.</strong>
+                          </p>
+                        </div>
+
+                        {/* Bus Reimbursements */}
+                        <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                          <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
+                            🚌 Bus Reimbursements
+                          </h4>
+                          <p className="text-sm text-[#2D5016] mb-2 leading-relaxed">
+                            We do not provide bus service from any university to our campus. If you
+                            decide to take a bus (greyhound, etc.) we will reimburse the cost of the
+                            bus ticket up to $50.
+                          </p>
+                        </div>
+
+                        {/* Flight Reimbursements */}
+                        <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-400">
+                          <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
+                            ✈️ Flight Reimbursements
+                          </h4>
+                          <p className="text-sm text-[#2D5016] mb-2 leading-relaxed">
+                            Flight reimbursements are handled on a case by case basis. Generally
+                            these reimbursements will be in the range of $50-150.{' '}
+                            <em>However, more can be allotted based on team travel.</em>
+                          </p>
+                          <p className="text-xs text-[#2D5016] font-semibold">
+                            <strong>
+                              We highly recommend you apply with a team if you are requesting Flight
+                              Reimbursements.
+                            </strong>
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Important Notes */}
+                      <div className="bg-yellow-50 p-4 rounded-lg mt-6 text-left border-l-4 border-yellow-400">
+                        <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
+                          ⚖️ Important Terms
+                        </h4>
+                        <ul className="text-sm text-[#2D5016] space-y-1">
+                          <li>
+                            • All travel assistance is based on a{' '}
+                            <strong>first-come-first-serve application process</strong>
+                          </li>
+                          <li>
+                            • Travel reimbursement acceptance guarantees you and your team
+                            acceptance to HackUTD
+                          </li>
+                          <li>
+                            • We will be in touch by October 8th with a decision regarding
+                            reimbursement
+                          </li>
+                          <li>
+                            • Reimbursements will start to be processed after verifying that
+                            projects were submitted and presented
+                          </li>
+                        </ul>
+                      </div>
+
+                      {/* Contact Info */}
+                      <div className="mt-6 text-center">
+                        <p className="text-sm text-[#2D5016] mb-2">
+                          Questions? Contact us at{' '}
+                          <a
+                            href="mailto:hello@hackutd.co"
+                            className="text-[#7A9E7E] hover:text-[#2D5016] underline"
+                          >
+                            hello@hackutd.co
+                          </a>
+                        </p>
+                      </div>
                     </div>
                   </section>
                 )}
 
                 {/* School Questions */}
-                {registrationSection == 1 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#5D5A88]">
+                {registrationSection == 2 && (
+                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
                     <h2 className="sm:text-2xl text-xl sm:mb-3 mb-1 poppins-bold mt-2">
                       School Info
                     </h2>
@@ -583,24 +768,12 @@ export default function Register({ allowedRegistrations }: Props) {
                         />
                       )}
                     </div>
-                    <div className="flex justify-end my-4">
-                      <button
-                        disabled={!dirty}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleSaveProfile(values, registrationSection, resetForm);
-                        }}
-                        className="bg-[#5D5A88] rounded-lg p-3 text-white font-bold"
-                      >
-                        Save Profile
-                      </button>
-                    </div>
                   </section>
                 )}
 
                 {/* Hackathon Questions */}
-                {registrationSection == 2 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#5D5A88]">
+                {registrationSection == 3 && (
+                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
                     <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
                       Hackathon Experience
                     </h2>
@@ -616,7 +789,7 @@ export default function Register({ allowedRegistrations }: Props) {
                               {
                                 id: 'heardFromManual',
                                 name: 'heardFromManual',
-                                question: 'Where did you hear about HackPortal?',
+                                question: 'Where did you hear about HackUTD?',
                                 required: values['heardFrom'] === 'Other',
                                 initialValue: '',
                               },
@@ -625,24 +798,12 @@ export default function Register({ allowedRegistrations }: Props) {
                         />
                       )}
                     </div>
-                    <div className="flex justify-end my-4">
-                      <button
-                        disabled={!dirty}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleSaveProfile(values, registrationSection, resetForm);
-                        }}
-                        className="bg-[#5D5A88] rounded-lg p-3 text-white font-bold"
-                      >
-                        Save Profile
-                      </button>
-                    </div>
                   </section>
                 )}
 
                 {/* Short Answer Questions */}
-                {registrationSection == 3 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#5D5A88]">
+                {registrationSection == 4 && (
+                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
                     <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
                       Short Answer Questions
                     </h2>
@@ -651,53 +812,26 @@ export default function Register({ allowedRegistrations }: Props) {
                         <DisplayRegistrationQuestion key={idx} obj={obj} />
                       ))}
                     </div>
-                    <div className="flex justify-end my-4">
-                      <button
-                        disabled={!dirty}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleSaveProfile(values, registrationSection, resetForm);
-                        }}
-                        className="bg-[#5D5A88] rounded-lg p-3 text-white font-bold"
-                      >
-                        Save Profile
-                      </button>
-                    </div>
                   </section>
                 )}
 
-                {/* Event Questions */}
-                {registrationSection == 4 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#5D5A88]">
+                {/* Event Info Questions */}
+                {registrationSection == 5 && (
+                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
                     <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
                       Event Info
                     </h2>
                     <div className="flex flex-col poppins-regular md:px-4">
-                      {/* apply styling issue fix, it's an ugly fix but this solve the styling issue */}
-                      {eventInfoQuestions.map((obj, idx) => {
-                        // if (idx !== 0) return <DisplayQuestion key={idx} obj={obj} />;
-
-                        return <DisplayRegistrationQuestion key={idx} obj={obj} />;
-                      })}
-                    </div>
-                    <div className="flex justify-end my-4">
-                      <button
-                        disabled={!dirty}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleSaveProfile(values, registrationSection, resetForm);
-                        }}
-                        className="bg-[#5D5A88] rounded-lg p-3 text-white font-bold"
-                      >
-                        Save Profile
-                      </button>
+                      {eventInfoQuestions.map((obj, idx) => (
+                        <DisplayRegistrationQuestion key={idx} obj={obj} />
+                      ))}
                     </div>
                   </section>
                 )}
 
-                {/* Sponsor Questions */}
-                {registrationSection == 5 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#5D5A88] relative">
+                {/* Sponsor Info Questions */}
+                {registrationSection == 6 && (
+                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016] relative">
                     <h2 className="sm:text-2xl text-xl poppins-bold sm:mb-3 mb-1 mt-2">
                       Sponsor Info
                     </h2>
@@ -722,9 +856,9 @@ export default function Register({ allowedRegistrations }: Props) {
                         accept=".pdf, .doc, .docx, image/png, image/jpeg, .txt, .tex, .rtf"
                         className="hidden"
                       />
-                      <div className="flex items-center gap-x-3 poppins-regular w-full border border-[#5D5A88] rounded-md">
+                      <div className="flex items-center gap-x-3 poppins-regular w-full border border-[#2D5016] rounded-md">
                         <button
-                          className="md:p-2 p-1 bg-[#5D5A88] text-white h-full rounded-l-md border-none"
+                          className="md:p-2 p-1 bg-[#7A9E7E] text-white h-full rounded-l-md border-none"
                           onClick={(e) => {
                             e.preventDefault();
                             resumeFileRef.current?.click();
@@ -732,42 +866,29 @@ export default function Register({ allowedRegistrations }: Props) {
                         >
                           Upload new resume...
                         </button>
-                        <p className="text-[#5D5A88]">
+                        <p className="text-[#2D5016]">
                           {resumeFile ? resumeFile.name : 'No file selected.'}
                         </p>
                       </div>
-                      <p className="poppins-regular text-xs text-[#5D5A88]">
+                      <p className="poppins-regular text-xs text-[#2D5016]">
                         Accepted file types: .pdf, .doc, .docx, .png, .jpeg, .txt, .tex, .rtf
                       </p>
                       {partialProfile?.resume && (
                         <div className="my-4 w-fit">
                           <Link href={partialProfile.resume} target="_blank">
-                            <div className="bg-[#5D5A88] md:p-2 p-1 text-white rounded-lg">
+                            <div className="bg-[#7A9E7E] md:p-2 p-1 text-white rounded-lg">
                               Click to view your current resume
                             </div>
                           </Link>
                         </div>
                       )}
                     </div>
-                    <div className="flex justify-end my-4">
-                      <button
-                        disabled={(!dirty && !resumeFileUpdated) || isSavingApplication}
-                        onClick={async (e) => {
-                          e.preventDefault();
-                          setIsSavingApplication(true);
-                          await handleSaveProfile(values, registrationSection, resetForm);
-                          setIsSavingApplication(false);
-                        }}
-                        className="bg-[#5D5A88] rounded-lg p-3 text-white font-bold"
-                      >
-                        Save Profile
-                      </button>
-                    </div>
                   </section>
                 )}
+
                 {/* Teammate Questions */}
-                {registrationSection == 6 && (
-                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#5D5A88]">
+                {registrationSection == 7 && (
+                  <section className="bg-white lg:w-3/5 md:w-3/4 w-full min-h-[35rem] mx-auto rounded-2xl md:py-10 py-6 px-8 mb-8 text-[#2D5016]">
                     <h2 className="sm:text-2xl text-xl font-semibold sm:mb-3 mb-1">
                       Teammate Questions
                     </h2>
@@ -780,12 +901,39 @@ export default function Register({ allowedRegistrations }: Props) {
                       ))}
                     </div>
 
+                    {/* Review and Application Process */}
+                    <div className="bg-blue-50 p-4 rounded-lg mt-6 text-left border-l-4 border-blue-400">
+                      <h4 className="text-lg font-bold mb-2 text-[#2D5016]">
+                        📝 Please Review Your Submission
+                      </h4>
+                      <p className="text-sm text-[#2D5016] leading-relaxed">
+                        Before submitting your application, please take a moment to review all the
+                        information you&apos;ve provided.{' '}
+                        <strong>
+                          All applications are reviewed based on the essay questions and how they
+                          were answered.
+                        </strong>{' '}
+                        Our selection process evaluates each applicant&apos;s responses to the essay
+                        questions, their thoughtfulness, creativity, and potential contribution to
+                        the hackathon community.{' '}
+                        <a
+                          href="https://medium.com/@hackUTD/applying-to-hackutd-ripple-effect-1a85143a22da"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline"
+                        >
+                          Find more information here from last year&apos;s event
+                        </a>
+                        .
+                      </p>
+                    </div>
+
                     {/* Submit */}
                     <div className="mt-8 text-white">
                       <button
                         disabled={isSubmitting}
                         type="submit"
-                        className="mr-auto cursor-pointer px-4 py-2 rounded-lg bg-[#5D5A88] hover:brightness-90"
+                        className="mr-auto cursor-pointer px-4 py-2 rounded-lg bg-[#7A9E7E] hover:brightness-90"
                       >
                         Submit
                       </button>
@@ -795,18 +943,6 @@ export default function Register({ allowedRegistrations }: Props) {
                           make sure that every required fields are filled out.
                         </div>
                       )}
-                    </div>
-                    <div className="flex justify-end my-4">
-                      <button
-                        disabled={!dirty}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleSaveProfile(values, registrationSection, resetForm);
-                        }}
-                        className="bg-[#5D5A88] rounded-lg p-3 text-white font-bold"
-                      >
-                        Save Profile
-                      </button>
                     </div>
                   </section>
                 )}
@@ -821,7 +957,7 @@ export default function Register({ allowedRegistrations }: Props) {
                 className={`lg:block ${
                   registrationSection == 0
                     ? 'justify-end'
-                    : registrationSection >= 6
+                    : registrationSection >= 7
                     ? 'justify-start'
                     : 'justify-between'
                 } lg:pb-4 pb-8 lg:px-4 sm:px-8 px-6 text-primaryDark font-semibold text-primaryDark font-semibold text-md`}
@@ -836,16 +972,16 @@ export default function Register({ allowedRegistrations }: Props) {
                   >
                     <div
                       style={{ width: 'fit-content' }}
-                      className="hidden md:inline-flex cursor-pointer select-none bg-white text-[#5D5A88] rounded-[30px] py-3 pl-2 pr-4 text-xs md:text-lg border-2 border-[#5D5A88]"
+                      className="hidden md:inline-flex cursor-pointer select-none bg-[#2D5016] text-white rounded-[30px] py-3 pl-2 pr-4 text-xs md:text-lg border-2 border-[#2D5016]"
                     >
-                      <ChevronLeftIcon className="text-[#5D5A88]" />
+                      <ChevronLeftIcon className="text-white" />
                       prev page
                     </div>
                     <div
                       style={{ width: 'fit-content' }}
-                      className="md:hidden cursor-pointer select-none bg-white text-[#5D5A88] rounded-[30px] py-3 pl-2 pr-4 text-xs md:text-lg border-2 border-[#5D5A88]"
+                      className="md:hidden cursor-pointer select-none bg-[#2D5016] text-white rounded-[30px] py-3 pl-2 pr-4 text-xs md:text-lg border-2 border-[#2D5016]"
                     >
-                      <ChevronLeftIcon className="text-[#5D5A88]" />
+                      <ChevronLeftIcon className="text-white" />
                       prev
                     </div>
                   </div>
@@ -855,12 +991,21 @@ export default function Register({ allowedRegistrations }: Props) {
                   className="flex justify-center items-center"
                   style={{ gridArea: '1 / 2 / 2 / 3' }}
                 >
-                  {Array.from({ length: 7 }).map((_, i) => (
+                  {Array.from({ length: 8 }).map((_, i) => (
                     <div
                       key={i}
                       onClick={async (e) => {
                         e.preventDefault();
                         if (isSavingApplication) return;
+
+                        // Only allow jumping to pages if current page is complete or if going backwards
+                        if (i > registrationSection && !validateCurrentPage(values)) {
+                          alert(
+                            'Please fill out all required fields on the current page before proceeding.',
+                          );
+                          return;
+                        }
+
                         if (dirty || resumeFileUpdated) {
                           setIsSavingApplication(true);
                           await handleSaveProfile(values, registrationSection, resetForm);
@@ -874,7 +1019,7 @@ export default function Register({ allowedRegistrations }: Props) {
                   ))}
                 </div>
 
-                {registrationSection < 6 && (
+                {registrationSection < 7 && (
                   <div
                     className="flex justify-end "
                     style={{ gridArea: '1 / 3 / 2 / 4' }}
@@ -883,6 +1028,15 @@ export default function Register({ allowedRegistrations }: Props) {
                       if (isSavingApplication) {
                         return;
                       }
+
+                      // Validate current page before proceeding
+                      if (!validateCurrentPage(values)) {
+                        alert(
+                          'Please fill out all required fields before proceeding to the next page.',
+                        );
+                        return;
+                      }
+
                       if (dirty || resumeFileUpdated) {
                         setIsSavingApplication(true);
                         await handleSaveProfile(values, registrationSection, resetForm);
@@ -893,14 +1047,14 @@ export default function Register({ allowedRegistrations }: Props) {
                   >
                     <div
                       style={{ width: 'fit-content' }}
-                      className="hidden md:inline-flex cursor-pointer select-none bg-white text-[#5D5A88] text-xs md:text-lg rounded-[30px] py-3 pr-2 pl-4 border-2 border-[#5D5A88]"
+                      className="hidden md:inline-flex cursor-pointer select-none bg-[#2D5016] text-white text-xs md:text-lg rounded-[30px] py-3 pr-2 pl-4 border-2 border-[#2D5016]"
                     >
                       next page
                       <ChevronRightIcon />
                     </div>
                     <div
                       style={{ width: 'fit-content' }}
-                      className="md:hidden cursor-pointer select-none bg-white text-[#5D5A88] text-xs md:text-lg rounded-[30px] py-3 pr-2 pl-4 border-2 border-[#5D5A88]"
+                      className="md:hidden cursor-pointer select-none bg-[#2D5016] text-white text-xs md:text-lg rounded-[30px] py-3 pr-2 pl-4 border-2 border-[#2D5016]"
                     >
                       next
                       <ChevronRightIcon />

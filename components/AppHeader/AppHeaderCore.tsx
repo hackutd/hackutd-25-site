@@ -54,6 +54,11 @@ export default function AppHeaderCore(props: Props) {
     }
   }, [user, isAdmin]);
 
+  // makes it so the navbar doesn't render if user is signed out
+  if (!user) {
+    return null;
+  }
+
   const mainDockItems = (): JSX.Element[] => {
     const items: JSX.Element[] = [];
     const itemIdRoot: string = (props.dockItemIdRoot ?? 'AppHeader2-Core-mainDockItems') + '_';
@@ -73,6 +78,7 @@ export default function AppHeaderCore(props: Props) {
           }
         },
       },
+      /*
       {
         text: 'Livestream',
         onClick: () => {
@@ -119,6 +125,7 @@ export default function AppHeaderCore(props: Props) {
           }
         },
       },
+      */
     ];
 
     navItems.map((item, idx) => {
@@ -127,8 +134,8 @@ export default function AppHeaderCore(props: Props) {
           id={itemIdRoot + idx}
           onClick={item.onClick}
           className={clsx(
-            'py-2 px-4 text-[#5D5A88] cursor-pointer flex justify-center font-bold',
-            'hover:bg-[#EAE6F2] transition-[background] duration-300 ease-in-out',
+            'py-2 px-4 text-[#2D5016] cursor-pointer flex justify-center font-bold',
+            'hover:bg-[#8FBC8F] transition-[background] duration-300 ease-in-out',
             'rounded-[20px]',
           )}
         >
@@ -144,18 +151,18 @@ export default function AppHeaderCore(props: Props) {
         <Menu id={itemIdRoot + itemIdx} as="div">
           <Menu.Button
             className={clsx(
-              'py-2 px-4 text-[#5D5A88] cursor-pointer flex gap-1 items-center justify-center font-bold',
-              'hover:bg-[#EAE6F2] transition-[background] duration-300 ease-in-out',
+              'py-2 px-4 text-[#2D5016] cursor-pointer flex gap-1 items-center justify-center font-bold',
+              'hover:bg-[#8FBC8F] transition-[background] duration-300 ease-in-out',
               'rounded-[20px]',
             )}
           >
-            <div className="text-[##5D5A88]">Admin</div>
+            <div className="text-[#2D5016]">Admin</div>
             <svg
               xmlns="http:www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
-              stroke="#5D5A88"
+              stroke="#2D5016"
               className="size-4"
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -198,6 +205,10 @@ export default function AppHeaderCore(props: Props) {
                           {
                             optionName: 'Stats at a Glance',
                             onClick: () => router.push('/admin/stats'),
+                          },
+                          {
+                            optionName: 'Admin Leaderboard',
+                            onClick: () => router.push('/admin/leaderboard'),
                           },
                         ]
                       : []),
@@ -255,7 +266,7 @@ export default function AppHeaderCore(props: Props) {
               await router.push('/profile');
             }}
           >
-            <div className="py-3 px-5 rounded-[30px] bg-[#5D5A88] font-bold">Profile</div>
+            <div className="py-3 px-5 rounded-[30px] bg-[#2D5016] font-bold">Profile</div>
           </button>
         )}
       </div>,
@@ -270,19 +281,19 @@ export default function AppHeaderCore(props: Props) {
       {/* Real navbar */}
       <div
         id="nav-bar"
-        className="relative font-dmSans border-[3px] border-[rgba(30,30,30,0.60)] rounded-xl p-1 bg-white opacity-90 text-[#5D5A88] cursor-pointer flex-wrap"
+        className="relative font-dmSans border-[3px] border-[rgba(30,30,30,0.60)] rounded-xl p-1 bg-white opacity-90 text-[#2D5016] cursor-pointer flex items-center justify-center gap-4"
       >
+        <FloatingDock
+          classes={{
+            wrapperDiv: clsx('gap-4 flex items-center justify-center flex-wrap'),
+          }}
+          items={mainDockItems()}
+        />
+
         {/* Sign out button */}
         <button
           className={clsx(
-            'w-[102px]',
-            'top-1/2 -translate-y-1/2',
-            `absolute ${
-              location.pathname === '/'
-                ? '-left-[calc(102px+0.5rem)] lg:left-[unset] lg:-right-[calc(102px+1rem)] xl:-right-[calc(102px+2rem)]'
-                : '-right-[calc(102px+0.5rem)] lg:-right-[calc(102px+2rem)]'
-            }`,
-            'text-sm py-3 px-4 rounded-[30px] bg-[#5D5A88] font-bold text-white border-2 border-white',
+            'text-sm py-3 px-4 rounded-[30px] bg-[#2D5016] font-bold text-white border-2 border-white',
           )}
           onClick={async () => {
             if (user) {
@@ -294,13 +305,6 @@ export default function AppHeaderCore(props: Props) {
         >
           {user ? 'Sign Out' : 'Sign In'}
         </button>
-
-        <FloatingDock
-          classes={{
-            wrapperDiv: clsx('gap-4 flex items-center justify-center flex-wrap'),
-          }}
-          items={mainDockItems()}
-        />
 
         <QRScanDialog scan={currentScan} onModalClose={() => setCurrentScan(null)} />
       </div>
