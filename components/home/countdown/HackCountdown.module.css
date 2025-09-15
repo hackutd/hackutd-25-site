@@ -28,30 +28,43 @@
 }
 
 .digitBox {
-  background: linear-gradient(to bottom, rgba(156, 166, 255, 0.4), rgba(255, 255, 255, 0.1));
+  background: linear-gradient(to bottom, rgba(119, 31, 30, 0.4), #771F1E);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 7px;
   margin: 0 1vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 8vw;
-  height: 13vw;
+  width: 6vw;
+  height: 10vw;
+  border: 0.5px solid #fff;
+}
+
+.mobile-digitBox {
+  background: linear-gradient(to bottom, rgba(119, 31, 30, 0.4), #771F1E);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 7px;
+  margin: 0 1vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: vw;
+  height: 10vw;
   border: 0.5px solid #fff;
 }
 
 .digit {
-  font-family: 'DS-Digital', monospace;
-  font-size: 8vw;
+  font-family: 'Fredoka', monospace;
+  font-size: 5vw;
   font-weight: 400;
   color: #fff;
 }
 
 .label {
   text-transform: uppercase;
-  font-family: Poppins;
+  font-family: 'DM Sans';
   font-weight: 400;
-  font-size: 3vw;
+  font-size: 2vw;
   line-height: 5vw;
   color: #fff;
   margin-top: 2vw;
