@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import gsap from 'gsap';
 
 import { SectionReferenceContext } from '@/lib/context/section';
 import { RequestHelper } from '@/lib/request-helper';
@@ -22,32 +21,36 @@ export default function FaqCore({ fetchedFaqs }: { fetchedFaqs: AnsweredQuestion
     fetchedFaqs.map(() => false),
   );
   const { faqRef } = useContext(SectionReferenceContext);
-  const faqContainerRef = useRef(null); // Ref for the FAQ container
 
-  // GSAP animation on FAQ items when they come into view
+  // CHANGE: Split into separate refs for desktop and mobile
+  const faqDesktopRef = useRef(null);
+  const faqMobileRef = useRef(null);
+
+  // CSS-based animation on FAQ items when they come into view
   useEffect(() => {
     const handleIntersection = (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          gsap.to(entry.target, {
-            opacity: 1,
-            y: 0,
-            stagger: 0.1,
-            duration: 1,
-            ease: 'power3.out',
-          });
+          entry.target.classList.add('faq-animate-in');
         }
       });
     };
 
-    const observer = new IntersectionObserver(handleIntersection, { threshold: 0.1 });
-    if (faqContainerRef.current) {
-      const faqBoxes = faqContainerRef.current.querySelectorAll('.faq-box');
-      faqBoxes.forEach((box) => {
-        gsap.set(box, { opacity: 0, y: 50 }); // Initial hidden state for each FAQ item
-        observer.observe(box);
-      });
-    }
+    const observer = new IntersectionObserver(handleIntersection, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px',
+    });
+
+    // CHANGE: Observe both desktop and mobile containers
+    const containers = [faqDesktopRef.current, faqMobileRef.current];
+    containers.forEach((container) => {
+      if (container) {
+        const faqBoxes = container.querySelectorAll('.faq-box');
+        faqBoxes.forEach((box) => {
+          observer.observe(box);
+        });
+      }
+    });
 
     return () => observer.disconnect();
   }, []);
@@ -73,6 +76,18 @@ export default function FaqCore({ fetchedFaqs }: { fetchedFaqs: AnsweredQuestion
             0% { transform: translateX(0); }
             100% { transform: translateX(8px); }
           }
+
+          .faq-box {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform;
+          }
+
+          .faq-box.faq-animate-in {
+            opacity: 1;
+            transform: translateY(0);
+          }
         `}
       </style>
       <Head>
@@ -81,22 +96,24 @@ export default function FaqCore({ fetchedFaqs }: { fetchedFaqs: AnsweredQuestion
       </Head>
       <div className="top-6">
         <div className="pt-[8rem]">
-          <div className="bg-white mx-[8vw] p-10 rounded-lg flex justify-between font-fredoka">
+          <div className="bg-[#231140] mx-[8vw] p-10 rounded-lg flex justify-between font-[youngSerif] border border-white">
             <div className="pt-3">
-              <h1 className="text-3xl mb-4 font-bold text-[#5D5A88]">FAQ</h1>
-              <p>Can’t find what you’re looking for? Connect with our team at hello@hackutd.co</p>
+              <h1 className="text-3xl mb-4 font-bold text-[#5F5FFF]">FAQ</h1>
+              <p className="text-[#FFFFFF] text-md " style={{ fontFamily: 'DM Sans' }}>
+                Can`t find what you`re looking for? Connect with our team at hello@hackutd.co
+              </p>
             </div>
             <div className="flex items-center">
               <Link
                 href="mailto:hello@hackutd.co"
-                className="bg-[#EAE6F2] text-[#5D5A88] p-3 rounded-2xl"
+                className="bg-[#5F5FFF] text-[#FFFFFF] p-3 rounded-2xl"
               >
                 Ask A Question!
               </Link>
             </div>
           </div>
           {/* FAQ for lg-md */}
-          <div className="hidden lg:grid lg:grid-cols-2 gap-4">
+          <div className="hidden lg:grid lg:grid-cols-2 gap-4" ref={faqDesktopRef}>
             <div className="w-full my-3 pl-[8vw] space-y-4">
               {faqs.map(
                 ({ question, answer }, idx) =>
@@ -138,7 +155,7 @@ export default function FaqCore({ fetchedFaqs }: { fetchedFaqs: AnsweredQuestion
           </div>
           {/* FAQ for mobile */}
           <div className="lg:hidden">
-            <div className="mx-[8vw] my-3 space-y-4">
+            <div className="mx-[8vw] my-3 space-y-4" ref={faqMobileRef}>
               {faqs.map(({ question, answer }, idx) => (
                 <div key={idx} className="faq-box">
                   <FaqDisclosure

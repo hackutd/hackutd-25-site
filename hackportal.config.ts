@@ -174,6 +174,7 @@ export const hackPortalConfig: HackPortalConfig = {
             id: 'university',
             name: 'university',
             required: true,
+            description: 'If your college isn\'t listed, please select "Other"',
             options: [
               ...schools.map(({ university }) => ({
                 title: university,
@@ -242,7 +243,7 @@ export const hackPortalConfig: HackPortalConfig = {
             id: 'hackathonExperience',
             name: 'hackathonExperience',
             min: '0',
-            max: '100',
+            max: '1000',
             pattern: '[0-9]+',
             initialValue: null,
           },
@@ -662,6 +663,7 @@ interface RegistrationQuestion {
   name: string;
   required: boolean;
   initialValue: any; //value that will be first presented on the form
+  description?: string; //optional description text shown below the question
 }
 
 export interface CheckboxQuestion extends RegistrationQuestion {

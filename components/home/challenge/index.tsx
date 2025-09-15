@@ -45,19 +45,29 @@ export default function Challenge({ challenges }: Props) {
       <section className={`${styles.container} m-auto pb-[20rem] relative`}>
         <div className={styles.content}>
           <div
-            style={{ textShadow: '0 4px 4px rgba(0, 0, 0, 0.25)' }}
-            className="font-fredoka font-bold md:text-4xl text-2xl text-center text-[#05149C]"
+            style={{
+              background: 'linear-gradient(354.75deg, #FFD29B 4.2%, #FFD29B 37.67%, #FF5757 95.8%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+            className="font-[youngSerif] font-bold md:text-4xl text-2xl text-center "
           >
             Challenge Tracks
           </div>
           <div
-            style={{ textShadow: '0 4px 4px rgba(0, 0, 0, 0.25)' }}
-            className="text-center text-5xl font-bold text-[#05149C] p-4 font-fredoka uppercase"
+            style={{
+              background: 'linear-gradient(354.75deg, #FFD29B 4.2%, #FFD29B 37.67%, #FF5757 95.8%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+            className="font-[youngSerif] font-bold md:text-3xl text-2xl text-center  "
           >
-            Choose your track to get started
+            Participate in up to 2 of our challenge tracks
           </div>
 
-          {/* Challenge Tracks */}
+          {/* Challenge Tracks TODO: Fix structure of columns to be smaller  */}
           <div className="flex pt-14 px-16 flex-wrap lg:flex-nowrap gap-4">
             {CHALLENGE_TRACKS.map((track, idx) => (
               <HomeChallengeTrackCard key={idx} challengeTrack={track} blockType={idx % 3} />
@@ -65,7 +75,7 @@ export default function Challenge({ challenges }: Props) {
           </div>
 
           {/* TODO: enable this after get challenge data */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:p-10 items-center gap-x-6 gap-y-6 mt-6 mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:p-10 items-center gap-x-6 gap-y-6 mt-6 mx-auto max-w-10xl">
             {challenges.map((challenge, idx) => (
               <HomeChallengesCard key={idx} challenge={challenge} blockType={idx % 2} />
             ))}

@@ -30,8 +30,25 @@ export default function Home({
   sponsorCard,
 }: Props) {
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
     setLoading(false);
+
+    // Detect mobile device
+    const checkMobile = () => {
+      if (typeof window === 'undefined') return false;
+      return window.innerWidth <= 768;
+    };
+
+    setIsMobile(checkMobile());
+
+    const handleResize = () => {
+      setIsMobile(checkMobile());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   if (loading) {
@@ -47,24 +64,39 @@ export default function Home({
       <Head>
         <title>HackUTD 2025</title>
         <meta name="description" content="A default HackPortal instance" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+        <style jsx>{`
+          @supports not (background-image: url('data:image/webp')) {
+            .bg-fallback {
+              background-image: url('/assets/pathDrawing/bushLeft.webp'),
+                url('/assets/pathDrawing/pathOutline.webp'), url('/assets/pathDrawing/bg.webp') !important;
+            }
+          }
+        `}</style>
       </Head>
       <div
-        className="overflow-x-hidden w-full"
+        className="overflow-x-hidden w-full bg-fallback"
         style={{
-          backgroundImage: `url("/assets/pathDrawing/bushLeft.PNG"),
-                            url("/assets/pathDrawing/pathOutline.PNG"),
-                            url("/assets/pathDrawing/bg.PNG"),
-                            url("/assets/pathDrawing/forestyGround.PNG")`,
+          backgroundImage: isMobile
+            ? `url("/assets/pathDrawing/bg.webp")`
+            : `url("/assets/pathDrawing/bushLeft.webp"),
+                            url("/assets/pathDrawing/pathOutline.webp"),
+                            url("/assets/pathDrawing/bg.webp")`,
+          backgroundColor: isMobile ? '#2a2342' : 'transparent',
           backgroundSize: 'cover',
           backgroundRepeat: 'repeat',
           zIndex: 2,
+          // Mobile optimization
+          backgroundAttachment: 'scroll',
         }}
       >
         {/* <div
           className="fixed top-0 left-0 w-full h-full z-20 pointer-events-none"
           style={{
-            backgroundImage: `url("/assets/pathDrawing/mist.PNG")`,
+            backgroundImage: `url("/assets/pathDrawing/mist.webp")`,
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
           }}
