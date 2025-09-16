@@ -358,3 +358,10 @@ a.link {
     margin-top: 400px !important;
   }
 }
+
+/* Custom styles for screens bigger than 1535px */
+@media (min-width: 1536px) {
+  .hackutd-title {
+    font-size: 2.5rem !important;
+  }
+}

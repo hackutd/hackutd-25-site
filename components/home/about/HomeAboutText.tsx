@@ -65,9 +65,7 @@ const HomeAboutText = () => {
             />
             <h1
               ref={titleRef}
-              className="mt-[50px] sm:mt-[70px] 2xl:mt-[100px] absolute inset-0 flex items-center justify-center
-                      text-2xl sm:text-3xl md:text-4xl xl:text-4xl 2xl:text-6xl font-light 
-                      font-serif"
+              className="mt-[50px] sm:mt-[70px] 2xl:mt-[100px] absolute inset-0 flex items-center justify-center text-2xl sm:text-3xl md:text-4xl xl:text-4xl 2xl:text-6xl font-light font-serif hackutd-title"
               style={{
                 zIndex: 100,
                 opacity: 1,
@@ -84,12 +82,13 @@ const HomeAboutText = () => {
               className="text-xl xl:text-xl 2xl:text-3xl text-center md:text-left text-white max-w-sm md:max-w-4xl xl:max-w-4xl 2xl:max-w-6xl mb-16 font-fredoka relative px-[20px] md:px-[40px] xl:px-[40px] 2xl:px-[60px] pt-[100px] pb-[50px] xl:pt-[100px] xl:pb-[50px] 2xl:pt-[120px] 2xl:pb-[70px] rounded-2xl backdrop-blur-sm shadow-lg"
               style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
             >
-              HackUTD, the largest university hackathon in Texas, is a weekend-long event where
-              students build apps, hardware, and more. HackUTD provides a venue for self-expression
-              and creativity through technology. People with varying technical backgrounds from
-              universities all over the US come together, form teams around a problem or idea, and
-              collaboratively build a unique solution from scratch. Whether youre a frequent
-              hackathon attendee or just getting started, we&apos;d love to see what you can make!
+              HackUTD, the largest 24 hour university hackathon in North America, is a weekend-long
+              event where students build apps, hardware, and more. HackUTD provides a venue for
+              self-expression and creativity through technology. People with varying technical
+              backgrounds from universities all over the US come together, form teams around a
+              problem or idea, and collaboratively build a unique solution from scratch. Whether
+              youre a frequent hackathon attendee or just getting started, we&apos;d love to see
+              what you can make!
             </p>
           </div>
 
