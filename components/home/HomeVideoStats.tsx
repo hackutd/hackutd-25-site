@@ -43,7 +43,7 @@ export default function HomeVideoStats() {
           <h1
             className="-mt-[50px] sm:-mt-[57px] md:-mt-[60px] lg:-mt-[70px] 2xl:-mt-[90px] absolute inset-0 flex items-center justify-center 
                     text-xl sm:text-2xl md:text-4xl lg:text-4xl font-light 
-                    bg-gradient-to-t from-[#FFC273] to-[#8C180D] font-medium bg-clip-text z-50 text-transparent font-serif px-4"
+                    bg-gradient-to-t from-[#FFC273] to-[#8C180D] font-medium bg-clip-text z-50 text-[#531285] md:text-transparent font-serif px-4"
           >
             See our Teaser
           </h1>
