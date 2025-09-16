@@ -4,19 +4,29 @@ export default function HomeVideoStats() {
       {/* Background Images */}
       <img
         src="/assets/bushRight.png"
-        alt="HackUTD"
+        alt=""
         className="absolute right-0 top-0 -mt-[20vw] z-0 lg:w-[60vw] hidden lg:block xl:-mt-[30vw] 2xl:-mt-64"
+        onError={(e) => {
+          e.currentTarget.style.display = 'none';
+        }}
       />
       {/* Foreground Elements */}
       <div className="flex flex-col justify-center items-center mx-auto py-[1rem] md:py-[2rem] lg:py-[3rem] xl:py-[3rem] 2xl:py-[4rem] ml-2 md:ml-4 lg:ml-[40vw] px-4 md:px-0">
         {/* Stats */}
         <div className="flex justify-center relative w-full z-20 -mt-[10vw] sm:-mt-[12vw] md:mt-0 xl:-mt-[20vw] 2xl:-mt-64">
-          <img src="/assets/statsScroll.png" alt="HackUTD" className="z-10 lg:w-[60vw]" />
+          <img
+            src="/assets/statsScroll.png"
+            alt=""
+            className="z-10 lg:w-[60vw]"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
           <div
             className=" mt-[26vw] sm:mt-[30vw] md:mt-[240px] lg:mt-[180px] xl:mt-[240px] 2xl:mt-[450px] absolute inset-0 flex-row lg:flex-col items-center justify-center 
                      z-50 stats-position-533-640"
           >
-            <div className="flex justify-center items-center text-center font-medium text-[10px] sm:text-base w-[50%] md:w-full ml-[22vw] md:ml-0 md:text-lg lg:text-base 2xl:text-3xl text-[#351918] md:space-x-20 space-y-6 md:space-y-0 stats-text-533-640">
+            <div className="flex justify-center items-center text-center font-medium text-[10px] sm:text-base w-[50%] md:w-full ml-[22vw] md:ml-0 md:text-lg lg:text-base 2xl:text-3xl text-[#351918] md:space-x-20 space-y-6 md:space-y-0 stats-text-533-640 lg:mt-4">
               At our last hackathon, we had the pleasure of hosting...
             </div>
             <div className="flex md:flex-col justify-center flex-wrap w-[60%] lg:w-full gap-x-4 ml-[18vw] mt-2 lg:ml-0 lg:mt-4 2xl:mt-8">
@@ -37,8 +47,11 @@ export default function HomeVideoStats() {
         <div className="flex justify-center relative w-full z-30 mt-4 md:mt-2 lg:mt-0 xl:mt-0 2xl:mt-16">
           <img
             src="/assets/teaserBanner.png"
-            alt="HackUTD"
+            alt=""
             className="z-20 w-[90%] sm:w-[80%] md:w-[70%] lg:w-[37vw] max-w-[600px] lg:-mt-4"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
           />
           <h1
             className="-mt-[50px] sm:-mt-[57px] md:-mt-[60px] lg:-mt-[70px] 2xl:-mt-[90px] absolute inset-0 flex items-center justify-center 
