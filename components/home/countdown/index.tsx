@@ -50,8 +50,8 @@ const HackCountdown: React.FC<Props> = ({ targetDate }) => {
             className="relative md:static top-4 md:top-0" // push down only on mobile
           />
           <div className="absolute inset-0 flex items-center justify-center">
-            <h1 className="text-2xl md:text-5xl font-bold text-center font-Young-Serif text-transparent bg-gradient-to-b from-[#EDFF4E] to-[#FF1717] bg-clip-text -mt-8 md:-mt-8 translate-y-2 md:translate-y-0">
-              CountDown
+            <h1 className="text-4xl md:text-5xl font-bold text-center font-Young-Serif text-white md:text-transparent bg-gradient-to-b from-[#EDFF4E] to-[#FF1717] bg-clip-text -mt-12 md:-mt-8 translate-y-2 md:translate-y-0">
+              Countdown
             </h1>
           </div>
         </div>
