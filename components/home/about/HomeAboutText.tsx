@@ -65,9 +65,7 @@ const HomeAboutText = () => {
             />
             <h1
               ref={titleRef}
-              className="mt-[50px] sm:mt-[70px] 2xl:mt-[100px] absolute inset-0 flex items-center justify-center
-                      text-2xl sm:text-3xl md:text-4xl xl:text-4xl 2xl:text-6xl font-light 
-                      font-serif"
+              className="mt-[50px] sm:mt-[70px] 2xl:mt-[100px] absolute inset-0 flex items-center justify-center text-2xl sm:text-3xl md:text-4xl xl:text-4xl 2xl:text-6xl font-light font-serif hackutd-title"
               style={{
                 zIndex: 100,
                 opacity: 1,
