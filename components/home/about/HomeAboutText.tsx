@@ -10,110 +10,98 @@ const HomeAboutText = () => {
   const containerRef = useRef(null); // Reference for entire container to observe
 
   useEffect(() => {
-    // TODO: update this to use the media query
-    // const isDesktopView = window.matchMedia('(min-width: 1024px)').matches;
-    const isDesktopView = true;
+    // Show content immediately without animations
+    const titleText = titleRef.current;
+    const explanationText = explanationRef.current;
 
-    if (isDesktopView) {
-      const handleIntersection = (entries, observer) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const titleText = titleRef.current;
+    if (titleText) {
+      titleText.style.opacity = '1';
+      titleText.innerHTML = 'What Is HackUTD?';
+      titleText.style.color = '#531285';
+    }
 
-            gsap.set(titleText, { opacity: 1 });
-
-            const titleLetters = titleText.innerText.split('');
-            titleText.innerHTML = titleLetters
-              .map((letter) => {
-                if (letter === ' ') {
-                  return `<span class="inline-block">&nbsp;</span>`;
-                }
-                return `<span class="bg-gradient-to-t from-[#531285] to-[#C694FF] bg-clip-text text-transparent inline-block">${letter}</span>`;
-              })
-              .join('');
-
-            gsap.fromTo(
-              titleText.children,
-              { opacity: 0, y: 50 },
-              {
-                opacity: 1,
-                y: 0,
-                stagger: 0.1,
-                ease: 'power3.out',
-                duration: 1,
-              },
-            );
-
-            gsap.fromTo(
-              explanationRef.current,
-              { opacity: 0, y: 100 },
-              { opacity: 1, y: 0, duration: 1.5, ease: 'power3.out', delay: 1.5 },
-            );
-
-            observer.unobserve(entry.target);
-          }
-        });
-      };
-
-      const observer = new IntersectionObserver(handleIntersection, {
-        threshold: 0.3,
-        rootMargin: '0px 0px -100px 0px',
-      });
-
-      if (containerRef.current) {
-        observer.observe(containerRef.current);
-      }
-
-      return () => {
-        if (containerRef.current) {
-          observer.unobserve(containerRef.current);
-        }
-      };
-    } else {
-      // Mobile: show immediately
-      const titleText = titleRef.current;
-      const explanationText = explanationRef.current;
-      if (titleText) titleText.classList.add('title-animate-in');
-      if (explanationText) explanationText.classList.add('explanation-animate-in');
+    if (explanationText) {
+      explanationText.style.opacity = '1';
     }
   }, []);
 
   return (
     <div
       ref={containerRef}
-      className="relative -mt-36 flex flex-col items-center justify-center font-jua"
+      className="relative mt-4 md:mt-0 flex flex-col items-center md:items-start justify-center font-jua md:pl-16"
       style={{
-        // background: '#F2F3FF',
+        background: 'transparent',
         backgroundSize: '100% 100%',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
+        zIndex: 50,
+        position: 'relative',
+        minHeight: '200px',
       }}
       id="what-is-hackutd"
     >
-      <div className="flex justify-center relative w-full z-10">
-        <img src="/assets/aboutbanner.png" alt="HackUTD" className="z-10 rotate-180" />
-        <h1
-          ref={titleRef}
-          className="mt-[50px] sm:mt-[70px] absolute inset-0 flex items-center justify-center 
-                  text-2xl sm:text-3xl md:text-4xl font-light 
-                  bg-gradient-to-t from-[#531285] to-[#C694FF] bg-clip-text z-50 text-transparent font-serif"
-        >
-          What Is HackUTD?
-        </h1>
+      {/* Pink Flower Tree - positioned left, higher than fox, behind about container */}
+      <div
+        className="absolute left-0 top-0 pointer-events-none"
+        style={{
+          zIndex: 10,
+          transform: 'translateY(-20%)',
+        }}
+      >
+        <img
+          src="/assets/pathDrawing/pinkFlowerTree.webp"
+          alt="Pink Flower Tree"
+          className="w-48 md:w-80 lg:w-96 xl:w-96 2xl:w-[600px] h-auto opacity-80"
+        />
       </div>
+      <div className="flex justify-center md:justify-start relative w-full z-10">
+        <div className="flex flex-col items-center md:items-start w-full max-w-4xl xl:max-w-4xl 2xl:max-w-7xl">
+          <div className="relative flex justify-center w-full -mb-20" style={{ zIndex: 100 }}>
+            <img
+              src="/assets/aboutbanner.png"
+              alt="HackUTD"
+              className="z-10 rotate-180 w-auto h-auto xl:scale-125"
+              style={{ zIndex: 10 }}
+            />
+            <h1
+              ref={titleRef}
+              className="mt-[50px] sm:mt-[70px] 2xl:mt-[100px] absolute inset-0 flex items-center justify-center
+                      text-2xl sm:text-3xl md:text-4xl xl:text-4xl 2xl:text-6xl font-light 
+                      font-serif"
+              style={{
+                zIndex: 100,
+                opacity: 1,
+                color: '#531285',
+              }}
+            >
+              What Is HackUTD?
+            </h1>
+          </div>
 
-      <div className="relative w-full flex justify-center items-center -mt-24 z-0">
-        <p
-          ref={explanationRef}
-          className="text-xl text-center text-white max-w-4xl mb-16 font-fredoka relative px-[40px] opacity-0 bg-black/50 pt-[100px] pb-[50px] rounded-2xl backdrop-blur-sm shadow-lg shadow-[#93004C66]"
-        >
-          HackUTD, the largest university hackathon in Texas, is a weekend-long event where students
-          build apps, hardware, and more. HackUTD provides a venue for self-expression and
-          creativity through technology. People with varying technical backgrounds from universities
-          all over the US come together, form teams around a problem or idea, and collaboratively
-          build a unique solution from scratch. Whether youre a frequent hackathon attendee or just
-          getting started, we&apos;d love to see what you can make!
-        </p>
+          <div className="relative w-full z-0 flex justify-center">
+            <p
+              ref={explanationRef}
+              className="text-xl xl:text-xl 2xl:text-3xl text-center md:text-left text-white max-w-sm md:max-w-4xl xl:max-w-4xl 2xl:max-w-6xl mb-16 font-fredoka relative px-[20px] md:px-[40px] xl:px-[40px] 2xl:px-[60px] pt-[100px] pb-[50px] xl:pt-[100px] xl:pb-[50px] 2xl:pt-[120px] 2xl:pb-[70px] rounded-2xl backdrop-blur-sm shadow-lg"
+              style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+            >
+              HackUTD, the largest university hackathon in Texas, is a weekend-long event where
+              students build apps, hardware, and more. HackUTD provides a venue for self-expression
+              and creativity through technology. People with varying technical backgrounds from
+              universities all over the US come together, form teams around a problem or idea, and
+              collaboratively build a unique solution from scratch. Whether youre a frequent
+              hackathon attendee or just getting started, we&apos;d love to see what you can make!
+            </p>
+          </div>
+
+          {/* Fox image below the about text */}
+          <div className="relative w-full flex justify-center -mt-4">
+            <img
+              src="/assets/pathDrawing/fox.webp"
+              alt="Fox"
+              className="w-80 md:w-96 lg:w-[500px] xl:w-[500px] 2xl:w-[600px] h-auto md:-mt-12 lg:-mt-16"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

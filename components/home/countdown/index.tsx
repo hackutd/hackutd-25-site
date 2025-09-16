@@ -39,9 +39,9 @@ const HackCountdown: React.FC<Props> = ({ targetDate }) => {
   });
 
   return (
-    <section className="relative w-screen flex justify-center items-start overflow-x-hidden">
+    <section className="relative w-screen flex justify-center items-start overflow-x-hidden mt-16 md:mt-32">
       <div className="relative w-screen flex flex-col justify-center items-center overflow-x-hidden">
-        <div className="relative w-[95vw] md:w-[600px] h-auto aspect-[2.4/1] z-20 translate-y-12 md:translate-y-0">
+        <div className="relative w-[95vw] md:w-[600px] h-auto aspect-[2.4/1] z-20 translate-y-12 md:translate-y-64 xl:translate-y-72 2xl:translate-y-[80rem]">
           <Image
             src="/assets/KeynoteSpeakerRoll.svg"
             alt="Countdown banner"
@@ -50,14 +50,14 @@ const HackCountdown: React.FC<Props> = ({ targetDate }) => {
             className="relative md:static top-4 md:top-0" // push down only on mobile
           />
           <div className="absolute inset-0 flex items-center justify-center">
-            <h1 className="text-2xl md:text-5xl font-bold text-center font-Young-Serif text-transparent bg-gradient-to-b from-[#EDFF4E] to-[#FF1717] bg-clip-text -mt-8 md:-mt-8 translate-y-2 md:translate-y-0">
-              CountDown
+            <h1 className="text-4xl md:text-5xl font-bold text-center font-Young-Serif text-white md:text-transparent bg-gradient-to-b from-[#EDFF4E] to-[#FF1717] bg-clip-text -mt-12 md:-mt-8 translate-y-2 md:translate-y-0">
+              Countdown
             </h1>
           </div>
         </div>
 
         {/* -------------------- DESKTOP LAYOUT (VISIBLE ON MD AND UP) -------------------- */}
-        <div className="hidden md:block w-full flex flex-col items-center -mt-56">
+        <div className="hidden md:block w-full flex flex-col items-center mt-16 2xl:mt-[40rem]">
           <div className="relative flex justify-center">
             <Image
               src="/assets/Vector.svg"
@@ -93,10 +93,6 @@ const HackCountdown: React.FC<Props> = ({ targetDate }) => {
                   })}
                 </div>
               </div>
-
-              <div className="text-center w-full text-white text-2xl font-DM-Sans mt-8">
-                <h1>{"We'll let you know when we are hatching"}</h1>
-              </div>
             </div>
           </div>
         </div>
@@ -123,9 +119,6 @@ const HackCountdown: React.FC<Props> = ({ targetDate }) => {
                 </div>
               );
             })}
-          </div>
-          <div className="text-center w-full text-white text-lg font-DM-Sans mt-8">
-            <h1>{"We'll let you know when we are hatching"}</h1>
           </div>
         </div>
       </div>

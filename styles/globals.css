@@ -29,13 +29,13 @@ body, html {
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
-  background-color: #2a2342;
+  background-color: transparent;
   overscroll-behavior: auto;
 }
 
 /* Custom overscroll color to match footer theme */
 html {
-  background: linear-gradient(to bottom right, #581c87, #1e1b4b);
+  background: transparent;
 }
 
 /* Mobile optimizations */
@@ -52,7 +52,7 @@ html {
   body {
     background-attachment: scroll !important;
     background-size: cover !important;
-    background-color: #2a2342 !important;
+    background-color: transparent !important;
     contain: layout style paint;
   }
   
@@ -107,11 +107,11 @@ html {
   }
   
   /* Disable complex gradients on mobile */
-  .bg-gradient-to-r,
-  .bg-gradient-to-l,
-  .bg-gradient-to-t,
-  .bg-gradient-to-b {
-    background: #2a2342 !important;
+  .bg-gradient-to-r:not(.banner-gradient),
+  .bg-gradient-to-l:not(.banner-gradient),
+  .bg-gradient-to-t:not(.banner-gradient),
+  .bg-gradient-to-b:not(.banner-gradient) {
+    background: transparent !important;
   }
   
   /* Optimize sections */
@@ -320,4 +320,19 @@ a.link {
 .swiper-button-prev:after,
 .swiper-button-next:after {
   display: block;
+}
+
+/* Custom breakpoint for 533-640px range */
+@media (min-width: 533px) and (max-width: 639px) {
+  .stats-text-533-640 {
+    font-size: 18px !important;
+  }
+  
+  .stats-numbers-533-640 {
+    font-size: 20px !important;
+  }
+  
+  .stats-position-533-640 {
+    margin-top: 26vw !important;
+  }
 }

@@ -4,15 +4,11 @@ import Head from 'next/head';
 
 import HomeChallengesComponent from '@/components/home/challenge';
 import HomeHero from '@/components/home/HomeHero';
-import HackUTDCountdown from '@/components/home/countdown';
-import HomeAboutText from '@/components/home/about/HomeAboutText';
 import HomeSchedule from '@/components/home/HomeSchedule';
 import HomeFaq from '@/components/home/faq';
 import HomeSponsors from '@/components/home/sponsors';
 import HomeFooter from '@/components/home/HomeFooter';
-import KeynoteSpeaker from '@/components/home/speakers';
 import { RequestHelper } from '@/lib/request-helper';
-import HomeVideoStats from '@/components/home/HomeVideoStats';
 
 interface Props {
   answeredQuestion: AnsweredQuestion[];
@@ -77,22 +73,7 @@ export default function Home({
           }
         `}</style>
       </Head>
-      <div
-        className="overflow-x-hidden w-full bg-fallback"
-        style={{
-          backgroundImage: isMobile
-            ? `url("/assets/pathDrawing/bg.webp")`
-            : `url("/assets/pathDrawing/bushLeft.webp"),
-                            url("/assets/pathDrawing/pathOutline.webp"),
-                            url("/assets/pathDrawing/bg.webp")`,
-          backgroundColor: isMobile ? '#2a2342' : 'transparent',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'repeat',
-          zIndex: 2,
-          // Mobile optimization
-          backgroundAttachment: 'scroll',
-        }}
-      >
+      <div>
         {/* <div
           className="fixed top-0 left-0 w-full h-full z-20 pointer-events-none"
           style={{
@@ -101,41 +82,36 @@ export default function Home({
             backgroundRepeat: 'no-repeat',
           }}
         /> */}
+
         <HomeHero />
+      </div>
 
-        <div className="my-72">
-          <HomeAboutText />
-        </div>
-
-        <div className="my-72">
-          <HomeVideoStats />
-        </div>
-
-        <div className="my-72">
-          <HackUTDCountdown />
-        </div>
-
-        <div className="my-72">
-          <KeynoteSpeaker />
-        </div>
-
-        <div className="my-72">
+      <div
+        className="overflow-x-hidden w-full"
+        style={{
+          backgroundColor: '#0B0B1B',
+          backgroundImage: 'url("/assets/sponsorsBG/leaves.PNG")',
+          backgroundRepeat: 'repeat',
+          backgroundSize: 'auto',
+        }}
+      >
+        {/* <div className="my-72">
           <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
         </div>
 
         <div className="my-72">
           <HomeChallengesComponent challenges={challenges} />
-        </div>
+        </div> */}
 
         <div className="my-72">
           <HomeFaq answeredQuestions={answeredQuestion} />
         </div>
 
-        <div className="my-72">
+        {/* <div className="my-72">
           <HomeSponsors />
-        </div>
-        <HomeFooter />
+        </div> */}
       </div>
+      <HomeFooter />
     </>
   );
 }
