@@ -1,6 +1,6 @@
 export default function HomeVideoStats() {
   return (
-    <section className="z-10 relative h-[500px] sm:h-[550px] md:h-[600px]">
+    <section className="z-10 relative md:h-[600px]">
       {/* Background Images */}
       <img
         src="/assets/bushRight.png"
