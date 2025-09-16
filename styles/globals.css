@@ -23,8 +23,9 @@
   box-sizing: border-box;
 }
 
-body, html {
-  background-image: url('/assets/registration-background.png');
+body,
+html {
+  background-image: url('/assets/registration-background.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -47,7 +48,7 @@ html {
     width: 100% !important;
     height: auto !important;
   }
-  
+
   /* Optimize background loading on mobile */
   body {
     background-attachment: scroll !important;
@@ -55,57 +56,57 @@ html {
     background-color: transparent !important;
     contain: layout style paint;
   }
-  
+
   /* Optimize for mobile memory */
   * {
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
     will-change: auto;
   }
-  
+
   /* Reduce animations on mobile */
   .animate-pulse,
   .animate-bounce {
     animation: none !important;
   }
-  
+
   /* Optimize transitions */
   * {
     transition-duration: 0.15s !important;
     transition-timing-function: ease-out !important;
   }
-  
+
   /* Reduce box shadows on mobile */
   .shadow-lg,
   .shadow-xl,
   .shadow-2xl {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
   }
-  
+
   /* Optimize backdrop blur */
   .backdrop-blur-sm,
   .backdrop-blur-md,
   .backdrop-blur-lg {
     backdrop-filter: blur(4px) !important;
   }
-  
+
   /* Disable complex CSS effects on mobile */
   .drop-shadow-2xl {
     filter: none !important;
   }
-  
+
   /* Optimize images */
   img {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
     contain: layout style paint;
   }
-  
+
   /* Reduce layout thrashing */
   .min-h-\[100svh\] {
     min-height: 100vh !important;
   }
-  
+
   /* Disable complex gradients on mobile */
   .bg-gradient-to-r:not(.banner-gradient),
   .bg-gradient-to-l:not(.banner-gradient),
@@ -113,7 +114,7 @@ html {
   .bg-gradient-to-b:not(.banner-gradient) {
     background: transparent !important;
   }
-  
+
   /* Optimize sections */
   section {
     contain: layout style paint;
@@ -327,11 +328,11 @@ a.link {
   .stats-text-533-640 {
     font-size: 18px !important;
   }
-  
+
   .stats-numbers-533-640 {
     font-size: 20px !important;
   }
-  
+
   .stats-position-533-640 {
     margin-top: 26vw !important;
   }
