@@ -28,6 +28,7 @@ module.exports = {
         concertOne: ['Concert One', 'sans-serif'],
         montserrat: ['Montserrat', 'sans-serif'],
         atlasi: ['Atlasi', 'sans-serif'],
+        youngSerif: ['Young Serif', 'serif'],
       },
       width: {
         '1/8': '12.5%',

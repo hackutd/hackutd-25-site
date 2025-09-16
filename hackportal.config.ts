@@ -174,6 +174,7 @@ export const hackPortalConfig: HackPortalConfig = {
             id: 'university',
             name: 'university',
             required: true,
+            description: 'If your college isn\'t listed, please select "Other"',
             options: [
               ...schools.map(({ university }) => ({
                 title: university,
@@ -662,6 +663,7 @@ interface RegistrationQuestion {
   name: string;
   required: boolean;
   initialValue: any; //value that will be first presented on the form
+  description?: string; //optional description text shown below the question
 }
 
 export interface CheckboxQuestion extends RegistrationQuestion {
@@ -796,7 +798,7 @@ const setInitialValues = (obj, finalValues, savedValues) => {
 // export const formInitialValues = getInitialValues();
 
 export const config = {
-  targetDate: '2024-11-15T18:00:00-11:00',
+  targetDate: '2025-11-08T18:00:00-11:00',
 };
 
 //extracting statRecords for general stats

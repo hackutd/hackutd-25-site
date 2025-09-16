@@ -10,14 +10,17 @@ import {
   textAreaQuestion,
 } from '@/hackportal.config';
 
+interface RegistrationQuestion {
+  question: string;
+  id: string;
+  name: string;
+  required: boolean;
+  initialValue: any;
+  description?: string;
+}
+
 interface Props {
-  question: {
-    name: string;
-    required: boolean;
-    id: string;
-    initialValue: any;
-    question: string;
-  };
+  question: RegistrationQuestion;
   type: string;
 }
 /**
@@ -123,6 +126,9 @@ function RegistrationQuestion(props: Props) {
             <span className="text-gray-600 ml-2 text-[8px]">optional</span>
           )}
         </label>
+        {props.question.description && (
+          <p className="text-gray-600 text-sm poppins-regular mb-2">{props.question.description}</p>
+        )}
         <Field name={props.question.name}>
           {({ field }: FieldProps) => (
             <Autocomplete

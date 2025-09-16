@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Young+Serif&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
@@ -10,6 +11,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Alatsi&family=Concert+One&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Young+Serif&display=swap');
 
 @import url('/fonts/stylesheet.css');
 
@@ -21,97 +23,98 @@
   box-sizing: border-box;
 }
 
-body, html {
-  background-image: url('/assets/registration-background.png');
+body,
+html {
+  background-image: url('/assets/registration-background.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
-  background-color: #2a2342;
+  background-color: transparent;
   overscroll-behavior: auto;
 }
 
 /* Custom overscroll color to match footer theme */
 html {
-  background: linear-gradient(to bottom right, #581c87, #1e1b4b);
+  background: transparent;
 }
 
 /* Mobile optimizations */
 @media (max-width: 768px) {
-  /* Prevent scrolling only on home page for mobile */
+  /* Allow normal scrolling on mobile */
   body.home-page {
-    overflow: hidden !important;
-    position: fixed !important;
+    overflow: auto !important;
+    position: relative !important;
     width: 100% !important;
-    height: 100% !important;
+    height: auto !important;
   }
-  
+
   /* Optimize background loading on mobile */
   body {
     background-attachment: scroll !important;
     background-size: cover !important;
-    background-color: #2a2342 !important;
+    background-color: transparent !important;
     contain: layout style paint;
   }
-  
+
   /* Optimize for mobile memory */
   * {
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
     will-change: auto;
   }
-  
+
   /* Reduce animations on mobile */
   .animate-pulse,
   .animate-bounce {
     animation: none !important;
   }
-  
+
   /* Optimize transitions */
   * {
     transition-duration: 0.15s !important;
     transition-timing-function: ease-out !important;
   }
-  
+
   /* Reduce box shadows on mobile */
   .shadow-lg,
   .shadow-xl,
   .shadow-2xl {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
   }
-  
+
   /* Optimize backdrop blur */
   .backdrop-blur-sm,
   .backdrop-blur-md,
   .backdrop-blur-lg {
     backdrop-filter: blur(4px) !important;
   }
-  
+
   /* Disable complex CSS effects on mobile */
   .drop-shadow-2xl {
     filter: none !important;
   }
-  
+
   /* Optimize images */
   img {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
     contain: layout style paint;
   }
-  
+
   /* Reduce layout thrashing */
   .min-h-\[100svh\] {
     min-height: 100vh !important;
   }
-  
+
   /* Disable complex gradients on mobile */
-  .bg-gradient-to-r,
-  .bg-gradient-to-l,
-  .bg-gradient-to-t,
-  .bg-gradient-to-b {
-    background: #2a2342 !important;
+  .bg-gradient-to-r:not(.banner-gradient),
+  .bg-gradient-to-l:not(.banner-gradient),
+  .bg-gradient-to-t:not(.banner-gradient),
+  .bg-gradient-to-b:not(.banner-gradient) {
+    background: transparent !important;
   }
-  
+
   /* Optimize sections */
   section {
     contain: layout style paint;
@@ -162,6 +165,12 @@ a.link {
   font-family: 'Montserrat', sans-serif;
 }
 
+.font-DM-Sans {
+  font-family: 'DM Sans', sans-serif;
+}
+.font-Young-Serif {
+  font-family: 'Young Serif', serif;
+}
 .text-shadow {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
@@ -312,4 +321,48 @@ a.link {
 .swiper-button-prev:after,
 .swiper-button-next:after {
   display: block;
+}
+
+/* Custom breakpoint for 533-640px range */
+@media (min-width: 533px) and (max-width: 639px) {
+  .stats-text-533-640 {
+    font-size: 18px !important;
+  }
+
+  .stats-numbers-533-640 {
+    font-size: 20px !important;
+  }
+
+  .stats-position-533-640 {
+    margin-top: 26vw !important;
+  }
+}
+
+/* Custom styles for 1536px to 2000px screens */
+@media (min-width: 1536px) and (max-width: 2000px) {
+  .stats-text-533-640 {
+    font-size: 1.125rem !important;
+  }
+  
+  .stats-numbers-533-640 {
+    font-size: 1.5rem !important;
+  }
+  
+  .stats-position-533-640 {
+    margin-top: 280px !important;
+  }
+}
+
+/* Custom styles for 2000px and above screens */
+@media (min-width: 2000px) {
+  .stats-position-533-640 {
+    margin-top: 400px !important;
+  }
+}
+
+/* Custom styles for screens bigger than 1535px */
+@media (min-width: 1536px) {
+  .hackutd-title {
+    font-size: 2.5rem !important;
+  }
 }
