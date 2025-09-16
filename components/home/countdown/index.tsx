@@ -120,9 +120,6 @@ const HackCountdown: React.FC<Props> = ({ targetDate }) => {
               );
             })}
           </div>
-          <div className="text-center w-full text-white text-lg font-DM-Sans mt-8">
-            <h1>{"We'll let you know when we are hatching"}</h1>
-          </div>
         </div>
       </div>
     </section>
