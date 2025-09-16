@@ -440,7 +440,7 @@ export default function Register({ allowedRegistrations }: Props) {
     <div
       className="flex flex-col flex-grow mt-0 mb-0"
       style={{
-        backgroundImage: 'url(/assets/registration-background.png)',
+        backgroundImage: 'url(/assets/registration-background.webp)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

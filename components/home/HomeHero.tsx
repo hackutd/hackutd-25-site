@@ -143,6 +143,7 @@ export default function HomeHero() {
               alt="HACKPORTAL"
               width={800}
               height={200}
+              fetchPriority="high"
               priority
               className={`w-full h-auto ${isMobile ? '' : 'drop-shadow-2xl'}`}
             />
