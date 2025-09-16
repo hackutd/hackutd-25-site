@@ -366,3 +366,67 @@ a.link {
     font-size: 2.5rem !important;
   }
 }
+
+/* Windows-specific fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 1) {
+  /* Improve font rendering on Windows */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
+  /* Fix viewport units on Windows */
+  .min-h-\[100svh\] {
+    min-height: 100vh !important;
+  }
+  
+  /* Improve text consistency */
+  body {
+    font-feature-settings: "kern" 1, "liga" 1;
+    font-kerning: normal;
+  }
+  
+  /* Fix potential layout shifts */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+  
+  /* Fix viewport width units that might differ on Windows */
+  .w-\[90vw\], .w-\[80vw\], .w-\[70vw\], .w-\[60vw\], .w-\[50vw\], .w-\[40vw\], .w-\[37vw\] {
+    max-width: 100% !important;
+  }
+  
+  /* Fix negative margins that might cause issues */
+  .-mt-\[15vw\], .-mt-\[17vw\], .-mt-\[4vw\] {
+    margin-top: -2rem !important;
+  }
+  
+  /* Fix transform positioning that might differ */
+  .translate-y-12, .translate-y-64, .translate-y-72, .translate-y-96 {
+    transform: translateY(var(--tw-translate-y)) !important;
+  }
+  
+  /* Ensure consistent box-sizing */
+  *, *::before, *::after {
+    box-sizing: border-box !important;
+  }
+  
+  /* Fix potential scrollbar width differences */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0.3) transparent;
+  }
+  
+  /* Fix backdrop-filter support */
+  .backdrop-blur-sm, .backdrop-blur-md, .backdrop-blur-lg {
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+  }
+  
+  /* Fix gradient rendering */
+  .bg-gradient-to-t, .bg-gradient-to-b, .bg-gradient-to-r, .bg-gradient-to-l {
+    background-attachment: scroll !important;
+  }
+}

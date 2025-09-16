@@ -101,12 +101,12 @@ export default function HomeHero() {
         zIndex: 2,
       }}
     >
-      <section className="min-h-[100svh] flex flex-col-reverse md:flex-col">
+      <section className="min-h-[100vh] flex flex-col-reverse md:flex-col">
         {/* Header above the hero */}
         {/* <AppHeader /> */}
         {/* <AppHeader /> */}
 
-        <div className="relative w-full min-h-[100svh] max-h-[100svh] overflow-hidden">
+        <div className="relative w-full min-h-[100vh] max-h-[100vh] overflow-hidden">
           {/* MLH sticker */}
           <div className="relative z-10 shrink-0 w-full flex">
             <div className="absolute top-0 right-4 z-20 transition-all">
