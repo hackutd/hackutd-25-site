@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export default function HomeVideoStats() {
   return (
     <section className="z-10 relative md:h-[600px]">
@@ -5,7 +7,18 @@ export default function HomeVideoStats() {
       <img
         src="/assets/bushRight.png"
         alt=""
-        className="absolute right-0 top-0 -mt-[20vw] z-0 lg:w-[60vw] hidden lg:block xl:-mt-[30vw] 2xl:-mt-64"
+        className="absolute right-0 top-0 -mt-[30vw] z-0 lg:w-[80vw] hidden lg:block xl:-mt-[50vw] 2xl:-mt-[60rem]"
+        onError={(e) => {
+          e.currentTarget.style.display = 'none';
+        }}
+      />
+      <Image
+        src="/assets/pathDrawing/bird.webp"
+        alt="Bird"
+        width={200}
+        height={150}
+        className="absolute right-0 top-0 -mt-[30vw] z-10 lg:w-[8vw] hidden lg:block xl:-mt-[50vw] 2xl:-mt-[60rem]"
+        style={{ right: '12vw', top: '12vw' }}
         onError={(e) => {
           e.currentTarget.style.display = 'none';
         }}
