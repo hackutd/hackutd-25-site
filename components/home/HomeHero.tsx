@@ -140,7 +140,7 @@ export default function HomeHero() {
           >
             <Image
               src="/assets/Vectorized-Title.svg"
-              alt="HACKPORTAL"
+              alt="HackUTD 2025"
               width={800}
               height={200}
               fetchPriority="high"
