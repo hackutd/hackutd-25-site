@@ -102,12 +102,10 @@ export default function HomeHero() {
       }}
     >
       <section className="min-h-[100vh] flex flex-col-reverse md:flex-col">
-        {/* Header above the hero */}
         {/* <AppHeader /> */}
         {/* <AppHeader /> */}
 
         <div className="relative w-full min-h-[100vh] max-h-[100vh] overflow-hidden">
-          {/* MLH sticker */}
           <div className="relative z-10 shrink-0 w-full flex">
             <div className="absolute top-0 right-4 z-20 transition-all">
               <a
@@ -133,7 +131,6 @@ export default function HomeHero() {
             </div>
           </div>
 
-          {/* Title lockup */}
           <div
             className="absolute left-1/2 z-10 w-full max-w-[600px] md:max-w-[800px] px-4"
             style={{ top: '33%', transform: 'translate(-50%, -50%)' }}
@@ -148,7 +145,6 @@ export default function HomeHero() {
               className={`w-full h-auto ${isMobile ? '' : 'drop-shadow-2xl'}`}
             />
 
-            {/* Date SVG */}
             <div className="text-center mt-6 mb-4">
               <Image
                 src="/assets/topDrawing/Nov-8-9.svg"
@@ -160,7 +156,6 @@ export default function HomeHero() {
               />
             </div>
 
-            {/* Apply Button */}
             <div className={`${isMobile ? 'mt-24' : 'mt-8'} text-center`}>
               <button
                 onClick={() => (window.location.href = '/auth')}
@@ -191,7 +186,6 @@ export default function HomeHero() {
         </div>
       </section>
 
-      {/* Poyo image positioned to overlap with about section */}
       <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
         <div className="md:hidden" style={{ marginTop: '-20rem' }}>
           <Image
@@ -223,7 +217,6 @@ export default function HomeHero() {
       </div>
 
       <div className={`my-32 mb-32 md:my-[60rem] md:mb-[128rem]`}>
-        {/* Cliff image behind countdown */}
         <div className="absolute z-0" style={{ left: '-8rem', marginTop: '20rem' }}>
           <div className="md:hidden">
             <Image
@@ -268,7 +261,25 @@ export default function HomeHero() {
             console.log('Side river image loaded successfully');
           }}
         />
-
+        <Image
+          src="/assets/pathDrawing/deer.webp"
+          alt="Deer"
+          width={200}
+          height={300}
+          className="absolute right-0 z-30 lg:w-[30vw] hidden lg:block select-none pointer-events-none side-river-medium deer-positioning"
+          style={{
+            top: '-1000px',
+            right: '20px',
+          }}
+          draggable={false}
+          onError={(e) => {
+            console.log('Deer image failed to load');
+            e.currentTarget.style.display = 'none';
+          }}
+          onLoad={() => {
+            console.log('Deer image loaded successfully');
+          }}
+        />
         <KeynoteSpeaker />
       </div>
     </div>
