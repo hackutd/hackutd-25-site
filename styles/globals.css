@@ -32,6 +32,9 @@ html {
   min-height: 100vh;
   background-color: transparent;
   overscroll-behavior: auto;
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  width: 100vw !important;
 }
 
 /* Custom overscroll color to match footer theme */
@@ -364,6 +367,27 @@ a.link {
 @media (min-width: 1536px) {
   .hackutd-title {
     font-size: 2.5rem !important;
+  }
+}
+
+/* Custom styles for side river positioning on medium-large screens */
+@media (min-width: 1024px) and (max-width: 1500px) {
+  .side-river-medium {
+    top: -600px !important;
+  }
+}
+
+/* Custom styles for side river positioning on larger screens */
+@media (min-width: 1280px) and (max-width: 1500px) {
+  .side-river-medium {
+    top: -1000px !important;
+  }
+}
+
+/* Custom styles for side river positioning on very large screens */
+@media (min-width: 1900px) {
+  .side-river-medium {
+    top: -1800px !important;
   }
 }
 

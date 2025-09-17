@@ -248,7 +248,27 @@ export default function HomeHero() {
         <HackUTDCountdown />
       </div>
 
-      <div className={`my-32 -mt-16 md:my-72 xl:my-80 md:-mt-[32rem] xl:-mt-[20rem]`}>
+      <div className={`my-32 -mt-16 md:my-72 xl:my-80 md:-mt-[32rem] xl:-mt-[20rem] relative`}>
+        <Image
+          src="/assets/pathDrawing/sideRiver.webp"
+          alt="Side River"
+          width={400}
+          height={600}
+          className="absolute right-0 z-20 lg:w-[60vw] hidden lg:block select-none pointer-events-none side-river-medium"
+          style={{
+            top: '-1400px',
+            right: '-100px',
+          }}
+          draggable={false}
+          onError={(e) => {
+            console.log('Side river image failed to load');
+            e.currentTarget.style.display = 'none';
+          }}
+          onLoad={() => {
+            console.log('Side river image loaded successfully');
+          }}
+        />
+
         <KeynoteSpeaker />
       </div>
     </div>
