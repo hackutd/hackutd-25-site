@@ -69,7 +69,7 @@ export default function HomeSponsors() {
   return (
     sponsors.length !== 0 && (
       <section
-        className="relative pt-[5rem] pb-[10rem] font-fredoka overflow-hidden"
+        className="relative pt-[2rem] pb-[2rem] font-fredoka overflow-hidden"
         style={{ backgroundColor: '#0B0B1B' }}
       >
         <style jsx>{`

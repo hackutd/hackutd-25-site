@@ -87,12 +87,12 @@ export default function Home({
       </div>
 
       <div
-        className="overflow-x-hidden w-full"
+        className="w-full relative"
         style={{
           backgroundColor: '#0B0B1B',
           backgroundImage: 'url("/assets/sponsorsBG/leaves.PNG")',
-          backgroundRepeat: 'repeat',
-          backgroundSize: 'auto',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
         }}
       >
         {/* <div className="my-72">
@@ -108,7 +108,21 @@ export default function Home({
         </div>
       </div>
 
-      <div>
+      <div className="relative">
+        {/* Extended leaf background that overflows into sponsor section */}
+        <div
+          className="absolute top-0 left-0 w-full h-64 pointer-events-none"
+          style={{
+            backgroundImage: 'url("/assets/sponsorsBG/leaves.PNG")',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundPosition: 'top',
+            mask: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
+            WebkitMask:
+              'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
+            zIndex: 5,
+          }}
+        />
         <HomeSponsors />
       </div>
       <HomeFooter />

@@ -5,6 +5,7 @@ import HomeAboutText from './about/HomeAboutText';
 import HomeVideoStats from './HomeVideoStats';
 import HackUTDCountdown from './countdown';
 import KeynoteSpeaker from './speakers';
+import { useAuthContext } from '@/lib/user/AuthContext';
 
 const useHeroImageCache = () => {
   const [cachedImages, setCachedImages] = useState<Set<string>>(new Set());
@@ -87,6 +88,7 @@ const useHeroImageCache = () => {
 
 export default function HomeHero() {
   const { cachedImages, isLoading, MOBILE_LAYERS, isMobile } = useHeroImageCache();
+  const { user, hasProfile } = useAuthContext();
 
   return (
     <div
@@ -158,7 +160,19 @@ export default function HomeHero() {
 
             <div className={`${isMobile ? 'mt-24' : 'mt-8'} text-center`}>
               <button
-                onClick={() => (window.location.href = '/auth')}
+                onClick={() => {
+                  // Redirect based on user authentication and profile status
+                  if (!user) {
+                    // Not logged in - go to auth page
+                    window.location.href = '/auth';
+                  } else if (!hasProfile) {
+                    // Logged in but no profile - go to registration
+                    window.location.href = '/register';
+                  } else {
+                    // Logged in with profile - go to profile page
+                    window.location.href = '/profile';
+                  }
+                }}
                 className={`relative overflow-hidden font-bold py-3 px-10 rounded-full shadow-2xl transform transition-all duration-300 backdrop-blur-sm group ${
                   isMobile ? 'hover:scale-100' : 'hover:scale-105'
                 }`}
@@ -210,21 +224,17 @@ export default function HomeHero() {
       <div className={`my-24 md:my-[30rem] xl:my-[60rem] 2xl:my-[70rem]`}>
         <div className="relative w-full h-32 md:h-48 xl:h-64 2xl:h-80 pointer-events-none">
           <div className="absolute -left-32 md:-left-48 xl:-left-64 2xl:-left-80 -top-[400px] md:-top-[600px] xl:-top-[800px] 2xl:-top-[1000px] z-10">
-            <Image
+            <img
               src="/assets/pathDrawing/backLeftCloud.webp"
               alt="Back Left Cloud"
-              width={800}
-              height={400}
               className="w-[500px] md:w-[700px] xl:w-[800px] 2xl:w-[1000px] h-auto opacity-80"
             />
           </div>
 
           <div className="absolute -right-16 md:-right-24 xl:-right-32 2xl:-right-40 -top-[400px] md:-top-[600px] xl:-top-[800px] 2xl:-top-[1000px] z-10">
-            <Image
+            <img
               src="/assets/pathDrawing/backRightCloud.webp"
               alt="Back Right Cloud"
-              width={800}
-              height={400}
               className="w-[500px] md:w-[700px] xl:w-[800px] 2xl:w-[1000px] h-auto opacity-80"
             />
           </div>
