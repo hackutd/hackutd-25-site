@@ -51,7 +51,7 @@ const HomeAboutText = () => {
         <img
           src="/assets/pathDrawing/pinkFlowerTree.webp"
           alt="Pink Flower Tree"
-          className="w-48 md:w-80 lg:w-96 xl:w-96 2xl:w-[600px] h-auto opacity-80"
+          className="w-64 md:w-96 lg:w-[500px] xl:w-[500px] 2xl:w-[800px] h-auto opacity-80"
         />
       </div>
       <div className="flex justify-center md:justify-start relative w-full z-10">

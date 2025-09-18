@@ -14,9 +14,9 @@ export default function HomeVideoStats() {
       <Image
         src="/assets/pathDrawing/bird.webp"
         alt="Bird"
-        width={400}
-        height={300}
-        className="absolute right-0 top-0 -mt-[30vw] z-10 md:w-[16vw] hidden md:block xl:-mt-[50vw] 2xl:-mt-[60rem]"
+        width={300}
+        height={225}
+        className="absolute right-0 top-0 -mt-[30vw] z-10 md:w-[12vw] hidden md:block xl:-mt-[50vw] 2xl:-mt-[60rem]"
         style={{ right: '12vw', top: '12vw' }}
         onError={(e) => {
           e.currentTarget.style.display = 'none';

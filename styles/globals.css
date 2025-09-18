@@ -408,6 +408,26 @@ a.link {
   }
 }
 
+@media (min-width: 768px) and (max-width: 1280px) {
+  .side-river-medium {
+    top: -1000px !important;
+  }
+  
+  .deer-positioning {
+    top: -600px !important;
+  }
+}
+
+@media (min-width: 1300px) and (max-width: 1500px) {
+  .side-river-medium {
+    top: -1200px !important;
+  }
+  
+  .deer-positioning {
+    top: -800px !important;
+  }
+}
+
 
 @media screen and (-webkit-min-device-pixel-ratio: 1) {
  
