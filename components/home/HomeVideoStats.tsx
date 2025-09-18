@@ -4,29 +4,25 @@ export default function HomeVideoStats() {
   return (
     <section className="z-10 relative md:h-[600px]">
       <img
-        src="/assets/bushRight.png"
+        src="/assets/pathDrawing/bushRight.webp"
         alt=""
         className="absolute right-0 top-0 -mt-[30vw] z-0 w-[80vw] hidden md:block xl:-mt-[50vw] 2xl:-mt-[60rem]"
         onError={(e) => {
           e.currentTarget.style.display = 'none';
         }}
       />
-      <Image
+      <img
         src="/assets/pathDrawing/bird.webp"
         alt="Bird"
-        width={300}
-        height={225}
         className="absolute right-0 top-0 -mt-[30vw] z-10 md:w-[12vw] hidden md:block xl:-mt-[50vw] 2xl:-mt-[60rem]"
         style={{ right: '12vw', top: '12vw' }}
         onError={(e) => {
           e.currentTarget.style.display = 'none';
         }}
       />
-      <Image
+      <img
         src="/assets/pathDrawing/gust.webp"
         alt="Gust"
-        width={600}
-        height={450}
         className="absolute right-0 top-0 -mt-[30vw] z-5 md:w-[28vw] hidden md:block xl:-mt-[50vw] 2xl:-mt-[60rem]"
         style={{ right: '8vw', top: '8vw' }}
         onError={(e) => {
