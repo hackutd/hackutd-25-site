@@ -106,10 +106,10 @@ export default function Home({
         <div className="my-72">
           <HomeFaq answeredQuestions={answeredQuestion} />
         </div>
+      </div>
 
-        {/* <div className="my-72">
-          <HomeSponsors />
-        </div> */}
+      <div>
+        <HomeSponsors />
       </div>
       <HomeFooter />
     </>

@@ -47,8 +47,8 @@ export default function HomeSponsors() {
 
   if (loading) {
     return (
-      <section className="relative pt-[10rem] bg-[#F2F3FF] font-fredoka">
-        <div className="text-center text-5xl text-[#5D5A88]">
+      <section className="relative pt-[10rem] font-fredoka" style={{ backgroundColor: '#0B0B1B' }}>
+        <div className="text-center text-5xl text-white">
           <h1 className="uppercase font-bold">Loading sponsors...</h1>
         </div>
       </section>
@@ -57,8 +57,8 @@ export default function HomeSponsors() {
 
   if (error) {
     return (
-      <section className="relative pt-[10rem] bg-[#F2F3FF] font-fredoka">
-        <div className="text-center text-5xl text-[#5D5A88]">
+      <section className="relative pt-[10rem] font-fredoka" style={{ backgroundColor: '#0B0B1B' }}>
+        <div className="text-center text-5xl text-white">
           <h1 className="uppercase font-bold">Error loading sponsors</h1>
           <p className="text-2xl mt-4">{error}</p>
         </div>
@@ -68,7 +68,132 @@ export default function HomeSponsors() {
 
   return (
     sponsors.length !== 0 && (
-      <section className="relative pt-[10rem] font-fredoka">
+      <section
+        className="relative pt-[5rem] pb-[10rem] font-fredoka overflow-hidden"
+        style={{ backgroundColor: '#0B0B1B' }}
+      >
+        <style jsx>{`
+          @keyframes fireflyFloat1 {
+            0%,
+            100% {
+              transform: translate(0, 0) scale(1);
+            }
+            25% {
+              transform: translate(20px, -30px) scale(1.2);
+            }
+            50% {
+              transform: translate(-15px, -20px) scale(0.8);
+            }
+            75% {
+              transform: translate(30px, 10px) scale(1.1);
+            }
+          }
+          @keyframes fireflyFloat2 {
+            0%,
+            100% {
+              transform: translate(0, 0) scale(1);
+            }
+            20% {
+              transform: translate(-25px, 15px) scale(0.9);
+            }
+            40% {
+              transform: translate(35px, -25px) scale(1.3);
+            }
+            60% {
+              transform: translate(-10px, 30px) scale(0.7);
+            }
+            80% {
+              transform: translate(20px, -10px) scale(1.1);
+            }
+          }
+          @keyframes fireflyFloat3 {
+            0%,
+            100% {
+              transform: translate(0, 0) scale(1);
+            }
+            30% {
+              transform: translate(40px, 20px) scale(1.4);
+            }
+            60% {
+              transform: translate(-30px, -15px) scale(0.6);
+            }
+            90% {
+              transform: translate(15px, 25px) scale(1.2);
+            }
+          }
+          @keyframes fireflyFloat4 {
+            0%,
+            100% {
+              transform: translate(0, 0) scale(1);
+            }
+            15% {
+              transform: translate(-20px, -35px) scale(0.8);
+            }
+            35% {
+              transform: translate(25px, 10px) scale(1.5);
+            }
+            55% {
+              transform: translate(-35px, 20px) scale(0.9);
+            }
+            75% {
+              transform: translate(10px, -20px) scale(1.3);
+            }
+            95% {
+              transform: translate(-15px, 15px) scale(0.7);
+            }
+          }
+          @keyframes fireflyGlow {
+            0%,
+            100% {
+              opacity: 0.3;
+            }
+            50% {
+              opacity: 1;
+            }
+          }
+        `}</style>
+
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(16)].map((_, i) => {
+            const animationType = i % 4;
+            const animationNames = [
+              'fireflyFloat1',
+              'fireflyFloat2',
+              'fireflyFloat3',
+              'fireflyFloat4',
+            ];
+            const selectedAnimation = animationNames[animationType];
+
+            return (
+              <div
+                key={i}
+                className="absolute w-2 h-2 bg-yellow-400 rounded-full"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 6}s`,
+                  animationDuration: `${6 + Math.random() * 6}s`,
+                  boxShadow: '0 0 10px #fbbf24, 0 0 20px #fbbf24, 0 0 30px #fbbf24',
+                  animation: `${selectedAnimation} ${
+                    6 + Math.random() * 6
+                  }s ease-in-out infinite, fireflyGlow ${
+                    2 + Math.random() * 3
+                  }s ease-in-out infinite`,
+                }}
+              >
+                <div
+                  className="absolute inset-0 bg-yellow-300 rounded-full"
+                  style={{
+                    animationDelay: `${Math.random() * 3}s`,
+                    animationDuration: `${1.5 + Math.random() * 2.5}s`,
+                    animation: 'fireflyGlow 2s ease-in-out infinite',
+                  }}
+                />
+              </div>
+            );
+          })}
+        </div>
+
         {/* TODO: will update styling better once get more assets and finalized content */}
         <div></div>
         <div className="flex flex-col flex-grow">
@@ -81,7 +206,7 @@ export default function HomeSponsors() {
               backgroundClip: 'text',
             }}
           >
-            Sponsorship
+            Sponsors will be revealed soon
           </h4>
           <h2
             className="uppercase text-center text-3xl font-youngSerif"
@@ -138,7 +263,7 @@ export default function HomeSponsors() {
                   key={tier}
                   className="flex flex-col gap-8 my-[3rem] text-center text-3xl text-[#5D5A88] font-bold font-youngSerif"
                 >
-                  <TierTitle tierName={tier} />
+                  {/* <TierTitle tierName={tier} /> */}
 
                   <div className="flex flex-wrap gap-16 justify-center items-center">
                     <LogoContext.Provider value={{ currentHoveredLogo, setCurrentHoveredLogo }}>
@@ -152,7 +277,7 @@ export default function HomeSponsors() {
             </div>
           </section>
         </div>
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <p
             className="text-4xl text-center pb-28 font-youngSerif"
             style={{
@@ -164,7 +289,7 @@ export default function HomeSponsors() {
           >
             and more to come!
           </p>
-        </div>
+        </div> */}
       </section>
     )
   );
