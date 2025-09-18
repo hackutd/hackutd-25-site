@@ -3,12 +3,18 @@ import Image from 'next/image';
 export default function HomeVideoStats() {
   return (
     <section className="z-10 relative md:h-[600px]">
-      <img
-        src="/assets/bushRight.png"
-        alt=""
+      <Image
+        src="/assets/pathDrawing/bushRight.webp"
+        alt="Bush Right Tree"
+        width={800}
+        height={600}
         className="absolute right-0 top-0 -mt-[30vw] z-0 w-[80vw] hidden md:block xl:-mt-[50vw] 2xl:-mt-[60rem]"
         onError={(e) => {
+          console.log('Bush right tree image failed to load');
           e.currentTarget.style.display = 'none';
+        }}
+        onLoad={() => {
+          console.log('Bush right tree image loaded successfully');
         }}
       />
       <Image
