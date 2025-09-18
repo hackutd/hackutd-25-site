@@ -207,8 +207,29 @@ export default function HomeHero() {
         </div>
       </div>
 
-      {/* Other components that use the same background */}
       <div className={`my-24 md:my-[30rem] xl:my-[60rem] 2xl:my-[70rem]`}>
+        <div className="relative w-full h-32 md:h-48 xl:h-64 2xl:h-80 pointer-events-none">
+          <div className="absolute -left-32 md:-left-48 xl:-left-64 2xl:-left-80 -top-[400px] md:-top-[600px] xl:-top-[800px] 2xl:-top-[1000px] z-10">
+            <Image
+              src="/assets/pathDrawing/backLeftCloud.webp"
+              alt="Back Left Cloud"
+              width={800}
+              height={400}
+              className="w-[500px] md:w-[700px] xl:w-[800px] 2xl:w-[1000px] h-auto opacity-80"
+            />
+          </div>
+
+          <div className="absolute -right-16 md:-right-24 xl:-right-32 2xl:-right-40 -top-[400px] md:-top-[600px] xl:-top-[800px] 2xl:-top-[1000px] z-10">
+            <Image
+              src="/assets/pathDrawing/backRightCloud.webp"
+              alt="Back Right Cloud"
+              width={800}
+              height={400}
+              className="w-[500px] md:w-[700px] xl:w-[800px] 2xl:w-[1000px] h-auto opacity-80"
+            />
+          </div>
+        </div>
+
         <HomeAboutText />
       </div>
 
