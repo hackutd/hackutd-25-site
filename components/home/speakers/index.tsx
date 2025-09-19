@@ -14,9 +14,14 @@ export default function HomeSpeakers() {
     fetchData();
   }, []);
   return (
-    <section className="overflow-x-auto min-h-[24rem] pb-20 bg-cover bg-center lg:mt-[20rem] 2xl:mt-[30rem]">
-      <div className="relative w-full min-h-screen flex flex-col justify-center items-center overflow-x-hidden px-4">
-        {/* Keynote Speaker Banner (Remains unchanged as it is responsive) */}
+    <section
+      className="overflow-x-hidden min-h-[24rem] pb-20 bg-cover bg-center lg:mt-[20rem] 2xl:mt-[30rem]"
+      style={{ maxWidth: '100vw', overflowX: 'hidden', width: '100vw' }}
+    >
+      <div
+        className="relative w-full min-h-screen flex flex-col justify-center items-center overflow-x-hidden px-4"
+        style={{ maxWidth: '100vw', overflowX: 'hidden', width: '100%' }}
+      >
         <div className="relative w-full max-w-[500px] h-[170px] 2xl:max-w-[800px] 2xl:h-[300px] z-20">
           <Image
             src="/assets/SpeakerRoll.png"
@@ -52,7 +57,7 @@ export default function HomeSpeakers() {
             {/* Speaker Image */}
             <div className="flex justify-center flex-shrink-0">
               <div className="w-[200px] h-[200px] md:w-[250px] md:h-[250px] lg:w-[300px] lg:h-[300px] 2xl:w-[400px] 2xl:h-[400px] border border-orange-400 shadow-[0_0_30px_10px_rgba(255,165,0,0.5)] bg-black/80 rounded-lg flex items-center justify-center">
-                <span className="text-white text-xl md:text-2xl 2xl:text-4xl font-bold font-fredoka">
+                <span className="text-white text-xl md:text-2xl 2xl:text-4xl font-bold font-youngSerif">
                   Coming Soon
                 </span>
               </div>
@@ -62,7 +67,7 @@ export default function HomeSpeakers() {
               <div className="absolute inset-0 rounded-3xl bg-black/80 border border-orange-400 shadow-[0_0_30px_10px_rgba(255,165,0,0.5)]"></div>
               <div className="relative flex flex-col justify-center items-center gap-y-2 p-4 lg:p-6 h-full">
                 <div className="flex items-center justify-center h-full">
-                  <span className="text-white text-xl md:text-2xl 2xl:text-4xl font-bold font-fredoka">
+                  <span className="text-white text-xl md:text-2xl 2xl:text-4xl font-bold font-youngSerif">
                     Coming Soon
                   </span>
                 </div>

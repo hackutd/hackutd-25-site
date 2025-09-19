@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 
 import { initFirebase } from '@/lib/firebase-client';
-import { AuthProvider } from '@/lib/user/AuthContext';
+import { AuthProvider, useAuthContext } from '@/lib/user/AuthContext';
 import { FCMProvider } from '@/lib/service-worker/FCMContext';
 
 import AppHeader from '@/components/AppHeader';
@@ -22,6 +22,20 @@ import { SectionReferenceContext } from '@/lib/context/section';
 import { useUrlHash } from '@/lib/hooks';
 
 initFirebase();
+
+/**
+ * Component to conditionally render bottom spacer based on auth status
+ */
+function BottomSpacer() {
+  const { user } = useAuthContext();
+
+  // Only show spacer when user is logged in (since navbar only shows when logged in)
+  if (!user) {
+    return null;
+  }
+
+  return <div className="md:hidden h-[80px] shrink-0" />;
+}
 
 /**
  * A Wrapper for the HackPortal web app.
@@ -135,7 +149,7 @@ function PortalApp({ Component, pageProps }: AppProps) {
                 )}
                 <Component {...pageProps} />
                 {/* Spacer at the bottom of the page for navbar bottom on mobile, so that content won't be covered by the navbar */}
-                <div className="md:hidden h-[80px] shrink-0" />
+                <BottomSpacer />
               </div>
               <AppNavbarBottom />
             </NavbarCallbackRegistryContext.Provider>

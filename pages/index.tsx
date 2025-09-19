@@ -87,12 +87,12 @@ export default function Home({
       </div>
 
       <div
-        className="overflow-x-hidden w-full"
+        className="w-full relative"
         style={{
           backgroundColor: '#0B0B1B',
           backgroundImage: 'url("/assets/sponsorsBG/leaves.PNG")',
-          backgroundRepeat: 'repeat',
-          backgroundSize: 'auto',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
         }}
       >
         {/* <div className="my-72">
@@ -107,9 +107,19 @@ export default function Home({
           <HomeFaq answeredQuestions={answeredQuestion} />
         </div>
 
-        {/* <div className="my-72">
+        <div
+          className="absolute left-0 w-full pointer-events-none"
+          style={{
+            top: '30%',
+            height: '70%',
+            background:
+              'linear-gradient(to bottom, transparent 0%, rgba(11,11,27,0.1) 20%, rgba(11,11,27,0.4) 60%, rgba(11,11,27,0.8) 100%)',
+            zIndex: 1,
+          }}
+        />
+        <div className="relative z-10" style={{ marginTop: '-200px', paddingTop: '200px' }}>
           <HomeSponsors />
-        </div> */}
+        </div>
       </div>
       <HomeFooter />
     </>
