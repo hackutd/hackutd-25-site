@@ -106,24 +106,20 @@ export default function Home({
         <div className="my-72">
           <HomeFaq answeredQuestions={answeredQuestion} />
         </div>
-      </div>
 
-      <div className="relative">
-        {/* Extended leaf background that overflows into sponsor section */}
         <div
-          className="absolute top-0 left-0 w-full h-64 pointer-events-none"
+          className="absolute left-0 w-full pointer-events-none"
           style={{
-            backgroundImage: 'url("/assets/sponsorsBG/leaves.PNG")',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
-            backgroundPosition: 'top',
-            mask: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
-            WebkitMask:
-              'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
-            zIndex: 5,
+            top: '30%',
+            height: '70%',
+            background:
+              'linear-gradient(to bottom, transparent 0%, rgba(11,11,27,0.1) 20%, rgba(11,11,27,0.4) 60%, rgba(11,11,27,0.8) 100%)',
+            zIndex: 1,
           }}
         />
-        <HomeSponsors />
+        <div className="relative z-10" style={{ marginTop: '-200px', paddingTop: '200px' }}>
+          <HomeSponsors />
+        </div>
       </div>
       <HomeFooter />
     </>

@@ -47,7 +47,7 @@ export default function HomeSponsors() {
 
   if (loading) {
     return (
-      <section className="relative pt-[10rem] font-fredoka" style={{ backgroundColor: '#0B0B1B' }}>
+      <section className="relative pt-[10rem] font-fredoka">
         <div className="text-center text-5xl text-white">
           <h1 className="uppercase font-bold">Loading sponsors...</h1>
         </div>
@@ -57,7 +57,7 @@ export default function HomeSponsors() {
 
   if (error) {
     return (
-      <section className="relative pt-[10rem] font-fredoka" style={{ backgroundColor: '#0B0B1B' }}>
+      <section className="relative pt-[10rem] font-fredoka">
         <div className="text-center text-5xl text-white">
           <h1 className="uppercase font-bold">Error loading sponsors</h1>
           <p className="text-2xl mt-4">{error}</p>
@@ -69,8 +69,8 @@ export default function HomeSponsors() {
   return (
     sponsors.length !== 0 && (
       <section
-        className="relative pt-[2rem] pb-[2rem] font-fredoka overflow-hidden"
-        style={{ backgroundColor: '#0B0B1B' }}
+        className="relative pt-[2rem] pb-[2rem] font-fredoka"
+        style={{ overflow: 'visible' }}
       >
         <style jsx>{`
           @keyframes fireflyFloat1 {
@@ -152,8 +152,16 @@ export default function HomeSponsors() {
             }
           }
         `}</style>
-
-        <div className="absolute inset-0 pointer-events-none">
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            top: '-200px',
+            left: 0,
+            right: 0,
+            height: 'calc(100% + 200px)',
+            zIndex: 20,
+          }}
+        >
           {[...Array(16)].map((_, i) => {
             const animationType = i % 4;
             const animationNames = [
@@ -170,7 +178,7 @@ export default function HomeSponsors() {
                 className="absolute w-2 h-2 bg-yellow-400 rounded-full"
                 style={{
                   left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`, // Normal positioning within the extended container
                   animationDelay: `${Math.random() * 6}s`,
                   animationDuration: `${6 + Math.random() * 6}s`,
                   boxShadow: '0 0 10px #fbbf24, 0 0 20px #fbbf24, 0 0 30px #fbbf24',
@@ -228,7 +236,7 @@ export default function HomeSponsors() {
               backgroundClip: 'text',
             }}
           >
-            If you would like to sponsor HackPortal,
+            If you would like to sponsor HackUTD,
           </h2>
           <h2
             className="text-center font-youngSerif"
