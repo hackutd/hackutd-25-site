@@ -1,18 +1,36 @@
+import Image from 'next/image';
+
 export default function HomeVideoStats() {
   return (
     <section className="z-10 relative md:h-[600px]">
-      {/* Background Images */}
       <img
-        src="/assets/bushRight.png"
+        src="/assets/pathDrawing/bushRight.webp"
         alt=""
-        className="absolute right-0 top-0 -mt-[20vw] z-0 lg:w-[60vw] hidden lg:block xl:-mt-[30vw] 2xl:-mt-64"
+        className="absolute right-0 top-0 -mt-[30vw] z-0 w-[80vw] hidden md:block xl:-mt-[50vw] 2xl:-mt-[60rem]"
         onError={(e) => {
           e.currentTarget.style.display = 'none';
         }}
       />
-      {/* Foreground Elements */}
+      <img
+        src="/assets/pathDrawing/bird.webp"
+        alt="Bird"
+        className="absolute right-0 top-0 -mt-[30vw] z-10 md:w-[12vw] hidden md:block xl:-mt-[50vw] 2xl:-mt-[60rem]"
+        style={{ right: '12vw', top: '12vw' }}
+        onError={(e) => {
+          e.currentTarget.style.display = 'none';
+        }}
+      />
+      <img
+        src="/assets/pathDrawing/gust.webp"
+        alt="Gust"
+        className="absolute right-0 top-0 -mt-[30vw] z-5 md:w-[28vw] hidden md:block xl:-mt-[50vw] 2xl:-mt-[60rem]"
+        style={{ right: '8vw', top: '8vw' }}
+        onError={(e) => {
+          e.currentTarget.style.display = 'none';
+        }}
+      />
+
       <div className="flex flex-col justify-center items-center mx-auto py-[1rem] md:py-[2rem] lg:py-[3rem] xl:py-[3rem] 2xl:py-[4rem] ml-2 md:ml-4 lg:ml-[40vw] px-4 md:px-0">
-        {/* Stats */}
         <div className="flex justify-center relative w-full z-20 -mt-[10vw] sm:-mt-[12vw] md:mt-0 xl:-mt-[20vw] 2xl:-mt-64">
           <img
             src="/assets/statsScroll.png"
@@ -43,7 +61,6 @@ export default function HomeVideoStats() {
           </div>
         </div>
 
-        {/* Video */}
         <div className="flex justify-center relative w-full z-30 mt-4 md:mt-2 lg:mt-0 xl:mt-0 2xl:mt-16">
           <img
             src="/assets/teaserBanner.png"

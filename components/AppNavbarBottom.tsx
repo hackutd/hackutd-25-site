@@ -27,6 +27,11 @@ export default function AppNavbarBottom(props: Props) {
   const { callbackRegistry } = useContext(NavbarCallbackRegistryContext);
   const router = useRouter();
 
+  // Only show navbar when user is logged in
+  if (!user) {
+    return null;
+  }
+
   const floatingDockItems = (): JSX.Element[] => {
     const items: JSX.Element[] = [];
     const itemIdRoot: string = (props.dockItemIdRoot ?? 'AppNavbarBottom-floating-dock-item') + '_';

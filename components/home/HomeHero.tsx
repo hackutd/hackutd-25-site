@@ -5,6 +5,7 @@ import HomeAboutText from './about/HomeAboutText';
 import HomeVideoStats from './HomeVideoStats';
 import HackUTDCountdown from './countdown';
 import KeynoteSpeaker from './speakers';
+import { useAuthContext } from '@/lib/user/AuthContext';
 
 const useHeroImageCache = () => {
   const [cachedImages, setCachedImages] = useState<Set<string>>(new Set());
@@ -87,6 +88,7 @@ const useHeroImageCache = () => {
 
 export default function HomeHero() {
   const { cachedImages, isLoading, MOBILE_LAYERS, isMobile } = useHeroImageCache();
+  const { user, hasProfile } = useAuthContext();
 
   return (
     <div
@@ -102,12 +104,10 @@ export default function HomeHero() {
       }}
     >
       <section className="min-h-[100vh] flex flex-col-reverse md:flex-col">
-        {/* Header above the hero */}
         {/* <AppHeader /> */}
         {/* <AppHeader /> */}
 
         <div className="relative w-full min-h-[100vh] max-h-[100vh] overflow-hidden">
-          {/* MLH sticker */}
           <div className="relative z-10 shrink-0 w-full flex">
             <div className="absolute top-0 right-4 z-20 transition-all">
               <a
@@ -133,7 +133,6 @@ export default function HomeHero() {
             </div>
           </div>
 
-          {/* Title lockup */}
           <div
             className="absolute left-1/2 z-10 w-full max-w-[600px] md:max-w-[800px] px-4"
             style={{ top: '33%', transform: 'translate(-50%, -50%)' }}
@@ -148,7 +147,6 @@ export default function HomeHero() {
               className={`w-full h-auto ${isMobile ? '' : 'drop-shadow-2xl'}`}
             />
 
-            {/* Date SVG */}
             <div className="text-center mt-6 mb-4">
               <Image
                 src="/assets/topDrawing/Nov-8-9.svg"
@@ -160,10 +158,21 @@ export default function HomeHero() {
               />
             </div>
 
-            {/* Apply Button */}
             <div className={`${isMobile ? 'mt-24' : 'mt-8'} text-center`}>
               <button
-                onClick={() => (window.location.href = '/auth')}
+                onClick={() => {
+                  // Redirect based on user authentication and profile status
+                  if (!user) {
+                    // Not logged in - go to auth page
+                    window.location.href = '/auth';
+                  } else if (!hasProfile) {
+                    // Logged in but no profile - go to registration
+                    window.location.href = '/register';
+                  } else {
+                    // Logged in with profile - go to profile page
+                    window.location.href = '/profile';
+                  }
+                }}
                 className={`relative overflow-hidden font-bold py-3 px-10 rounded-full shadow-2xl transform transition-all duration-300 backdrop-blur-sm group ${
                   isMobile ? 'hover:scale-100' : 'hover:scale-105'
                 }`}
@@ -191,7 +200,6 @@ export default function HomeHero() {
         </div>
       </section>
 
-      {/* Poyo image positioned to overlap with about section */}
       <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
         <div className="md:hidden" style={{ marginTop: '-20rem' }}>
           <Image
@@ -213,8 +221,25 @@ export default function HomeHero() {
         </div>
       </div>
 
-      {/* Other components that use the same background */}
       <div className={`my-24 md:my-[30rem] xl:my-[60rem] 2xl:my-[70rem]`}>
+        <div className="relative w-full h-32 md:h-48 xl:h-64 2xl:h-80 pointer-events-none">
+          <div className="absolute -left-32 md:-left-48 xl:-left-64 2xl:-left-80 -top-[400px] md:-top-[600px] xl:-top-[800px] 2xl:-top-[1000px] z-10">
+            <img
+              src="/assets/pathDrawing/backLeftCloud.webp"
+              alt="Back Left Cloud"
+              className="w-[500px] md:w-[700px] xl:w-[800px] 2xl:w-[1000px] h-auto opacity-80"
+            />
+          </div>
+
+          <div className="absolute -right-16 md:-right-24 xl:-right-32 2xl:-right-40 -top-[400px] md:-top-[600px] xl:-top-[800px] 2xl:-top-[1000px] z-10">
+            <img
+              src="/assets/pathDrawing/backRightCloud.webp"
+              alt="Back Right Cloud"
+              className="w-[500px] md:w-[700px] xl:w-[800px] 2xl:w-[1000px] h-auto opacity-80"
+            />
+          </div>
+        </div>
+
         <HomeAboutText />
       </div>
 
@@ -223,7 +248,6 @@ export default function HomeHero() {
       </div>
 
       <div className={`my-32 mb-32 md:my-[60rem] md:mb-[128rem]`}>
-        {/* Cliff image behind countdown */}
         <div className="absolute z-0" style={{ left: '-8rem', marginTop: '20rem' }}>
           <div className="md:hidden">
             <Image
@@ -248,7 +272,45 @@ export default function HomeHero() {
         <HackUTDCountdown />
       </div>
 
-      <div className={`my-32 -mt-16 md:my-72 xl:my-80 md:-mt-[32rem] xl:-mt-[20rem]`}>
+      <div className={`my-32 -mt-16 md:my-72 xl:my-80 md:-mt-[32rem] xl:-mt-[20rem] relative`}>
+        <Image
+          src="/assets/pathDrawing/sideRiver.webp"
+          alt="Side River"
+          width={400}
+          height={600}
+          className="absolute right-0 z-20 lg:w-[60vw] hidden lg:block select-none pointer-events-none side-river-medium"
+          style={{
+            top: '-1400px',
+            right: '-100px',
+          }}
+          draggable={false}
+          onError={(e) => {
+            console.log('Side river image failed to load');
+            e.currentTarget.style.display = 'none';
+          }}
+          onLoad={() => {
+            console.log('Side river image loaded successfully');
+          }}
+        />
+        <Image
+          src="/assets/pathDrawing/deer.webp"
+          alt="Deer"
+          width={200}
+          height={300}
+          className="absolute right-0 z-30 lg:w-[30vw] hidden lg:block select-none pointer-events-none side-river-medium deer-positioning"
+          style={{
+            top: '-1000px',
+            right: '20px',
+          }}
+          draggable={false}
+          onError={(e) => {
+            console.log('Deer image failed to load');
+            e.currentTarget.style.display = 'none';
+          }}
+          onLoad={() => {
+            console.log('Deer image loaded successfully');
+          }}
+        />
         <KeynoteSpeaker />
       </div>
     </div>
