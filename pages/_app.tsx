@@ -114,8 +114,51 @@ function PortalApp({ Component, pageProps }: AppProps) {
                   name="viewport"
                   content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
                 />
-                <title>HackUTD 2025</title> {/* !change */}
-                <meta name="description" content="Your all-in-one guide to this hackathon." />
+                <title>HackUTD 2025 - Largest University Hackathon in North America</title>
+                <meta
+                  name="description"
+                  content="Join HackUTD 2025, the largest 24-hour university hackathon in North America. Build apps, hardware, and innovative solutions with 1200+ hackers from 30+ universities. Nov 8-9, 2025 at UT Dallas."
+                />
+                <meta
+                  name="keywords"
+                  content="hackathon, HackUTD, UT Dallas, university hackathon, programming competition, tech event, North America, largest hackathon, student hackathon, coding event"
+                />
+                <meta name="author" content="HackUTD" />
+                <meta name="robots" content="index, follow" />
+                <link rel="canonical" href="https://legend.hackutd.co" />
+
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://legend.hackutd.co/" />
+                <meta
+                  property="og:title"
+                  content="HackUTD 2025 - Largest University Hackathon in North America"
+                />
+                <meta
+                  property="og:description"
+                  content="Join HackUTD 2025, the largest 24-hour university hackathon in North America. Build apps, hardware, and innovative solutions with 1200+ hackers from 30+ universities."
+                />
+                <meta property="og:image" content="https://legend.hackutd.co/assets/og-image.jpg" />
+                <meta property="og:site_name" content="HackUTD 2025" />
+
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:url" content="https://legend.hackutd.co/" />
+                <meta
+                  property="twitter:title"
+                  content="HackUTD 2025 - Largest University Hackathon in North America"
+                />
+                <meta
+                  property="twitter:description"
+                  content="Join HackUTD 2025, the largest 24-hour university hackathon in North America. Build apps, hardware, and innovative solutions with 1200+ hackers from 30+ universities."
+                />
+                <meta
+                  property="twitter:image"
+                  content="https://legend.hackutd.co/assets/og-image.jpg"
+                />
+
+                <meta name="theme-color" content="#5D5FEF" />
+                <meta name="apple-mobile-web-app-capable" content="yes" />
+                <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+                <meta name="apple-mobile-web-app-title" content="HackUTD 2025" />
                 {process.env.ENABLE_PWA ||
                   (process.env.NODE_ENV !== 'development' && (
                     <link rel="manifest" href="/manifest.json" />
@@ -135,8 +178,6 @@ function PortalApp({ Component, pageProps }: AppProps) {
                 />
                 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=2025" />
                 <meta name="theme-color" content="#5D5FEF" />
-                {/* Preload critical resources */}
-                <link rel="preload" href="/assets/topDrawing/mobileBG-optimized.jpg" as="image" />
                 <link rel="dns-prefetch" href="//fonts.googleapis.com" />
                 <link rel="dns-prefetch" href="//s3.amazonaws.com" />
               </Head>

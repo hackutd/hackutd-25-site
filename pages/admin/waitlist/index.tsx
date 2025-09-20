@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { useState } from 'react';
+import { GetServerSideProps } from 'next';
 
 import { checkUserPermission } from '@/lib/util';
 import { useAuthContext } from '@/lib/user/AuthContext';
@@ -185,3 +186,10 @@ export default function WaitlistCheckinPage() {
     </div>
   );
 }
+
+// Prevent static generation for admin pages
+export const getServerSideProps: GetServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};
