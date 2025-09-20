@@ -69,6 +69,8 @@ export default function Home({
         />
         <link rel="canonical" href="https://legend.hackutd.co/" />
 
+        <link rel="preload" href="/assets/topDrawing/mobileBG-optimized.jpg" as="image" />
+
         {/* Structured Data */}
         <script
           type="application/ld+json"
