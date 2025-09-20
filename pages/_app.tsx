@@ -127,7 +127,6 @@ function PortalApp({ Component, pageProps }: AppProps) {
                 <meta name="robots" content="index, follow" />
                 <link rel="canonical" href="https://legend.hackutd.co" />
 
-                {/* Open Graph / Facebook */}
                 <meta property="og:type" content="website" />
                 <meta property="og:url" content="https://legend.hackutd.co/" />
                 <meta
@@ -141,7 +140,6 @@ function PortalApp({ Component, pageProps }: AppProps) {
                 <meta property="og:image" content="https://legend.hackutd.co/assets/og-image.jpg" />
                 <meta property="og:site_name" content="HackUTD 2025" />
 
-                {/* Twitter */}
                 <meta property="twitter:card" content="summary_large_image" />
                 <meta property="twitter:url" content="https://legend.hackutd.co/" />
                 <meta
@@ -157,7 +155,6 @@ function PortalApp({ Component, pageProps }: AppProps) {
                   content="https://legend.hackutd.co/assets/og-image.jpg"
                 />
 
-                {/* Additional SEO meta tags */}
                 <meta name="theme-color" content="#5D5FEF" />
                 <meta name="apple-mobile-web-app-capable" content="yes" />
                 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -181,8 +178,6 @@ function PortalApp({ Component, pageProps }: AppProps) {
                 />
                 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=2025" />
                 <meta name="theme-color" content="#5D5FEF" />
-                {/* Preload critical resources */}
-                <link rel="preload" href="/assets/topDrawing/mobileBG-optimized.jpg" as="image" />
                 <link rel="dns-prefetch" href="//fonts.googleapis.com" />
                 <link rel="dns-prefetch" href="//s3.amazonaws.com" />
               </Head>
