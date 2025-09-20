@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://hackutd2025.com/sitemap.xml
+Sitemap: https://legend.hackutd.co/sitemap.xml
 
 # Block admin and private pages
 Disallow: /admin/

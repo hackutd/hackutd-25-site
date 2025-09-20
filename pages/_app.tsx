@@ -125,11 +125,11 @@ function PortalApp({ Component, pageProps }: AppProps) {
                 />
                 <meta name="author" content="HackUTD" />
                 <meta name="robots" content="index, follow" />
-                <link rel="canonical" href="https://hackutd2025.com" />
+                <link rel="canonical" href="https://legend.hackutd.co" />
 
                 {/* Open Graph / Facebook */}
                 <meta property="og:type" content="website" />
-                <meta property="og:url" content="https://hackutd2025.com/" />
+                <meta property="og:url" content="https://legend.hackutd.co/" />
                 <meta
                   property="og:title"
                   content="HackUTD 2025 - Largest University Hackathon in North America"
@@ -138,12 +138,12 @@ function PortalApp({ Component, pageProps }: AppProps) {
                   property="og:description"
                   content="Join HackUTD 2025, the largest 24-hour university hackathon in North America. Build apps, hardware, and innovative solutions with 1200+ hackers from 30+ universities."
                 />
-                <meta property="og:image" content="https://hackutd2025.com/assets/og-image.jpg" />
+                <meta property="og:image" content="https://legend.hackutd.co/assets/og-image.jpg" />
                 <meta property="og:site_name" content="HackUTD 2025" />
 
                 {/* Twitter */}
                 <meta property="twitter:card" content="summary_large_image" />
-                <meta property="twitter:url" content="https://hackutd2025.com/" />
+                <meta property="twitter:url" content="https://legend.hackutd.co/" />
                 <meta
                   property="twitter:title"
                   content="HackUTD 2025 - Largest University Hackathon in North America"
@@ -154,7 +154,7 @@ function PortalApp({ Component, pageProps }: AppProps) {
                 />
                 <meta
                   property="twitter:image"
-                  content="https://hackutd2025.com/assets/og-image.jpg"
+                  content="https://legend.hackutd.co/assets/og-image.jpg"
                 />
 
                 {/* Additional SEO meta tags */}

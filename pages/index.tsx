@@ -67,7 +67,7 @@ export default function Home({
           name="keywords"
           content="hackathon, HackUTD, UT Dallas, university hackathon, programming competition, tech event, North America, largest hackathon, student hackathon, coding event, Nov 8-9 2025"
         />
-        <link rel="canonical" href="https://hackutd2025.com/" />
+        <link rel="canonical" href="https://legend.hackutd.co/" />
 
         {/* Structured Data */}
         <script
@@ -96,10 +96,10 @@ export default function Home({
               organizer: {
                 '@type': 'Organization',
                 name: 'HackUTD',
-                url: 'https://hackutd2025.com',
+                url: 'https://legend.hackutd.co',
               },
-              url: 'https://hackutd2025.com',
-              image: 'https://hackutd2025.com/assets/og-image.jpg',
+              url: 'https://legend.hackutd.co',
+              image: 'https://legend.hackutd.co/assets/og-image.jpg',
               offers: {
                 '@type': 'Offer',
                 price: '0',
