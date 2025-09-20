@@ -4,6 +4,7 @@ import { useAuthContext } from '@/lib/user/AuthContext';
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { GetServerSideProps } from 'next';
 
 const Page = () => {
   const { user, isSignedIn } = useAuthContext();
@@ -181,3 +182,10 @@ const Page = () => {
 };
 
 export default Page;
+
+// Prevent static generation for admin pages
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import { GetServerSideProps } from 'next';
 
 import { useAuthContext } from '@/lib/user/AuthContext';
 import { RequestHelper } from '@/lib/request-helper';
@@ -60,3 +61,10 @@ export default function AddChallengePage() {
     </div>
   );
 }
+
+// Prevent static generation for admin pages
+export const getServerSideProps: GetServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

@@ -1,6 +1,7 @@
 import { useAuthContext } from '@/lib/user/AuthContext';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { GetServerSideProps } from 'next';
 
 /**
  * A page that signs the user out and redirects to the index (/) page.
@@ -26,3 +27,10 @@ export default function SignOutPage() {
     </div>
   );
 }
+
+// Prevent static generation for auth pages
+export const getServerSideProps: GetServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};
