@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://hackutd2025.com/sitemap.xml
+
+# Block admin and private pages
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /register/
+Disallow: /profile/
+Disallow: /scan/
+Disallow: /parking/
+
+# Allow important public pages
+Allow: /
+Allow: /hackutd2025/
+Allow: /live/
+Allow: /schedule/

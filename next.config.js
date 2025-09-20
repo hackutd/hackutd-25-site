@@ -10,6 +10,17 @@ const withPWA = require('next-pwa')({
 (module.exports = withPWA({
   reactStrictMode: true,
 
+  // Enable compression for better performance
+  compress: true,
+
+  // Enable experimental features for SEO
+  experimental: {
+    // optimizeCss: true, // Disabled due to missing critters dependency
+  },
+
+  // Disable static optimization for admin pages that require auth
+  trailingSlash: false,
+
   async redirects() {
     return [
       {
@@ -17,6 +28,51 @@ const withPWA = require('next-pwa')({
         destination:
           'https://hackutd.notion.site/HackUTD-2025-Lost-in-the-Pages-Travel-Reimbursement-13e0d994cbb981c5a336f1dda3e5d3be',
         permanent: true,
+      },
+    ];
+  },
+
+  // Add headers for better SEO and security
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin',
+          },
+        ],
+      },
+      {
+        source: '/sitemap.xml',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, s-maxage=86400',
+          },
+        ],
+      },
+      {
+        source: '/robots.txt',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, s-maxage=86400',
+          },
+        ],
       },
     ];
   },

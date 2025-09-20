@@ -58,11 +58,62 @@ export default function Home({
   return (
     <>
       <Head>
-        <title>HackUTD 2025</title>
-        <meta name="description" content="A default HackPortal instance" />
+        <title>HackUTD 2025 - Largest University Hackathon in North America | Nov 8-9, 2025</title>
         <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+          name="description"
+          content="Join HackUTD 2025, the largest 24-hour university hackathon in North America. Build innovative apps, hardware, and solutions with 1200+ hackers from 30+ universities. Nov 8-9, 2025 at UT Dallas."
+        />
+        <meta
+          name="keywords"
+          content="hackathon, HackUTD, UT Dallas, university hackathon, programming competition, tech event, North America, largest hackathon, student hackathon, coding event, Nov 8-9 2025"
+        />
+        <link rel="canonical" href="https://hackutd2025.com/" />
+
+        {/* Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Event',
+              name: 'HackUTD 2025',
+              description:
+                'The largest 24-hour university hackathon in North America. Join 1200+ hackers from 30+ universities to build innovative apps, hardware, and solutions.',
+              startDate: '2025-11-08T00:00:00-06:00',
+              endDate: '2025-11-09T23:59:59-06:00',
+              location: {
+                '@type': 'Place',
+                name: 'University of Texas at Dallas',
+                address: {
+                  '@type': 'PostalAddress',
+                  streetAddress: '800 W Campbell Rd',
+                  addressLocality: 'Richardson',
+                  addressRegion: 'TX',
+                  postalCode: '75080',
+                  addressCountry: 'US',
+                },
+              },
+              organizer: {
+                '@type': 'Organization',
+                name: 'HackUTD',
+                url: 'https://hackutd2025.com',
+              },
+              url: 'https://hackutd2025.com',
+              image: 'https://hackutd2025.com/assets/og-image.jpg',
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'USD',
+                availability: 'https://schema.org/InStock',
+              },
+              audience: {
+                '@type': 'Audience',
+                audienceType: 'Students',
+              },
+              eventStatus: 'https://schema.org/EventScheduled',
+              eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+            }),
+          }}
         />
         <style jsx>{`
           @supports not (background-image: url('data:image/webp')) {
