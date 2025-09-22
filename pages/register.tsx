@@ -450,7 +450,7 @@ export default function Register({ allowedRegistrations }: Props) {
       <Head>
         <title>Hacker Application</title>
         <meta name="description" content="Register for HackPortal" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/icons/favicon.png?v=2025" />
       </Head>
       <Formik
         initialValues={{
