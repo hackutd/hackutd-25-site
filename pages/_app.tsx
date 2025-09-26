@@ -114,41 +114,68 @@ function PortalApp({ Component, pageProps }: AppProps) {
                   name="viewport"
                   content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
                 />
-                <title>HackUTD 2025 - Largest University Hackathon in North America</title>
+                <title>
+                  HackUTD 2025: Lost in the Pages - Largest 24-Hour University Hackathon in North
+                  America
+                </title>
                 <meta
                   name="description"
-                  content="Join HackUTD 2025, the largest 24-hour university hackathon in North America. Build apps, hardware, and innovative solutions with 1200+ hackers from 30+ universities. Nov 8-9, 2025 at UT Dallas."
+                  content="Join HackUTD 2025: Lost in the Pages, the largest 24-hour university hackathon in North America. Build innovative apps, hardware, and solutions with 1200+ hackers from 30+ universities. Nov 8-9, 2025 at UT Dallas."
                 />
                 <meta
                   name="keywords"
-                  content="hackathon, HackUTD, UT Dallas, university hackathon, programming competition, tech event, North America, largest hackathon, student hackathon, coding event"
+                  content="HackUTD 2025, Lost in the Pages, hackathon, UT Dallas, university hackathon, programming competition, tech event, North America, largest hackathon, student hackathon, coding event, hackutd lost in the pages, hackutd 2025"
                 />
                 <meta name="author" content="HackUTD" />
                 <meta name="robots" content="index, follow" />
+                <meta name="googlebot" content="index, follow" />
+                <meta name="bingbot" content="index, follow" />
                 <link rel="canonical" href="https://legend.hackutd.co" />
+
+                {/* Additional SEO meta tags */}
+                <meta name="geo.region" content="US-TX" />
+                <meta name="geo.placename" content="Richardson" />
+                <meta name="geo.position" content="32.9858;-96.7501" />
+                <meta name="ICBM" content="32.9858, -96.7501" />
+                <meta name="DC.title" content="HackUTD 2025: Lost in the Pages" />
+                <meta name="DC.creator" content="HackUTD" />
+                <meta name="DC.subject" content="University Hackathon" />
+                <meta
+                  name="DC.description"
+                  content="The largest 24-hour university hackathon in North America"
+                />
+                <meta name="DC.publisher" content="HackUTD" />
+                <meta name="DC.contributor" content="University of Texas at Dallas" />
+                <meta name="DC.date" content="2025-11-08" />
+                <meta name="DC.type" content="Event" />
+                <meta name="DC.format" content="text/html" />
+                <meta name="DC.identifier" content="https://legend.hackutd.co" />
+                <meta name="DC.language" content="en" />
+                <meta name="DC.coverage" content="North America" />
+                <meta name="DC.rights" content="Copyright HackUTD" />
 
                 <meta property="og:type" content="website" />
                 <meta property="og:url" content="https://legend.hackutd.co/" />
                 <meta
                   property="og:title"
-                  content="HackUTD 2025 - Largest University Hackathon in North America"
+                  content="HackUTD 2025: Lost in the Pages - Largest University Hackathon in North America"
                 />
                 <meta
                   property="og:description"
-                  content="Join HackUTD 2025, the largest 24-hour university hackathon in North America. Build apps, hardware, and innovative solutions with 1200+ hackers from 30+ universities."
+                  content="Join HackUTD 2025: Lost in the Pages, the largest 24-hour university hackathon in North America. Build innovative apps, hardware, and solutions with 1200+ hackers from 30+ universities."
                 />
                 <meta property="og:image" content="https://legend.hackutd.co/assets/og-image.jpg" />
-                <meta property="og:site_name" content="HackUTD 2025" />
+                <meta property="og:site_name" content="HackUTD 2025: Lost in the Pages" />
 
                 <meta property="twitter:card" content="summary_large_image" />
                 <meta property="twitter:url" content="https://legend.hackutd.co/" />
                 <meta
                   property="twitter:title"
-                  content="HackUTD 2025 - Largest University Hackathon in North America"
+                  content="HackUTD 2025: Lost in the Pages - Largest University Hackathon in North America"
                 />
                 <meta
                   property="twitter:description"
-                  content="Join HackUTD 2025, the largest 24-hour university hackathon in North America. Build apps, hardware, and innovative solutions with 1200+ hackers from 30+ universities."
+                  content="Join HackUTD 2025: Lost in the Pages, the largest 24-hour university hackathon in North America. Build innovative apps, hardware, and solutions with 1200+ hackers from 30+ universities."
                 />
                 <meta
                   property="twitter:image"

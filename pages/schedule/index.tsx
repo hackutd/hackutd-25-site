@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect, useContext } from 'react';
+import Head from 'next/head';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { SectionReferenceContext } from '@/lib/context/section';
 
@@ -167,87 +168,103 @@ export default function Calendar() {
   const day2Events = getDailyEvents(day2StartDateAndTime, eventEndDateAndTime);
 
   return (
-    <div className="bg-[#F2F3FF]">
-      <div className="text-center text-5xl font-bold text-[#05149C] p-4 font-fredoka">
-        What to Expect?
-      </div>
+    <>
+      <Head>
+        <title>HackUTD 2025: Lost in the Pages - Event Schedule | Nov 8-9, 2025</title>
+        <meta
+          name="description"
+          content="View the complete schedule for HackUTD 2025: Lost in the Pages hackathon. See workshops, meals, social events, and required activities for Nov 8-9, 2025."
+        />
+        <meta
+          name="keywords"
+          content="HackUTD 2025 schedule, Lost in the Pages, hackathon schedule, workshops, events, Nov 8-9 2025, UT Dallas"
+        />
+        <link rel="canonical" href="https://legend.hackutd.co/schedule" />
+      </Head>
+      <div className="bg-[#F2F3FF]">
+        <div className="text-center text-5xl font-bold text-[#05149C] p-4 font-fredoka">
+          What to Expect?
+        </div>
 
-      {/* Filter */}
-      <div className="md:flex justify-center items-center mx-8">
-        <div className="bg-white border-2 border-blue-900 rounded-3xl px-8 my-4 border-opacity-40">
-          <div className="text-center py-1 text-xl font-bold text-[#05149C] font-poppins">
-            Filters
-          </div>
-          <div className="flex flex-wrap justify-center mb-2 font-poppins">
-            <div
-              onClick={() => changeFilter('All')}
-              className={`text-sm cursor-pointer mx-1 px-2 h-8 py-1 border-2 rounded-xl border-gray-500 mb-1
+        {/* Filter */}
+        <div className="md:flex justify-center items-center mx-8">
+          <div className="bg-white border-2 border-blue-900 rounded-3xl px-8 my-4 border-opacity-40">
+            <div className="text-center py-1 text-xl font-bold text-[#05149C] font-poppins">
+              Filters
+            </div>
+            <div className="flex flex-wrap justify-center mb-2 font-poppins">
+              <div
+                onClick={() => changeFilter('All')}
+                className={`text-sm cursor-pointer mx-1 px-2 h-8 py-1 border-2 rounded-xl border-gray-500 mb-1
               ${filter === 'All' ? eventColors['All-Filter'] : eventColors['All']}`}
-            >
-              All
-            </div>
+              >
+                All
+              </div>
 
-            <div
-              onClick={() => changeFilter('Required')}
-              className={`text-sm cursor-pointer mx-1 px-2 h-8 py-1 border-2 rounded-xl
+              <div
+                onClick={() => changeFilter('Required')}
+                className={`text-sm cursor-pointer mx-1 px-2 h-8 py-1 border-2 rounded-xl
               ${filter === 'Required' ? eventColors['Required-Filter'] : eventColors['Required']}`}
-            >
-              Required
-            </div>
+              >
+                Required
+              </div>
 
-            <div
-              onClick={() => changeFilter('Sponsor')}
-              className={`text-sm cursor-pointer mx-1 px-2 h-8 py-1 border-2 rounded-xl
+              <div
+                onClick={() => changeFilter('Sponsor')}
+                className={`text-sm cursor-pointer mx-1 px-2 h-8 py-1 border-2 rounded-xl
               ${filter === 'Sponsor' ? eventColors['Sponsor-Filter'] : eventColors['Sponsor']}`}
-            >
-              Sponsor
-            </div>
+              >
+                Sponsor
+              </div>
 
-            <div
-              onClick={() => changeFilter('Food')}
-              className={`text-sm cursor-pointer	mx-1 px-2 h-8 py-1 border-2 rounded-xl
+              <div
+                onClick={() => changeFilter('Food')}
+                className={`text-sm cursor-pointer	mx-1 px-2 h-8 py-1 border-2 rounded-xl
               ${filter === 'Food' ? eventColors['Food-Filter'] : eventColors['Food']}`}
-            >
-              Food
-            </div>
+              >
+                Food
+              </div>
 
-            <div
-              onClick={() => changeFilter('Workshop')}
-              className={`text-sm cursor-pointer mx-1 px-2 h-8 py-1 border-2 rounded-xl
+              <div
+                onClick={() => changeFilter('Workshop')}
+                className={`text-sm cursor-pointer mx-1 px-2 h-8 py-1 border-2 rounded-xl
               ${filter === 'Workshop' ? eventColors['Workshop-Filter'] : eventColors['Workshop']}`}
-            >
-              Workshop
-            </div>
+              >
+                Workshop
+              </div>
 
-            <div
-              onClick={() => changeFilter('Social')}
-              className={`text-sm cursor-pointer mx-1 px-2 h-8 py-1 border-2 rounded-xl
+              <div
+                onClick={() => changeFilter('Social')}
+                className={`text-sm cursor-pointer mx-1 px-2 h-8 py-1 border-2 rounded-xl
               ${filter === 'Social' ? eventColors['Social-Filter'] : eventColors['Social']}`}
-            >
-              Social
+              >
+                Social
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Calendar */}
+        <div className="md:flex p-1 overflow-y-auto overflow-x-hidden mx-auto lg:w-[80%] w-full h-full">
+          <div className="w-full lg:w-1/2 px-4 md:px-0">
+            <div className="text-3xl font-black py-6 text-[#05149C] font-fredoka">
+              Day 1: Saturday
+            </div>
+            <div className="bg-white mb-8 mx-2 p-2 border-2 rounded-2xl border-[#05149C] border-opacity-20">
+              {day1Events}
+            </div>
+          </div>
+
+          <div className="w-full lg:w-1/2 md:ml-6 px-4 md:px-0">
+            <div className="text-3xl font-black py-6 text-[#05149C] font-fredoka">
+              Day 2: Sunday
+            </div>
+            <div className="bg-white mb-8 mx-2 p-2 border-2 rounded-2xl border-[#05149C] border-opacity-20">
+              {day2Events}
             </div>
           </div>
         </div>
       </div>
-
-      {/* Calendar */}
-      <div className="md:flex p-1 overflow-y-auto overflow-x-hidden mx-auto lg:w-[80%] w-full h-full">
-        <div className="w-full lg:w-1/2 px-4 md:px-0">
-          <div className="text-3xl font-black py-6 text-[#05149C] font-fredoka">
-            Day 1: Saturday
-          </div>
-          <div className="bg-white mb-8 mx-2 p-2 border-2 rounded-2xl border-[#05149C] border-opacity-20">
-            {day1Events}
-          </div>
-        </div>
-
-        <div className="w-full lg:w-1/2 md:ml-6 px-4 md:px-0">
-          <div className="text-3xl font-black py-6 text-[#05149C] font-fredoka">Day 2: Sunday</div>
-          <div className="bg-white mb-8 mx-2 p-2 border-2 rounded-2xl border-[#05149C] border-opacity-20">
-            {day2Events}
-          </div>
-        </div>
-      </div>
-    </div>
+    </>
   );
 }
