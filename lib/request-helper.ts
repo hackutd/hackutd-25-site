@@ -96,6 +96,32 @@ export class RequestHelper {
       data,
     };
   }
+
+  /**
+   * Will make a PATCH request to the provided URL with the provided config and body
+   *
+   * @param url URL to which the request will be made
+   * @param config Config that can be added into the request, usually used to add information to the headers
+   * @param body Request body
+   * @returns Response data
+   */
+  static async patch<ReqBody, ResBody>(
+    url: string,
+    config: RequestInit,
+    body?: ReqBody,
+  ): Promise<ResponseData<ResBody>> {
+    const temp = await fetch(url, {
+      ...config,
+      method: 'PATCH',
+      mode: 'cors',
+      body: JSON.stringify(body),
+    });
+    const data = await temp.json();
+    return {
+      status: temp.status,
+      data,
+    };
+  }
 }
 
 /**
