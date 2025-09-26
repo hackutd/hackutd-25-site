@@ -19,3 +19,7 @@ Allow: /
 Allow: /hackutd2025/
 Allow: /live/
 Allow: /schedule/
+Allow: /docs
+
+# Crawl delay for better server performance
+Crawl-delay: 1
