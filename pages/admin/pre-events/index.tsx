@@ -1,13 +1,8 @@
 import { GetServerSideProps } from 'next';
-import { firestore } from 'firebase-admin';
-import initializeApi from '../../../lib/admin/init';
 import { RequestHelper } from '../../../lib/request-helper';
 import { useState } from 'react';
 import PreEventForm from '../../../components/admin/pre-event/PreEventForm';
 import PreEventList from '../../../components/admin/pre-event/PreEventList';
-
-initializeApi();
-const db = firestore();
 
 interface Props {
   events: PreEvent[];
@@ -116,6 +111,13 @@ export default function PreEventPage(props: Props) {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
+    // Import Firebase Admin only on the server side
+    const { firestore } = await import('firebase-admin');
+    const initializeApi = (await import('../../../lib/admin/init')).default;
+
+    initializeApi();
+    const db = firestore();
+
     const snapshot = await db.collection('/pre-events').get();
     const events: PreEvent[] = [];
 
