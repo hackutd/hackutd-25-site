@@ -5,6 +5,7 @@ import Head from 'next/head';
 import HomeChallengesComponent from '@/components/home/challenge';
 import HomeHero from '@/components/home/HomeHero';
 import HomeSchedule from '@/components/home/HomeSchedule';
+import HomePreEventsSimple from '@/components/home/HomePreEventsSimple';
 import HomeFaq from '@/components/home/faq';
 import HomeSponsors from '@/components/home/sponsors';
 import HomeFooter from '@/components/home/HomeFooter';
@@ -209,11 +210,15 @@ export default function Home({
           backgroundSize: 'cover',
         }}
       >
-        {/* <div className="my-72">
-          <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
+        <div className="my-72">
+          <HomePreEventsSimple />
         </div>
 
-        <div className="my-72">
+        {/* <div className="my-72">
+          <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
+        </div> */}
+
+        {/* <div className="my-72">
           <HomeChallengesComponent challenges={challenges} />
         </div> */}
 
@@ -258,6 +263,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     `${protocol}://${context.req.headers.host}/api/schedule`,
     {},
   );
+  const { data: preEventsData } = await RequestHelper.get<PreEvent[]>(
+    `${protocol}://${context.req.headers.host}/api/pre-events`,
+    {},
+  );
   const { data: dateData } = await RequestHelper.get<ScheduleEvent[]>(
     `${protocol}://${context.req.headers.host}/api/dates`,
     {},
@@ -268,6 +277,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       challenges: challengeData,
       answeredQuestion: answeredQuestion,
       scheduleCard: scheduleData,
+      preEventsCard: preEventsData,
       dateCard: dateData,
     },
   };
