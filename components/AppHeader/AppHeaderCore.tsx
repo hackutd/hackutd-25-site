@@ -54,11 +54,6 @@ export default function AppHeaderCore(props: Props) {
     }
   }, [user, isAdmin]);
 
-  // makes it so the navbar doesn't render if user is signed out
-  if (!user) {
-    return null;
-  }
-
   const mainDockItems = (): JSX.Element[] => {
     const items: JSX.Element[] = [];
     const itemIdRoot: string = (props.dockItemIdRoot ?? 'AppHeader2-Core-mainDockItems') + '_';
@@ -78,40 +73,21 @@ export default function AppHeaderCore(props: Props) {
           }
         },
       },
-      /*
-      {
-        text: 'Livestream',
-        onClick: () => {
-          if (router.pathname === '/live') {
-            window.scrollTo({
-              top: 0,
-              behavior: 'smooth',
-            });
-          } else {
-            window.location.href = '/live';
-          }
-        },
-      },
-      {
-        text: 'Hackerpacks',
-        onClick: () => {
-          if (router.pathname === '/hackerpacks') {
-            window.scrollTo({
-              top: 0,
-              behavior: 'smooth',
-            });
-          } else {
-            window.location.href = '/hackerpacks';
-          }
-        },
-      },
       {
         text: 'Schedule',
         onClick: () => {
+          console.log('Desktop Schedule button clicked, pathname:', router.pathname);
           if (router.pathname === '/') {
-            document.getElementById('schedule-section')?.scrollIntoView({ behavior: 'smooth' });
+            const element = document.getElementById('pre-events-section');
+            console.log('Found pre-events-section element:', element);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            } else {
+              console.log('pre-events-section not found');
+            }
           } else {
-            router.push('/#schedule-section');
+            console.log('Navigating to /#pre-events-section');
+            router.push('/#pre-events-section');
           }
         },
       },
@@ -125,7 +101,6 @@ export default function AppHeaderCore(props: Props) {
           }
         },
       },
-      */
     ];
 
     navItems.map((item, idx) => {

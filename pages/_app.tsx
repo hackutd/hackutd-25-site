@@ -27,13 +27,7 @@ initFirebase();
  * Component to conditionally render bottom spacer based on auth status
  */
 function BottomSpacer() {
-  const { user } = useAuthContext();
-
-  // Only show spacer when user is logged in (since navbar only shows when logged in)
-  if (!user) {
-    return null;
-  }
-
+  // Always show spacer since navbar is now always visible
   return <div className="md:hidden h-[80px] shrink-0" />;
 }
 
