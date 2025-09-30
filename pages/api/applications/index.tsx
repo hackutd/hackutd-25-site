@@ -1,13 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { firestore, auth } from 'firebase-admin';
+import admin, { firestore, auth } from 'firebase-admin';
 import initializeApi from '../../../lib/admin/init';
 import {
   extractUserDataFromToken,
   userIsAuthorized,
 } from '../../../lib/authorization/check-authorization';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/storage';
-import 'firebase/compat/auth';
 
 initializeApi();
 
@@ -23,21 +20,30 @@ async function checkRegistrationAllowed() {
 }
 
 async function deleteResumeFromStorage(fileUrl: string) {
-  if (firebase.apps.length <= 0)
-    firebase.initializeApp({
-      apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-      authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-      storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    });
-  await firebase
-    .auth()
-    .signInWithEmailAndPassword(
-      process.env.NEXT_PUBLIC_RESUME_UPLOAD_SERVICE_ACCOUNT,
-      process.env.NEXT_PUBLIC_RESUME_UPLOAD_PASSWORD,
-    );
-  const resumeRef = firebase.storage().refFromURL(fileUrl);
-  const files = await resumeRef.list();
-  await Promise.all(files.items.map((file) => file.delete()));
+  try {
+    // Extract file path from URL
+    const url = new URL(fileUrl);
+    const pathMatch = url.pathname.match(/\/o\/(.+)\?/);
+    if (!pathMatch) {
+      console.error('Could not extract file path from URL:', fileUrl);
+      return;
+    }
+
+    const filePath = decodeURIComponent(pathMatch[1]);
+    const bucket = admin.storage().bucket();
+    const file = bucket.file(filePath);
+
+    // Check if file exists and delete it
+    const [exists] = await file.exists();
+    if (exists) {
+      await file.delete();
+      console.log('Successfully deleted file:', filePath);
+    } else {
+      console.log('File does not exist:', filePath);
+    }
+  } catch (error) {
+    console.error('Error deleting resume from storage:', error);
+  }
 }
 
 async function updateAllUsersDoc(userId: string, profile: any) {
