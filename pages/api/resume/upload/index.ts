@@ -1,9 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/storage';
-import 'firebase/compat/auth';
+import admin from 'firebase-admin';
 import nc from 'next-connect';
 import multer from 'multer';
+import initializeApi from '../../../../lib/admin/init';
 
 interface NCNextApiRequest extends NextApiRequest {
   file: Express.Multer.File;
@@ -25,45 +24,66 @@ const handler = nc<NCNextApiRequest, NextApiResponse>({
 
 handler.use(multer().single('resume'));
 handler.post(async (req, res) => {
-  if (!req.file) res.end();
-  if (firebase.apps.length <= 0)
-    firebase.initializeApp({
-      apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-      authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-      storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  try {
+    if (!req.file) {
+      return res.status(400).json({ msg: 'No file uploaded' });
+    }
+
+    // Initialize Firebase Admin
+    initializeApi();
+    const bucketName =
+      process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || 'hackutd-2025-prod.firebasestorage.app';
+
+    const bucket = admin.storage().bucket(bucketName);
+
+    // NOTE: This case will happen if user wants to save resume as part of partially completed profile
+    if (req.body.isPartialProfile === 'true') {
+      const fileName = `resumes/pending/${req.body.fileName}`;
+      const file = bucket.file(fileName);
+
+      await file.save(req.file.buffer, {
+        metadata: {
+          contentType: req.file.mimetype,
+        },
+      });
+
+      const [fileUrl] = await file.getSignedUrl({
+        action: 'read',
+        expires: '03-09-2491', // Far future date
+      });
+
+      return res.status(200).json({
+        url: fileUrl,
+      });
+    }
+
+    // NOTE: This section will be reached only if user manages to retain resume file in react object state
+    const fileName = `resumes/${req.body.studyLevel}/${req.body.major}/${req.body.fileName}`;
+    const file = bucket.file(fileName);
+
+    await file.save(req.file.buffer, {
+      metadata: {
+        contentType: req.file.mimetype,
+      },
     });
 
-  await firebase
-    .auth()
-    .signInWithEmailAndPassword(
-      process.env.NEXT_PUBLIC_RESUME_UPLOAD_SERVICE_ACCOUNT,
-      process.env.NEXT_PUBLIC_RESUME_UPLOAD_PASSWORD,
-    );
+    const [fileUrl] = await file.getSignedUrl({
+      action: 'read',
+      expires: '03-09-2491', // Far future date
+    });
 
-  const storageRef = firebase.storage().ref();
-  // NOTE: This case will happen if user wants to save resume as part of partially completed profile
-  if (req.body.isPartialProfile === 'true') {
-    const partialResumeRef = storageRef.child('resumes/pending');
-    const fileRef = partialResumeRef.child(req.body.fileName);
-    await fileRef.put(req.file.buffer);
-    const fileUrl = await fileRef.getDownloadURL();
-    return res.status(200).json({
+    res.status(200).json({
       url: fileUrl,
     });
+
+    // NOTE: In case user saved resume as part of partial profile but failed to retain file in react state, /api/resume/move will be used instead
+  } catch (error) {
+    console.error('Resume upload error:', error);
+    res.status(500).json({
+      msg: 'Failed to upload resume',
+      error: error.message,
+    });
   }
-
-  // NOTE: This section will be reached only if user manages to retain resume file in react object state
-  const studyLevelRef = storageRef.child('resumes/' + req.body.studyLevel);
-  const majorRef = studyLevelRef.child(req.body.major);
-  const fileRef = majorRef.child(req.body.fileName);
-
-  await fileRef.put(req.file.buffer);
-  const fileUrl = await fileRef.getDownloadURL();
-  res.status(200).json({
-    url: fileUrl,
-  });
-
-  // NOTE: In case user saved resume as part of partial profile but failed to retain file in react state, /api/resume/move will be used instead
 });
 
 export const config = {
