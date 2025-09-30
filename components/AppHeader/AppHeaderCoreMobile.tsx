@@ -53,6 +53,61 @@ export default function AppHeaderCoreMobile(props: Props) {
     const itemIdRoot: string = (props.dockItemIdRoot ?? 'AppHeader2-Core-mainDockItems') + '_';
     let itemIdx = 0;
 
+    // Basic navigation items for all users
+    const navItems = [
+      {
+        text: 'Home',
+        onClick: () => {
+          if (router.pathname === '/') {
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth',
+            });
+          } else {
+            window.location.href = '/';
+          }
+        },
+      },
+      {
+        text: 'Schedule',
+        onClick: () => {
+          if (router.pathname === '/') {
+            document.getElementById('pre-events-section')?.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            router.push('/#pre-events-section');
+          }
+        },
+      },
+      {
+        text: 'FAQ',
+        onClick: () => {
+          if (router.pathname === '/') {
+            document.getElementById('faq-section')?.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            router.push('/#faq-section');
+          }
+        },
+      },
+    ];
+
+    navItems.forEach((item, idx) => {
+      items.push(
+        <button
+          key={itemIdRoot + idx}
+          id={itemIdRoot + idx}
+          onClick={item.onClick}
+          className={clsx(
+            'py-2 px-4 text-[#40B7BA] cursor-pointer flex justify-center font-bold',
+            'hover:bg-[#DFFEFF] transition-[background] duration-300 ease-in-out',
+            'rounded-[20px]',
+          )}
+        >
+          {item.text}
+        </button>,
+      );
+      itemIdx++;
+    });
+
     if (isAdmin) {
       items.push(
         <Menu id={itemIdRoot + itemIdx} as="div">

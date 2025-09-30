@@ -1,41 +1,14 @@
 import * as React from 'react';
-import { useState, useEffect, useContext } from 'react';
+import { useState } from 'react';
 import Head from 'next/head';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { SectionReferenceContext } from '@/lib/context/section';
+import { PRE_EVENTS_DATA } from '@/lib/pre-events-data';
 
-/* Calendar */
-export default function Calendar() {
-  const [dateCard, setDateCard] = useState([]);
-  const [scheduleCard, setScheduleCard] = useState([]);
+export default function PreEventsPage() {
   const [filter, setFilter] = useState('All');
+  const scheduleCard = PRE_EVENTS_DATA;
 
-  /* Fetch Data */
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const scheduleData = await fetch(
-          `${window.location.protocol}//${window.location.host}/api/schedule`,
-        ).then((res) => res.json());
-        setScheduleCard(scheduleData);
-
-        const dateData = await fetch(
-          `${window.location.protocol}//${window.location.host}/api/dates`,
-        ).then((res) => res.json());
-        setDateCard(dateData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (dateCard.length === 0 || scheduleCard.length === 0) {
-    return <div>Fetching Data</div>;
-  }
-
-  /* Event Colors */
   const eventColors = {
     All: 'border-gray-500 text-gray-500',
     Required: 'border-[#FC012E] text-[#FC012E]',
@@ -51,42 +24,6 @@ export default function Calendar() {
     'Workshop-Filter': 'border-[#5200FF] bg-[#5200FF] text-white',
   };
 
-  /* Dates Values */
-  const dateValues = {
-    year: dateCard[0].year,
-    day1: dateCard[0].day1,
-    day1Month: dateCard[0].day1Month,
-    day2: dateCard[0].day2,
-    day2Month: dateCard[0].day2Month,
-    endTime: dateCard[0].endTime,
-    startTime: dateCard[0].startTime,
-  };
-
-  /* Set event dates and times */
-  const day1StartDateAndTime = new Date(
-    dateValues['year'],
-    dateValues['day1Month'],
-    dateValues['day1'],
-    dateValues['startTime'],
-    0,
-  );
-  const day2StartDateAndTime = new Date(
-    dateValues['year'],
-    dateValues['day2Month'],
-    dateValues['day2'],
-    dateValues['startTime'],
-    0,
-  );
-  const eventEndDateAndTime = new Date(
-    dateValues['year'],
-    dateValues['day1Month'],
-    dateValues['day2'] + 1,
-    dateValues['endTime'],
-    0,
-  );
-
-  /* Filter Functionality */
-
   const changeFilter = (newFilter: string) => {
     if (newFilter === filter) {
       setFilter('All');
@@ -95,7 +32,6 @@ export default function Calendar() {
     }
   };
 
-  /* Event Component */
   const Event = ({ data, index, arrayLength }) => {
     const startDate = new Date(data.startDate);
     const formattedTime = startDate
@@ -130,18 +66,33 @@ export default function Calendar() {
               <div className="text-md font-bold font-dmSans">{formattedTime}</div>
               <div className="text-md font-bold font-dmSans">{data.title}</div>
             </div>
-            <div className="flex justify-between">
-              <div
-                className={`bg-white text-xs rounded-xl py-1 px-2 border-2 font-dmSans ${
-                  eventColors[data.type]
-                }`}
-              >
-                {data.type}
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-2">
+                <div
+                  className={`bg-white text-xs rounded-xl py-1 px-2 border-2 font-dmSans ${
+                    eventColors[data.type]
+                  }`}
+                >
+                  {data.type}
+                </div>
+                <div className="text-gray-600 flex items-center font-dmSans">
+                  <LocationOnIcon style={{ fontSize: 'large', marginRight: '2px' }} />
+                  {data.location}
+                </div>
               </div>
-              <div className="text-gray-600 flex items-center font-dmSans">
-                <LocationOnIcon style={{ fontSize: 'large', marginRight: '2px' }} />
-                {data.location}
-              </div>
+              {data.rsvpLink && (
+                <a
+                  href={data.rsvpLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-gradient-to-r from-[#FFD29B] to-[#FF5757] text-white px-3 py-1 rounded-lg text-xs font-bold font-dmSans hover:opacity-80 transition-opacity"
+                  style={{
+                    textShadow: '1px 1px 0 rgba(0,0,0,0.3)',
+                  }}
+                >
+                  RSVP
+                </a>
+              )}
             </div>
           </div>
         </>
@@ -149,44 +100,33 @@ export default function Calendar() {
     );
   };
 
-  /* Filter Daily Events */
-  const getDailyEvents = (startTime, endTime) => {
-    return scheduleCard
-      .sort((a, b) => {
-        return +new Date(a.startDate) - +new Date(b.startDate);
-      })
-      .filter((event) => {
-        const eventDate = new Date(event.startDate);
-        return eventDate >= startTime && eventDate <= endTime;
-      })
-      .map((event, index, array) => (
-        <Event data={event} key={event.title + index} index={index} arrayLength={array.length} />
-      ));
-  };
-
-  const day1Events = getDailyEvents(day1StartDateAndTime, day2StartDateAndTime);
-  const day2Events = getDailyEvents(day2StartDateAndTime, eventEndDateAndTime);
+  const sortedEvents = scheduleCard
+    .sort((a, b) => {
+      return +new Date(a.startDate) - +new Date(b.startDate);
+    })
+    .map((event, index, array) => (
+      <Event data={event} key={event.title + index} index={index} arrayLength={array.length} />
+    ));
 
   return (
     <>
       <Head>
-        <title>HackUTD 2025: Lost in the Pages - Event Schedule | Nov 8-9, 2025</title>
+        <title>HackUTD 2025: Pre-Events Schedule | Leading up to Nov 8-9, 2025</title>
         <meta
           name="description"
-          content="View the complete schedule for HackUTD 2025: Lost in the Pages hackathon. See workshops, meals, social events, and required activities for Nov 8-9, 2025."
+          content="Join HackUTD 2025 pre-events! Workshops, info sessions, networking events, and preparation activities leading up to our main hackathon on Nov 8-9, 2025."
         />
         <meta
           name="keywords"
-          content="HackUTD 2025 schedule, Lost in the Pages, hackathon schedule, workshops, events, Nov 8-9 2025, UT Dallas"
+          content="HackUTD 2025 pre-events, workshops, info sessions, networking, preparation, UT Dallas, hackathon"
         />
-        <link rel="canonical" href="https://legend.hackutd.co/schedule" />
+        <link rel="canonical" href="https://legend.hackutd.co/pre-events" />
       </Head>
       <div className="bg-[#F2F3FF]">
         <div className="text-center text-5xl font-bold text-[#05149C] p-4 font-fredoka">
           What to Expect?
         </div>
 
-        {/* Filter */}
         <div className="md:flex justify-center items-center mx-8">
           <div className="bg-white border-2 border-blue-900 rounded-3xl px-8 my-4 border-opacity-40">
             <div className="text-center py-1 text-xl font-bold text-[#05149C] font-poppins">
@@ -244,23 +184,13 @@ export default function Calendar() {
           </div>
         </div>
 
-        {/* Calendar */}
         <div className="md:flex p-1 overflow-y-auto overflow-x-hidden mx-auto lg:w-[80%] w-full h-full">
-          <div className="w-full lg:w-1/2 px-4 md:px-0">
+          <div className="w-full px-4 md:px-0">
             <div className="text-3xl font-black py-6 text-[#05149C] font-fredoka">
-              Day 1: Saturday
+              All Pre-Events
             </div>
             <div className="bg-white mb-8 mx-2 p-2 border-2 rounded-2xl border-[#05149C] border-opacity-20">
-              {day1Events}
-            </div>
-          </div>
-
-          <div className="w-full lg:w-1/2 md:ml-6 px-4 md:px-0">
-            <div className="text-3xl font-black py-6 text-[#05149C] font-fredoka">
-              Day 2: Sunday
-            </div>
-            <div className="bg-white mb-8 mx-2 p-2 border-2 rounded-2xl border-[#05149C] border-opacity-20">
-              {day2Events}
+              {sortedEvents}
             </div>
           </div>
         </div>

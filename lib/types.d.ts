@@ -272,6 +272,25 @@ type ScheduleEvent = {
   description: string;
 };
 
+type PreEvent = {
+  title: string;
+  speakers?: string[];
+  type?: string;
+  track: string;
+  startDate: Date;
+  startTimestamp?: any;
+  endDate: Date;
+  endTimestamp?: any;
+  Event: number;
+  location: string;
+  page: string;
+  description: string;
+  isVirtual?: boolean;
+  registrationRequired?: boolean;
+  maxCapacity?: number;
+  currentRegistrations?: number;
+};
+
 type Dates = {
   endTime: number;
   startTime: number;

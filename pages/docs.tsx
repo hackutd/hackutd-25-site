@@ -21,7 +21,16 @@ export default function Docs() {
   return (
     <>
       <Head>
-        <title>API Docs</title>
+        <title>HackUTD 2025: Lost in the Pages - API Documentation</title>
+        <meta
+          name="description"
+          content="API documentation for HackUTD 2025: Lost in the Pages hackathon. Access endpoints, schemas, and integration guides for developers."
+        />
+        <meta
+          name="keywords"
+          content="HackUTD 2025, API docs, hackathon API, Lost in the Pages, developer documentation, REST API"
+        />
+        <link rel="canonical" href="https://legend.hackutd.co/docs" />
         <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist/swagger-ui.css" />
       </Head>
       <Script

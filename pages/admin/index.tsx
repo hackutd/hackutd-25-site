@@ -121,6 +121,7 @@ export default function Admin({ questions }: { questions: QADocument[] }) {
           <h1 className="font-bold text-xl text-[#FFFFFF]">Event Details: </h1>
           <div className="py-2">
             <EventLink title="View Events" href="/admin/events" />
+            <EventLink title="View Pre-Events" href="/admin/pre-events" />
             <EventLink title="View Challenges" href="/admin/challenges" />
             <EventLink title="View Sponsors" href="/admin/sponsors" />
             <EventLink title="View Keynote" href="/admin/keynote" />

@@ -5,6 +5,7 @@ import Head from 'next/head';
 import HomeChallengesComponent from '@/components/home/challenge';
 import HomeHero from '@/components/home/HomeHero';
 import HomeSchedule from '@/components/home/HomeSchedule';
+import HomePreEventsSimple from '@/components/home/HomePreEventsSimple';
 import HomeFaq from '@/components/home/faq';
 import HomeSponsors from '@/components/home/sponsors';
 import HomeFooter from '@/components/home/HomeFooter';
@@ -58,14 +59,17 @@ export default function Home({
   return (
     <>
       <Head>
-        <title>HackUTD 2025 - Largest University Hackathon in North America | Nov 8-9, 2025</title>
+        <title>
+          HackUTD 2025: Lost in the Pages - Largest University Hackathon in North America | Nov 8-9,
+          2025
+        </title>
         <meta
           name="description"
-          content="Join HackUTD 2025, the largest 24-hour university hackathon in North America. Build innovative apps, hardware, and solutions with 1200+ hackers from 30+ universities. Nov 8-9, 2025 at UT Dallas."
+          content="Join HackUTD 2025: Lost in the Pages, the largest 24-hour university hackathon in North America. Build innovative apps, hardware, and solutions with 1200+ hackers from 30+ universities. Nov 8-9, 2025 at UT Dallas."
         />
         <meta
           name="keywords"
-          content="hackathon, HackUTD, UT Dallas, university hackathon, programming competition, tech event, North America, largest hackathon, student hackathon, coding event, Nov 8-9 2025"
+          content="HackUTD 2025, Lost in the Pages, hackathon, UT Dallas, university hackathon, programming competition, tech event, North America, largest hackathon, student hackathon, coding event, Nov 8-9 2025, hackutd lost in the pages, hackutd 2025"
         />
         <link rel="canonical" href="https://legend.hackutd.co/" />
 
@@ -78,9 +82,10 @@ export default function Home({
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'Event',
-              name: 'HackUTD 2025',
+              name: 'HackUTD 2025: Lost in the Pages',
+              alternateName: 'HackUTD Lost in the Pages',
               description:
-                'The largest 24-hour university hackathon in North America. Join 1200+ hackers from 30+ universities to build innovative apps, hardware, and solutions.',
+                'The largest 24-hour university hackathon in North America. Join 1200+ hackers from 30+ universities to build innovative apps, hardware, and solutions. Lost in the Pages theme.',
               startDate: '2025-11-08T00:00:00-06:00',
               endDate: '2025-11-09T23:59:59-06:00',
               location: {
@@ -94,11 +99,22 @@ export default function Home({
                   postalCode: '75080',
                   addressCountry: 'US',
                 },
+                geo: {
+                  '@type': 'GeoCoordinates',
+                  latitude: 32.9858,
+                  longitude: -96.7501,
+                },
               },
               organizer: {
                 '@type': 'Organization',
                 name: 'HackUTD',
                 url: 'https://legend.hackutd.co',
+                logo: 'https://legend.hackutd.co/assets/og-image.jpg',
+                sameAs: [
+                  'https://twitter.com/hackutd',
+                  'https://instagram.com/hackutd',
+                  'https://linkedin.com/company/hackutd',
+                ],
               },
               url: 'https://legend.hackutd.co',
               image: 'https://legend.hackutd.co/assets/og-image.jpg',
@@ -107,13 +123,59 @@ export default function Home({
                 price: '0',
                 priceCurrency: 'USD',
                 availability: 'https://schema.org/InStock',
+                validFrom: '2025-01-01',
+                validThrough: '2025-11-08',
               },
               audience: {
                 '@type': 'Audience',
                 audienceType: 'Students',
+                geographicArea: {
+                  '@type': 'Country',
+                  name: 'United States',
+                },
               },
               eventStatus: 'https://schema.org/EventScheduled',
               eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+              maximumAttendeeCapacity: 1200,
+              remainingAttendeeCapacity: 1200,
+              keywords:
+                'hackathon, programming, technology, innovation, students, university, coding, software development',
+              about: {
+                '@type': 'Thing',
+                name: 'Software Development',
+                description: 'Building innovative software solutions and applications',
+              },
+            }),
+          }}
+        />
+
+        {/* Additional Organization Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'HackUTD',
+              url: 'https://legend.hackutd.co',
+              logo: 'https://legend.hackutd.co/assets/og-image.jpg',
+              description: 'The largest university hackathon in North America, hosted at UT Dallas',
+              foundingDate: '2015',
+              location: {
+                '@type': 'Place',
+                name: 'University of Texas at Dallas',
+                address: {
+                  '@type': 'PostalAddress',
+                  addressLocality: 'Richardson',
+                  addressRegion: 'TX',
+                  addressCountry: 'US',
+                },
+              },
+              sameAs: [
+                'https://twitter.com/hackutd',
+                'https://instagram.com/hackutd',
+                'https://linkedin.com/company/hackutd',
+              ],
             }),
           }}
         />
@@ -148,11 +210,15 @@ export default function Home({
           backgroundSize: 'cover',
         }}
       >
-        {/* <div className="my-72">
-          <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
+        <div className="my-72">
+          <HomePreEventsSimple />
         </div>
 
-        <div className="my-72">
+        {/* <div className="my-72">
+          <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
+        </div> */}
+
+        {/* <div className="my-72">
           <HomeChallengesComponent challenges={challenges} />
         </div> */}
 
@@ -197,6 +263,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     `${protocol}://${context.req.headers.host}/api/schedule`,
     {},
   );
+  const { data: preEventsData } = await RequestHelper.get<PreEvent[]>(
+    `${protocol}://${context.req.headers.host}/api/pre-events`,
+    {},
+  );
   const { data: dateData } = await RequestHelper.get<ScheduleEvent[]>(
     `${protocol}://${context.req.headers.host}/api/dates`,
     {},
@@ -207,6 +277,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       challenges: challengeData,
       answeredQuestion: answeredQuestion,
       scheduleCard: scheduleData,
+      preEventsCard: preEventsData,
       dateCard: dateData,
     },
   };

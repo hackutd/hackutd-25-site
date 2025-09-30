@@ -14,6 +14,7 @@ import { useAuthContext } from '@/lib/user/AuthContext';
 import { getFileExtension } from '@/lib/util';
 
 import DeleteProfileDialog from '@/components/profile/DeleteProfileDialog';
+import ApplicationEditForm from '@/components/profile/ApplicationEditForm';
 import QRCode from '@/components/dashboard/QRCode';
 import Loading from '@/components/icon/Loading';
 
@@ -36,6 +37,7 @@ export default function ProfilePage() {
   } = useAuthContext();
   const [uploading, setUploading] = useState<boolean>(false);
   const [showAppDeleteModal, setShowAppDeleteModal] = useState<boolean>(false);
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const resumeRef = useRef(null);
 
   const isValidUrl = (s: string) => {
@@ -189,6 +191,29 @@ export default function ProfilePage() {
     }
   };
 
+  const handleEditApplication = () => {
+    setShowEditModal(true);
+  };
+
+  const handleEditSave = async (updatedData?: any) => {
+    console.log('handleEditSave called with:', updatedData);
+    console.log('Current profile:', profile);
+
+    // Update the profile data with the updated information
+    if (updatedData && profile) {
+      const updatedProfile = {
+        ...profile,
+        ...updatedData,
+      };
+      console.log('Updated profile:', updatedProfile);
+      updateProfile(updatedProfile);
+    } else {
+      console.log('No updated data provided, reloading page');
+      // Fallback to reload if no updated data is provided
+      window.location.reload();
+    }
+  };
+
   if (!isSignedIn) {
     router.push('/auth');
     return <div></div>;
@@ -206,6 +231,21 @@ export default function ProfilePage() {
           closeModalHandler={() => setShowAppDeleteModal(false)}
           showDialog={showAppDeleteModal}
           confirmDeletionHandler={deleteApplicationHandler}
+        />
+
+        <ApplicationEditForm
+          open={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          onSave={handleEditSave}
+          initialData={{
+            teammate1: profile?.teammate1 || '',
+            teammate2: profile?.teammate2 || '',
+            teammate3: profile?.teammate3 || '',
+            whyAttend: profile?.whyAttend || '',
+            hackathonNumber: profile?.hackathonNumber || '',
+            hackathonFirstTimer: profile?.hackathonFirstTimer || '',
+            lookingForward: profile?.lookingForward || '',
+          }}
         />
 
         <div className="bg-white min-w-3/4 py-12 px-16 rounded-xl flex flex-col md:flex-row 2xl:gap-x-14 gap-x-12 2xl:justify-center">
@@ -248,14 +288,6 @@ export default function ProfilePage() {
                         : new Date(profile?.updatedAt).toLocaleDateString()}
                     </p>
                   )}
-                  {/* <Link
-                    href="/profile/application/edit"
-                    className="text-[#7A9E7E] font-bold underline text-nowrap"
-                  >
-                    <p className="">
-                      {hasPartialProfile ? 'Continue Editing Application' : 'Edit Application'}
-                    </p>
-                  </Link> */}
                 </div>
               </div>
               <p className="text-lg text-nowrap mr-4 text-[#2D5016] font-bold underline">
@@ -324,6 +356,12 @@ export default function ProfilePage() {
                         View Resume
                       </Link>
                     )}
+                    <button
+                      className="font-fredoka transition py-3 font-semibold px-6 text-sm text-center whitespace-nowrap text-white w-min bg-[#7A9E7E] rounded-full cursor-pointer hover:brightness-110"
+                      onClick={handleEditApplication}
+                    >
+                      Edit Application
+                    </button>
                     <button
                       className="font-fredoka transition py-3 font-semibold px-6 text-sm text-center whitespace-nowrap text-white w-min bg-red-400 rounded-full cursor-pointer hover:brightness-110"
                       onClick={() => setShowAppDeleteModal(true)}
