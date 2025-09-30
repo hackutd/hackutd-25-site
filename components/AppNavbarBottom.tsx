@@ -27,11 +27,6 @@ export default function AppNavbarBottom(props: Props) {
   const { callbackRegistry } = useContext(NavbarCallbackRegistryContext);
   const router = useRouter();
 
-  // Only show navbar when user is logged in
-  if (!user) {
-    return null;
-  }
-
   const floatingDockItems = (): JSX.Element[] => {
     const items: JSX.Element[] = [];
     const itemIdRoot: string = (props.dockItemIdRoot ?? 'AppNavbarBottom-floating-dock-item') + '_';
@@ -82,7 +77,6 @@ export default function AppNavbarBottom(props: Props) {
     */
 
     // CalendarIcon - DIRECT ELEMENT APPROACH
-    /*
     items.push(
       <button
         id={itemIdRoot + itemIdx}
@@ -92,82 +86,10 @@ export default function AppNavbarBottom(props: Props) {
             await callbackRegistry[router.pathname]();
           }
 
-          // Function to find and scroll to the schedule section using multiple methods
-          const findAndScrollToSchedule = () => {
-            // Try direct element selection by common IDs and classes
-            const scheduleElement =
-              document.querySelector('#schedule-section') ||
-              document.querySelector('#schedule') ||
-              document.querySelector('.schedule-section') ||
-              document.querySelector('[id*="schedule"]');
-
-            if (scheduleElement) {
-              scheduleElement.scrollIntoView({ behavior: 'smooth' });
-              return true;
-            }
-
-            // Try using the contextual ref if available
-            if (scheduleRef && scheduleRef.current) {
-              scheduleRef.current.scrollIntoView({ behavior: 'smooth' });
-              return true;
-            }
-
-            // Look for headings that might indicate the schedule section
-            const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-            // Convert NodeList to Array to avoid TypeScript issues
-            Array.from(headings).forEach((heading) => {
-              if (heading.textContent && heading.textContent.toLowerCase().includes('schedule')) {
-                heading.scrollIntoView({ behavior: 'smooth' });
-                return true;
-              }
-            });
-
-            // Last resort - look for DOM sections with IDs or classnames containing "schedule"
-            const allElements = document.querySelectorAll('*');
-            // Convert NodeList to Array to avoid TypeScript issues
-            let foundElement = false;
-            Array.from(allElements).some((element) => {
-              const id = element.id || '';
-              const className = element.className || '';
-              if (
-                id.toLowerCase().includes('schedule') ||
-                (typeof className === 'string' && className.toLowerCase().includes('schedule'))
-              ) {
-                element.scrollIntoView({ behavior: 'smooth' });
-                foundElement = true;
-                return true; // Break the loop
-              }
-              return false;
-            });
-
-            if (foundElement) {
-              return true;
-            }
-
-            return false;
-          };
-
           if (router.pathname === '/') {
-            // We're on the home page - try direct scrolling with a delay
-            setTimeout(() => {
-              const success = findAndScrollToSchedule();
-              if (!success) {
-                console.log('Could not find schedule section, using hash navigation');
-                window.location.hash = 'schedule-section';
-              }
-            }, 200);
+            document.getElementById('pre-events-section')?.scrollIntoView({ behavior: 'smooth' });
           } else {
-            // Navigate to home page first, then try to scroll
-            router.push('/').then(() => {
-              // We need a longer delay after navigation
-              setTimeout(() => {
-                const success = findAndScrollToSchedule();
-                if (!success) {
-                  console.log('Could not find schedule section after navigation, using hash');
-                  window.location.hash = 'schedule-section';
-                }
-              }, 500);
-            });
+            router.push('/#pre-events-section');
           }
         }}
       >
@@ -175,10 +97,8 @@ export default function AppNavbarBottom(props: Props) {
       </button>,
     );
     itemIdx++;
-    */
 
     // QuestionIcon
-    /*
     items.push(
       <button
         id={itemIdRoot + itemIdx}
@@ -271,7 +191,6 @@ export default function AppNavbarBottom(props: Props) {
       </button>,
     );
     itemIdx++;
-    */
 
     // BookmarkIcon
     /*
