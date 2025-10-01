@@ -4,7 +4,7 @@ const withFonts = require('next-fonts');
 const withPWA = require('next-pwa')({
   dest: 'public',
   runtimeCaching,
-  disable: !process.env.ENABLE_PWA && process.env.NODE_ENV === 'development',
+  disable: true, // Temporarily disable PWA to test meta tags
 });
 
 (module.exports = withPWA({
