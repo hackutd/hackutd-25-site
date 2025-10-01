@@ -30,16 +30,16 @@ html {
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
-  background-color: transparent;
+  background-color: black !important;
   overscroll-behavior: auto;
   overflow-x: hidden !important;
   max-width: 100vw !important;
   width: 100vw !important;
 }
 
-/* Custom overscroll color to match footer theme */
+/* Custom overscroll color - black rubber band effect */
 html {
-  background: transparent;
+  background: black;
 }
 
 /* Mobile optimizations */
