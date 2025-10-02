@@ -5,17 +5,12 @@ function generateSiteMap() {
   const currentDate = new Date().toISOString();
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
      <url>
        <loc>${baseUrl}</loc>
        <lastmod>${currentDate}</lastmod>
        <changefreq>weekly</changefreq>
        <priority>1.0</priority>
-       <image:image>
-         <image:loc>${baseUrl}/assets/og-image.jpg</image:loc>
-         <image:title>HackUTD 2025: Lost in the Pages</image:title>
-         <image:caption>Join the largest university hackathon in North America</image:caption>
-       </image:image>
      </url>
      <url>
        <loc>${baseUrl}/hackutd2025</loc>
