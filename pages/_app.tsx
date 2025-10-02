@@ -102,42 +102,7 @@ function PortalApp({ Component, pageProps }: AppProps) {
               }}
             >
               <Head>
-                <meta charSet="utf-8" />
-                <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-                <meta
-                  name="viewport"
-                  content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
-                />
-
-                <meta property="og:type" content="website" />
-                <meta property="og:url" content="https://legend.hackutd.co/" />
-                <meta
-                  property="og:title"
-                  content="HackUTD 2025: Lost in the Pages - Largest University Hackathon in North America"
-                />
-                <meta
-                  property="og:description"
-                  content="Join HackUTD 2025: Lost in the Pages, the largest 24-hour university hackathon in North America. Build innovative apps, hardware, and solutions with 1200+ hackers from 30+ universities."
-                />
-                <meta property="og:image" content="https://legend.hackutd.co/assets/og-image.jpg" />
-                <meta property="og:site_name" content="HackUTD 2025: Lost in the Pages" />
-
-                <meta property="twitter:card" content="summary_large_image" />
-                <meta property="twitter:url" content="https://legend.hackutd.co/" />
-                <meta
-                  property="twitter:title"
-                  content="HackUTD 2025: Lost in the Pages - Largest University Hackathon in North America"
-                />
-                <meta
-                  property="twitter:description"
-                  content="Join HackUTD 2025: Lost in the Pages, the largest 24-hour university hackathon in North America. Build innovative apps, hardware, and solutions with 1200+ hackers from 30+ universities."
-                />
-                <meta
-                  property="twitter:image"
-                  content="https://legend.hackutd.co/assets/og-image.jpg"
-                />
-
-                <meta name="theme-color" content="#5D5FEF" />
+                {/* Meta tags moved to _document.tsx to ensure proper SSR rendering */}
                 <meta name="apple-mobile-web-app-capable" content="yes" />
                 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
                 <meta name="apple-mobile-web-app-title" content="HackUTD 2025" />
