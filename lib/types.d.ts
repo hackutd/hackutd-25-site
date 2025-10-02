@@ -314,6 +314,11 @@ type GeneralStats = {
   hackerCount: number;
   adminCount: number;
   scans: Record<string, number>;
+  dietary?: Record<string, number>;
+  timestamp?: Record<string, number>;
+  codeOfConduct?: Record<string, number>;
+  disclaimer?: Record<string, number>;
+  [key: string]: any; // Allow additional dynamic properties
 };
 
 /**

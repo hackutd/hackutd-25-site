@@ -4,6 +4,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import EngineeringIcon from '@mui/icons-material/Engineering';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 
 import { checkUserPermission } from '@/lib/util';
 import { RequestHelper } from '@/lib/request-helper';
@@ -21,15 +22,25 @@ export default function AdminStatsPage() {
   const [loading, setLoading] = useState(true);
   const { user, isSignedIn } = useAuthContext();
   const [statsData, setStatsData] = useState<GeneralStats>();
+  const [allCandidatesStats, setAllCandidatesStats] = useState<GeneralStats>();
 
   useEffect(() => {
     async function getData() {
-      const { data } = await RequestHelper.get<GeneralStats & { timestamp: any }>('/api/stats', {
-        headers: {
-          Authorization: user.token,
-        },
-      });
-      setStatsData(data);
+      const [statsResponse, allCandidatesResponse] = await Promise.all([
+        RequestHelper.get<GeneralStats & { timestamp: any }>('/api/stats', {
+          headers: {
+            Authorization: user.token,
+          },
+        }),
+        RequestHelper.get<GeneralStats & { timestamp: any }>('/api/stats-all-candidates', {
+          headers: {
+            Authorization: user.token,
+          },
+        }),
+      ]);
+
+      setStatsData(statsResponse.data);
+      setAllCandidatesStats(allCandidatesResponse.data);
       setLoading(false);
     }
     getData();
@@ -69,6 +80,63 @@ export default function AdminStatsPage() {
             value={statsData.superAdminCount}
           />
         </div>
+
+        {/* Dietary Restrictions for All Candidates */}
+        {allCandidatesStats && allCandidatesStats.dietary && (
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <RestaurantIcon className="text-blue-600" />
+              <h2 className="text-xl font-semibold text-gray-800">
+                Dietary Restrictions - All Candidates
+              </h2>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Dietary Restriction
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Count
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Percentage
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {Object.entries(allCandidatesStats.dietary)
+                    .sort(([, a], [, b]) => b - a)
+                    .map(([restriction, count]) => {
+                      const total = Object.values(allCandidatesStats.dietary).reduce(
+                        (sum, val) => sum + val,
+                        0,
+                      );
+                      const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : '0.0';
+                      return (
+                        <tr key={restriction} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {restriction || 'None specified'}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {count}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {percentage}%
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </div>
+            <div className="mt-4 text-sm text-gray-600">
+              <strong>Total candidates:</strong>{' '}
+              {Object.values(allCandidatesStats.dietary).reduce((sum, val) => sum + val, 0)}
+            </div>
+          </div>
+        )}
         {Object.entries(statsData)
           .filter(([k, v]) => typeof v === 'object')
           .map(([key, value]) => {
