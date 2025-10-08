@@ -261,7 +261,7 @@ export default function EditApplication({ allowedRegistrations }: Props) {
       <Head>
         <title>Hacker Application</title>
         <meta name="description" content="Register for HackPortal" />
-        <link rel="icon" href="/icons/favicon.png?v=2025" />
+        <link rel="icon" href="/icons/favicon.ico?v=2025" />
       </Head>
       <Formik
         initialValues={{
