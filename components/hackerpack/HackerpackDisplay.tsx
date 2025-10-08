@@ -151,7 +151,7 @@ export default function HackerpackDisplay({ content, notionRootId }: Props) {
       <Head>
         <title>HackerPacks</title>
         <meta name="description" content="HackerPack Information" />
-        <link rel="icon" href="/icons/favicon.png?v=2025" />
+        <link rel="icon" href="/icons/favicon.ico?v=2025" />
       </Head>
 
       {hackerpackSettings.sidebar && (
