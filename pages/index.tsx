@@ -236,9 +236,10 @@ export default function Home({
             zIndex: 1,
           }}
         />
-        <div className="relative z-10" style={{ marginTop: '-200px', paddingTop: '200px' }}>
-          <HomeSponsors />
-        </div>
+      </div>
+
+      <div className="relative z-10" style={{ marginTop: '-200px', paddingTop: '200px' }}>
+        <HomeSponsors />
       </div>
       <HomeFooter />
     </>

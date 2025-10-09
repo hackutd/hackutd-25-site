@@ -69,9 +69,31 @@ export default function HomeSponsors() {
   return (
     sponsors.length !== 0 && (
       <section
-        className="relative pt-[2rem] pb-[2rem] font-fredoka"
-        style={{ overflow: 'visible' }}
+        className="relative font-fredoka"
+        style={{
+          overflow: 'visible',
+          position: 'relative',
+          backgroundColor: '#0B0B1B',
+          backgroundImage: 'url("/assets/sponsorsBG/starryBG.PNG")',
+          backgroundRepeat: 'repeat',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center top',
+          backgroundAttachment: 'local',
+          minHeight: '100vh',
+          height: 'auto',
+          width: '100%',
+        }}
       >
+        <div
+          className="absolute left-0 w-full pointer-events-none"
+          style={{
+            top: '0',
+            height: '200px',
+            background:
+              'linear-gradient(to bottom, rgba(11,11,27,0.8) 0%, rgba(11,11,27,0.4) 50%, transparent 100%)',
+            zIndex: 1,
+          }}
+        />
         <style jsx>{`
           @keyframes fireflyFloat1 {
             0%,
@@ -203,19 +225,8 @@ export default function HomeSponsors() {
         </div>
 
         {/* TODO: will update styling better once get more assets and finalized content */}
-        <div></div>
-        <div className="flex flex-col flex-grow">
-          <h4
-            className="font-bold md:text-5xl text-2xl my-4 text-center uppercase font-youngSerif pt-32 pb-12"
-            style={{
-              background: 'linear-gradient(354.75deg, #FFD29B 4.2%, #FFD29B 37.67%, #FF5757 95.8%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            Sponsors will be revealed soon
-          </h4>
+        <div className="pt-[2rem] pb-[2rem]"></div>
+        <div className="flex flex-col flex-grow px-4">
           <h2
             className="uppercase text-center text-3xl font-youngSerif"
             style={{
@@ -223,6 +234,8 @@ export default function HomeSponsors() {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
+              filter:
+                'drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000)',
             }}
           >
             interested in sponsoring?
@@ -234,6 +247,8 @@ export default function HomeSponsors() {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
+              filter:
+                'drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000)',
             }}
           >
             If you would like to sponsor HackUTD,
@@ -245,6 +260,8 @@ export default function HomeSponsors() {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
+              filter:
+                'drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000)',
             }}
           >
             please reach out to us at&nbsp;
@@ -259,6 +276,8 @@ export default function HomeSponsors() {
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
+                filter:
+                  'drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000)',
               }}
             >
               hello@hackutd.co
@@ -271,7 +290,7 @@ export default function HomeSponsors() {
                   key={tier}
                   className="flex flex-col gap-8 my-[3rem] text-center text-3xl text-[#5D5A88] font-bold font-youngSerif"
                 >
-                  {/* <TierTitle tierName={tier} /> */}
+                  <TierTitle tierName={tier} />
 
                   <div className="flex flex-wrap gap-16 justify-center items-center">
                     <LogoContext.Provider value={{ currentHoveredLogo, setCurrentHoveredLogo }}>
@@ -285,7 +304,7 @@ export default function HomeSponsors() {
             </div>
           </section>
         </div>
-        {/* <div className="mt-4">
+        <div className="mt-4">
           <p
             className="text-4xl text-center pb-28 font-youngSerif"
             style={{
@@ -293,11 +312,13 @@ export default function HomeSponsors() {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
+              filter:
+                'drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000)',
             }}
           >
             and more to come!
           </p>
-        </div> */}
+        </div>
       </section>
     )
   );
