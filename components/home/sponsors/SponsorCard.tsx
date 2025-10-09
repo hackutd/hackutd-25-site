@@ -27,7 +27,7 @@ export default function SponsorCard(props: Sponsor) {
         {
           ['opacity-30']: currentHoveredLogo.length !== 0 && currentHoveredLogo !== props.reference,
           ['w-[250px] h-[150px]']: props.tier !== 'title',
-          ['w-[600px] h-[150px]']: props.tier === 'title',
+          ['w-[400px] h-[150px]']: props.tier === 'title',
         },
       )}
       onTouchStart={() => {
@@ -50,18 +50,19 @@ export default function SponsorCard(props: Sponsor) {
         href={props.link.startsWith('http') ? props.link : `https://${props.link}`}
         target="_blank"
         rel="noopener noreferrer"
+        className={clsx('bg-white p-4 rounded-lg flex items-center justify-center', {
+          ['w-[250px] h-[150px]']: props.tier !== 'title',
+          ['w-[400px] h-[150px]']: props.tier === 'title',
+        })}
       >
         <Image
           alt={`Sponsor Image ${props.reference}`}
           src={props.reference}
-          width={props.tier === 'title' ? 600 : 200}
-          height={props.tier === 'title' ? 600 : 200}
+          width={props.tier === 'title' ? 400 : 200}
+          height={props.tier === 'title' ? 200 : 200}
           layout="fixed"
           objectFit="contain"
-          className={clsx('object-contain', {
-            ['w-[250px] h-[150px]']: props.tier !== 'title',
-            ['w-[600px] h-[150px]']: props.tier === 'title',
-          })}
+          className="object-contain"
         />
       </a>
     </div>
