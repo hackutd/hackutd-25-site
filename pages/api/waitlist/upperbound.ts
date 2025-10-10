@@ -21,25 +21,26 @@ async function sendNotificationsToWalkIns(
   );
   const sendgridClient = require('@sendgrid/mail');
   sendgridClient.setApiKey(process.env.SENDGRID_APIKEY!);
-  // TODO: change message into something works better
-  const messageContent =
-    'Hey there, we are ready to check you into HackUTD! Please come to ECSW so that we can kick start the process!!! If you do not come to ECSW within 5 minutes of this text, your waitlist slot will be given to the next person';
   try {
     await Promise.all(
       snapshot.docs.map((doc) => {
-        if (doc.data().waitListInfo.notificationMethod === 'sms') {
+        const data = doc.data();
+        const firstName = data.user?.firstName || data.firstName || 'there';
+        const messageContent = `Hey ${firstName}, we are ready to check you into HackUTD! Please come to ECSW so that we can kick start the process!!! If you do not come to ECSW within 5 minutes of this text, your waitlist slot will be given to the next person`;
+
+        if (data.waitListInfo.notificationMethod === 'sms') {
           return twilioClient.messages.create({
             body: messageContent,
 
             // If a phone number does not have "+" prefix, phone number is US phone number
             to:
-              ((doc.data().waitListInfo.contactInfo as string).charAt(0) === '+' ? '' : '+1') +
-              doc.data().waitListInfo.contactInfo,
+              ((data.waitListInfo.contactInfo as string).charAt(0) === '+' ? '' : '+1') +
+              data.waitListInfo.contactInfo,
             from: process.env.TWILIO_PHONE_NUMBER,
           });
         } else {
           return sendgridClient.send({
-            to: doc.data().waitListInfo.contactInfo,
+            to: data.waitListInfo.contactInfo,
             from: {
               email: process.env.HACKUTD_EMAIL,
               name: 'HackUTD',
