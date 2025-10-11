@@ -49,7 +49,13 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
   // Track unique applications that have been judged at least once
   const judgedApplicationIds = new Set<string>();
 
-  // Group reviews by admin
+  // First, get all admin users
+  const adminUsersSnapshot = await db
+    .collection(USERS_COLLECTION)
+    .where('user.permissions', 'array-contains-any', ['admin', 'super_admin', 'organizer', 'judge'])
+    .get();
+
+  // Initialize all admin stats with zeros
   const adminStats = new Map<
     string,
     {
@@ -61,6 +67,26 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
     }
   >();
 
+  const adminNames = new Map<string, string>();
+
+  // Initialize all admin users with zero stats
+  adminUsersSnapshot.forEach((doc) => {
+    const data = doc.data();
+    const adminId = doc.id;
+    const adminName = `${data.user.firstName} ${data.user.lastName}`;
+
+    adminStats.set(adminId, {
+      totalReviews: 0,
+      accepts: 0,
+      rejects: 0,
+      maybes: 0,
+      superVotes: 0,
+    });
+
+    adminNames.set(adminId, adminName);
+  });
+
+  // Now process actual scoring data
   scoringSnapshot.forEach((doc) => {
     const data = doc.data();
     const adminId = data.adminId;
@@ -73,53 +99,29 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
       judgedApplicationIds.add(hackerId);
     }
 
-    if (!adminStats.has(adminId)) {
-      adminStats.set(adminId, {
-        totalReviews: 0,
-        accepts: 0,
-        rejects: 0,
-        maybes: 0,
-        superVotes: 0,
-      });
-    }
+    // Only process if this admin is in our admin list
+    if (adminStats.has(adminId)) {
+      const stats = adminStats.get(adminId)!;
+      stats.totalReviews++;
 
-    const stats = adminStats.get(adminId)!;
-    stats.totalReviews++;
+      if (isSuperVote) {
+        stats.superVotes++;
+      }
 
-    if (isSuperVote) {
-      stats.superVotes++;
-    }
-
-    switch (score) {
-      case 1: // Reject
-        stats.rejects++;
-        break;
-      case 2: // Maybe No
-      case 3: // Maybe Yes
-        stats.maybes++;
-        break;
-      case 4: // Accept
-        stats.accepts++;
-        break;
+      switch (score) {
+        case 1: // Reject
+          stats.rejects++;
+          break;
+        case 2: // Maybe No
+        case 3: // Maybe Yes
+          stats.maybes++;
+          break;
+        case 4: // Accept
+          stats.accepts++;
+          break;
+      }
     }
   });
-
-  // Get admin names
-  const adminIds = Array.from(adminStats.keys());
-  const adminNames = new Map<string, string>();
-
-  if (adminIds.length > 0) {
-    const adminSnapshot = await db
-      .collection(USERS_COLLECTION)
-      .where('id', 'in', adminIds)
-      .select('id', 'user.firstName', 'user.lastName')
-      .get();
-
-    adminSnapshot.forEach((doc) => {
-      const data = doc.data();
-      adminNames.set(doc.id, `${data.user.firstName} ${data.user.lastName}`);
-    });
-  }
 
   // Convert to array and calculate rates
   const leaderboardData: AdminReviewStats[] = Array.from(adminStats.entries()).map(
