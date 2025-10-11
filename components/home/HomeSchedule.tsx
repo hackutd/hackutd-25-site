@@ -99,24 +99,8 @@ export default function HomeSchedule(props: { scheduleCard: ScheduleEvent[]; dat
             style={{ backgroundColor: '#100101BF', borderBottomColor: '#FF99BD' }}
           >
             <div className="flex justify-between pb-1">
-              <div
-                className="text-md font-bold font-dmSans text-white"
-                style={{
-                  textShadow:
-                    '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
-                }}
-              >
-                {formattedTime}
-              </div>
-              <div
-                className="text-md font-bold font-dmSans text-white"
-                style={{
-                  textShadow:
-                    '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
-                }}
-              >
-                {data.title}
-              </div>
+              <div className="text-md font-bold font-dmSans text-white">{formattedTime}</div>
+              <div className="text-md font-bold font-dmSans text-white">{data.title}</div>
             </div>
             <div className="flex justify-between">
               <div
@@ -125,19 +109,11 @@ export default function HomeSchedule(props: { scheduleCard: ScheduleEvent[]; dat
                 }`}
                 style={{
                   backgroundColor: '#100101BF',
-                  textShadow:
-                    '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
                 }}
               >
                 {data.type}
               </div>
-              <div
-                className="text-white flex items-center font-dmSans"
-                style={{
-                  textShadow:
-                    '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
-                }}
-              >
+              <div className="text-white flex items-center font-dmSans">
                 <LocationOnIcon style={{ fontSize: 'large', marginRight: '2px' }} />
                 {data.location}
               </div>
