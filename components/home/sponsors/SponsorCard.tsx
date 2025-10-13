@@ -23,11 +23,9 @@ export default function SponsorCard(props: Sponsor) {
   return (
     <div
       className={clsx(
-        `my-4 p-3 flex justify-center items-center hover:scale-110 hover:duration-300  duration-500 opacity-100`,
+        `my-4 flex justify-center items-center hover:scale-110 hover:duration-300 duration-500 opacity-100`,
         {
           ['opacity-30']: currentHoveredLogo.length !== 0 && currentHoveredLogo !== props.reference,
-          ['w-[250px] h-[150px]']: props.tier !== 'title',
-          ['w-[400px] h-[150px]']: props.tier === 'title',
         },
       )}
       onTouchStart={() => {
@@ -50,20 +48,24 @@ export default function SponsorCard(props: Sponsor) {
         href={props.link.startsWith('http') ? props.link : `https://${props.link}`}
         target="_blank"
         rel="noopener noreferrer"
-        className={clsx('bg-white p-4 rounded-lg flex items-center justify-center', {
-          ['w-[250px] h-[150px]']: props.tier !== 'title',
-          ['w-[400px] h-[150px]']: props.tier === 'title',
-        })}
+        className={clsx(
+          'bg-white p-4 rounded-lg overflow-hidden flex items-center justify-center',
+          {
+            ['w-[250px] h-[150px]']: props.tier !== 'title',
+            ['w-[300px] h-[150px]']: props.tier === 'title',
+          },
+        )}
       >
-        <Image
-          alt={`Sponsor Image ${props.reference}`}
-          src={props.reference}
-          width={props.tier === 'title' ? 400 : 200}
-          height={props.tier === 'title' ? 200 : 200}
-          layout="fixed"
-          objectFit="contain"
-          className="object-contain"
-        />
+        <div className="relative flex items-center justify-center w-full h-full">
+          <Image
+            alt={`Sponsor Image ${props.reference}`}
+            src={props.reference}
+            width={props.tier === 'title' ? 260 : 200}
+            height={props.tier === 'title' ? 120 : 120}
+            objectFit="contain"
+            className="object-contain max-w-full max-h-full"
+          />
+        </div>
       </a>
     </div>
   );
