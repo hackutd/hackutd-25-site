@@ -214,9 +214,9 @@ export default function Home({
           <HomePreEventsSimple />
         </div>
 
-        {/* <div className="my-72">
+        <div className="my-72">
           <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
-        </div> */}
+        </div>
 
         {/* <div className="my-72">
           <HomeChallengesComponent challenges={challenges} />

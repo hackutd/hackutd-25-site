@@ -99,24 +99,8 @@ export default function HomeSchedule(props: { scheduleCard: ScheduleEvent[]; dat
             style={{ backgroundColor: '#100101BF', borderBottomColor: '#FF99BD' }}
           >
             <div className="flex justify-between pb-1">
-              <div
-                className="text-md font-bold font-dmSans text-white"
-                style={{
-                  textShadow:
-                    '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
-                }}
-              >
-                {formattedTime}
-              </div>
-              <div
-                className="text-md font-bold font-dmSans text-white"
-                style={{
-                  textShadow:
-                    '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
-                }}
-              >
-                {data.title}
-              </div>
+              <div className="text-md font-bold font-dmSans text-white">{formattedTime}</div>
+              <div className="text-md font-bold font-dmSans text-white">{data.title}</div>
             </div>
             <div className="flex justify-between">
               <div
@@ -125,19 +109,11 @@ export default function HomeSchedule(props: { scheduleCard: ScheduleEvent[]; dat
                 }`}
                 style={{
                   backgroundColor: '#100101BF',
-                  textShadow:
-                    '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
                 }}
               >
                 {data.type}
               </div>
-              <div
-                className="text-white flex items-center font-dmSans"
-                style={{
-                  textShadow:
-                    '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
-                }}
-              >
+              <div className="text-white flex items-center font-dmSans">
                 <LocationOnIcon style={{ fontSize: 'large', marginRight: '2px' }} />
                 {data.location}
               </div>
@@ -175,9 +151,11 @@ export default function HomeSchedule(props: { scheduleCard: ScheduleEvent[]; dat
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
+          filter:
+            'drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000)',
         }}
       >
-        What to Expect?
+        What to Expect Day Of?
       </div>
 
       {/* Filter */}
@@ -293,6 +271,22 @@ export default function HomeSchedule(props: { scheduleCard: ScheduleEvent[]; dat
           >
             {day2Events}
           </div>
+        </div>
+      </div>
+
+      <div className="text-center pb-8">
+        <div
+          className="text-3xl font-bold font-youngSerif"
+          style={{
+            background: 'linear-gradient(354.75deg, #FFD29B 4.2%, #FFD29B 37.67%, #FF5757 95.8%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            filter:
+              'drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000)',
+          }}
+        >
+          More Events Coming Soon
         </div>
       </div>
     </div>

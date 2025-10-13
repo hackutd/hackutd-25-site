@@ -32,24 +32,10 @@ export default function HomePreEventsSimple() {
         style={{ backgroundColor: '#100101BF', borderBottomColor: '#FF99BD' }}
       >
         <div className="flex justify-between pb-1">
-          <div
-            className="text-md font-bold font-dmSans text-white"
-            style={{
-              textShadow:
-                '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
-            }}
-          >
+          <div className="text-md font-bold font-dmSans text-white">
             {formattedDate} • {formattedTime}
           </div>
-          <div
-            className="text-md font-bold font-dmSans text-white"
-            style={{
-              textShadow:
-                '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
-            }}
-          >
-            {data.title}
-          </div>
+          <div className="text-md font-bold font-dmSans text-white">{data.title}</div>
         </div>
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
@@ -57,19 +43,11 @@ export default function HomePreEventsSimple() {
               className="text-xs rounded-xl py-1 px-2 border-2 font-dmSans border-[#5200FF] text-[#5200FF]"
               style={{
                 backgroundColor: '#100101BF',
-                textShadow:
-                  '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
               }}
             >
               {data.type}
             </div>
-            <div
-              className="text-white flex items-center font-dmSans"
-              style={{
-                textShadow:
-                  '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
-              }}
-            >
+            <div className="text-white flex items-center font-dmSans">
               <LocationOnIcon style={{ fontSize: 'large', marginRight: '2px' }} />
               {data.location}
             </div>
@@ -149,7 +127,7 @@ export default function HomePreEventsSimple() {
                 '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
             }}
           >
-            Coming Soon!
+            Sponsor Events!
           </div>
           <div
             className="mb-8 mx-2 p-2 border-2 rounded-2xl border-opacity-20"
@@ -160,15 +138,7 @@ export default function HomePreEventsSimple() {
             }}
           >
             <div className="p-4 text-center" style={{ backgroundColor: '#100101BF' }}>
-              <div
-                className="text-lg font-bold font-dmSans text-white"
-                style={{
-                  textShadow:
-                    '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
-                }}
-              >
-                Stay tuned for more upcoming events!
-              </div>
+              <div className="text-lg font-bold font-dmSans text-white">Stay tuned!</div>
             </div>
           </div>
         </div>
