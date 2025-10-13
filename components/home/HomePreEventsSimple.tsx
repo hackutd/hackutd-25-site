@@ -127,7 +127,7 @@ export default function HomePreEventsSimple() {
                 '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
             }}
           >
-            Coming Soon!
+            Sponsor Events!
           </div>
           <div
             className="mb-8 mx-2 p-2 border-2 rounded-2xl border-opacity-20"
@@ -138,9 +138,7 @@ export default function HomePreEventsSimple() {
             }}
           >
             <div className="p-4 text-center" style={{ backgroundColor: '#100101BF' }}>
-              <div className="text-lg font-bold font-dmSans text-white">
-                Stay tuned for more upcoming events!
-              </div>
+              <div className="text-lg font-bold font-dmSans text-white">Stay tuned!</div>
             </div>
           </div>
         </div>
