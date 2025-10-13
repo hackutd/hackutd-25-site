@@ -138,7 +138,7 @@ export default function HomeHero() {
             style={{ top: '33%', transform: 'translate(-50%, -50%)' }}
           >
             <Image
-              src="/assets/Vectorized-Title.svg"
+              src="/assets/Vectorized-Title.webp"
               alt="HackUTD 2025"
               width={800}
               height={200}
