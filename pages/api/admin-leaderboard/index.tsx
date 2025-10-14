@@ -31,7 +31,11 @@ async function userIsAuthorized(token: string): Promise<boolean> {
   if (!token) return false;
   try {
     const userData = await extractUserDataFromToken(token);
-    return userData?.user?.permissions?.includes('super_admin') || false;
+    return (
+      userData?.user?.permissions?.includes('super_admin') ||
+      userData?.user?.permissions?.includes('admin') ||
+      false
+    );
   } catch (error) {
     console.error(error);
     return false;
@@ -161,7 +165,7 @@ async function handleGetRequest(req: NextApiRequest, res: NextApiResponse) {
 
   if (!isAuthorized) {
     return res.status(403).json({
-      msg: 'Request is not authorized to perform super admin functionality',
+      msg: 'Request is not authorized to perform admin functionality',
     });
   }
 
