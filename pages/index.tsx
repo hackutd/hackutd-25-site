@@ -202,12 +202,13 @@ export default function Home({
       </div>
 
       <div
-        className="w-full relative"
+        className="w-full relative bg-blend-lighten"
         style={{
           backgroundColor: '#0B0B1B',
           backgroundImage: 'url("/assets/sponsorsBG/leaves.PNG")',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
+          backgroundRepeat: 'repeat',
+          backgroundSize: '100% auto',
+          backgroundPosition: 'top',
         }}
       >
         <div className="my-72">
