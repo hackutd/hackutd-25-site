@@ -56,10 +56,10 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
   // Track unique applications that have been judged at least once
   const judgedApplicationIds = new Set<string>();
 
-  // First, get all admin users
+  // First, get all admin users (only admins, not super_admins)
   const adminUsersSnapshot = await db
     .collection(USERS_COLLECTION)
-    .where('user.permissions', 'array-contains-any', ['admin', 'super_admin', 'organizer', 'judge'])
+    .where('user.permissions', 'array-contains', 'admin')
     .get();
 
   // Initialize all admin stats with zeros

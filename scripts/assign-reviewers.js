@@ -91,10 +91,10 @@ async function assignReviewers() {
     // Shuffle the applications to avoid bias
     shuffle(applicationsNeededForReview);
 
-    // Get all organizers
+    // Get all organizers (only admins, not super_admins)
     const organizersSnapshot = await db
       .collection(REGISTRATION_COLLECTIONS)
-      .where('user.permissions', 'array-contains-any', ['super_admin', 'admin'])
+      .where('user.permissions', 'array-contains', 'admin')
       .get();
     const organizers = organizersSnapshot.docs.map((doc) => {
       return {

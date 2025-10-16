@@ -81,10 +81,10 @@ async function handleAssignReviewers(req: NextApiRequest, res: NextApiResponse) 
     // shuffle the applications to avoid bias
     shuffle(applicationsNeededForReview);
 
-    // get all organizers
+    // get all organizers (only admins, not super_admins)
     const organizersSnapshot = await db
       .collection(REGISTRATION_COLLECTIONS)
-      .where('user.permissions', 'array-contains-any', ['super_admin', 'admin'])
+      .where('user.permissions', 'array-contains', 'admin')
       .get();
     const organizers = organizersSnapshot.docs.map((doc) => {
       return {
