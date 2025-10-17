@@ -75,6 +75,39 @@ async function getAllUsers(req: NextApiRequest, res: NextApiResponse) {
  * @return list of groups, each represented as `Registration[]`
  *
  */
+// Helper function to validate if a user is actually part of a valid team
+function isValidTeamMember(user: Registration, allUsers: Registration[]): boolean {
+  const teammates = [user.teammate1, user.teammate2, user.teammate3].filter(
+    (t) => t && t.trim() !== '',
+  );
+
+  if (teammates.length === 0) return false; // No teammates listed
+
+  // Check if all listed teammates exist in the database
+  const userEmails = new Set(allUsers.map((u) => u.user.preferredEmail));
+  for (const teammateEmail of teammates) {
+    if (!userEmails.has(teammateEmail)) {
+      return false; // Teammate doesn't exist
+    }
+  }
+
+  // Check bidirectional relationships
+  for (const teammateEmail of teammates) {
+    const teammate = allUsers.find((u) => u.user.preferredEmail === teammateEmail);
+    if (!teammate) continue;
+
+    const teammateTeammates = [teammate.teammate1, teammate.teammate2, teammate.teammate3].filter(
+      (t) => t && t.trim() !== '',
+    );
+
+    if (!teammateTeammates.includes(user.user.preferredEmail)) {
+      return false; // Teammate doesn't have this user listed back
+    }
+  }
+
+  return true;
+}
+
 export function generateGroupsFromUserData(userList: Registration[]): Registration[][] {
   const groupLeader = new Map<string, string>();
   const groupSize = new Map<string, number>();
@@ -90,12 +123,20 @@ export function generateGroupsFromUserData(userList: Registration[]): Registrati
     return groupLeader.get(userEmail);
   };
 
-  const validateEmail = (email: string) => {
-    return String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      );
+  const validateEmail = (email: string | null | undefined) => {
+    if (!email || typeof email !== 'string' || email.trim() === '') {
+      return false;
+    }
+    try {
+      return String(email)
+        .toLowerCase()
+        .match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        );
+    } catch (error) {
+      console.error('Email validation error:', error, 'for email:', email);
+      return false;
+    }
   };
 
   const mergeGroup = (firstUserEmail: string, secondUserEmail: string) => {
@@ -114,11 +155,19 @@ export function generateGroupsFromUserData(userList: Registration[]): Registrati
   };
 
   userList.forEach((user) => {
-    [user.teammate1, user.teammate2, user.teammate3]
-      .filter((email) => validateEmail(email) && groupLeader.has(email))
-      .forEach((teammateEmail) => {
-        mergeGroup(user.user.preferredEmail, teammateEmail);
-      });
+    try {
+      [user.teammate1, user.teammate2, user.teammate3]
+        .filter((email) => validateEmail(email) && groupLeader.has(email))
+        .forEach((teammateEmail) => {
+          mergeGroup(user.user.preferredEmail, teammateEmail);
+        });
+    } catch (error) {
+      console.error(
+        'Error processing team relationships for user:',
+        user.user.preferredEmail,
+        error,
+      );
+    }
   });
 
   const preliminaryGroups = new Map<string, Registration[]>();
@@ -132,7 +181,26 @@ export function generateGroupsFromUserData(userList: Registration[]): Registrati
   });
 
   const validGroup = (potentialGroup: Registration[]) => {
-    if (potentialGroup.length !== 4) return false;
+    if (potentialGroup.length < 2 || potentialGroup.length > 4) return false;
+
+    // First, verify that all listed teammates actually exist in the userList
+    const userEmails = new Set(userList.map((user) => user.user.preferredEmail));
+
+    for (const user of potentialGroup) {
+      const listedTeammates = [user.teammate1, user.teammate2, user.teammate3].filter(
+        (email) => email && email.trim() !== '',
+      );
+
+      // Check if all listed teammates exist in the database
+      for (const teammateEmail of listedTeammates) {
+        if (!userEmails.has(teammateEmail)) {
+          // This teammate doesn't exist in the database, so this is not a valid team
+          return false;
+        }
+      }
+    }
+
+    // Now check bidirectional relationships (existing logic)
     const voteCounter = new Map<string, number>();
     potentialGroup.forEach((user) => {
       voteCounter.set(user.user.preferredEmail, 0);
@@ -144,9 +212,10 @@ export function generateGroupsFromUserData(userList: Registration[]): Registrati
           voteCounter.set(teammateEmail, voteCounter.get(teammateEmail) + 1),
         );
     });
+    const expectedVotes = potentialGroup.length - 1;
     let isValidGroup = true;
     voteCounter.forEach((value, _) => {
-      if (value !== 3) isValidGroup = false;
+      if (value !== expectedVotes) isValidGroup = false;
     });
     return isValidGroup;
   };
@@ -154,11 +223,9 @@ export function generateGroupsFromUserData(userList: Registration[]): Registrati
   const ret: Registration[][] = [];
 
   preliminaryGroups.forEach((value, _) => {
-    if (validGroup(value)) {
-      ret.push(value);
-    } else {
-      value.forEach((user) => ret.push([user]));
-    }
+    // Always treat each person as an individual in the review queue
+    // This ensures proper workload distribution and individual attention
+    value.forEach((user) => ret.push([user]));
   });
 
   return ret;
@@ -182,15 +249,30 @@ async function getAllRegistrations(req: NextApiRequest, res: NextApiResponse) {
   const { headers } = req;
 
   const userToken = headers['authorization'];
-  const userData = await extractUserDataFromToken(userToken);
+  let userData;
 
-  const isAuthorized =
-    (userData.user.permissions as string[]).includes('super_admin') ||
-    (userData.user.permissions as string[]).includes('admin');
+  try {
+    userData = await extractUserDataFromToken(userToken);
 
-  if (!isAuthorized) {
-    return res.status(403).json({
-      msg: 'Request is not authorized to perform admin functionality.',
+    if (!userData) {
+      return res.status(401).json({
+        msg: 'Invalid or missing authentication token.',
+      });
+    }
+
+    const isAuthorized =
+      (userData.user.permissions as string[]).includes('super_admin') ||
+      (userData.user.permissions as string[]).includes('admin');
+
+    if (!isAuthorized) {
+      return res.status(403).json({
+        msg: 'Request is not authorized to perform admin functionality.',
+      });
+    }
+  } catch (error) {
+    console.error('Authentication error:', error);
+    return res.status(401).json({
+      msg: 'Authentication failed. Please check your token.',
     });
   }
   const decisionReleased = await checkDecisionIsReleased();
@@ -267,67 +349,133 @@ async function getAllRegistrations(req: NextApiRequest, res: NextApiResponse) {
     .where('inCommonPool', '==', true)
     .where('user.permissions', 'array-contains', 'in_review')
     .get();
+
+  // Get all user emails to validate team relationships
+  const allUserEmails = new Set<string>();
+  assignedAppCollectionRef.docs.forEach((doc) => {
+    allUserEmails.add(doc.data().user.preferredEmail);
+  });
+  commonPoolCollectionRef.docs.forEach((doc) => {
+    allUserEmails.add(doc.data().user.preferredEmail);
+  });
   const commonAppWithScores = await Promise.all(
-    commonPoolCollectionRef.docs
-      .filter((doc) => !doc.data().reviewer || !doc.data().reviewer.includes(userData.id))
-      .map(async (doc) => {
-        const data = doc.data();
-        delete data.reviewer; // Remove reviewer data from response
-        delete data.github; // Remove github data from response
-        delete data.linkedin; // Remove linkedin data from response
-        delete data.resume; // Remove resume data from response
-        delete data.phoneNumber; // Remove phone number data from response
-        const scoringSnapshot = await db
-          .collection(SCORING_COLLECTION)
-          .where('hackerId', '==', doc.id)
-          .get();
-        const reviewerIds = scoringSnapshot.docs.map((doc) => doc.data().adminId);
-        const organizerReview = scoringSnapshot.docs.find((d) => d.data().adminId === userData.id);
-        const reviewerInfo = await db
-          .collection(USERS_COLLECTION)
-          .where('id', 'in', reviewerIds)
-          .select('id', 'user.firstName', 'user.lastName')
-          .get();
-        const reviewerMapping = new Map<string, string>();
-        reviewerInfo.forEach((info) => {
-          reviewerMapping.set(
-            info.data().id,
-            `${info.data().user.firstName} ${info.data().user.lastName}`,
-          );
+    commonPoolCollectionRef.docs.map(async (doc) => {
+      const data = doc.data();
+      delete data.reviewer; // Remove reviewer data from response
+      delete data.github; // Remove github data from response
+      delete data.linkedin; // Remove linkedin data from response
+      delete data.resume; // Remove resume data from response
+      delete data.phoneNumber; // Remove phone number data from response
+      const scoringSnapshot = await db
+        .collection(SCORING_COLLECTION)
+        .where('hackerId', '==', doc.id)
+        .get();
+      const reviewerIds = scoringSnapshot.docs.map((doc) => doc.data().adminId);
+      const organizerReview = scoringSnapshot.docs.find((d) => d.data().adminId === userData.id);
+      const reviewerInfo = await db
+        .collection(USERS_COLLECTION)
+        .where('id', 'in', reviewerIds)
+        .select('id', 'user.firstName', 'user.lastName')
+        .get();
+      const reviewerMapping = new Map<string, string>();
+      reviewerInfo.forEach((info) => {
+        reviewerMapping.set(
+          info.data().id,
+          `${info.data().user.firstName} ${info.data().user.lastName}`,
+        );
+      });
+      const appScore = scoringSnapshot.docs.reduce((acc, doc) => {
+        const scoreMultiplier = !!doc.data().isSuperVote ? 50 : 1;
+        if (doc.data().score === 4) return acc + scoreMultiplier;
+        if (doc.data().score === 1) return acc - scoreMultiplier;
+        return acc;
+      }, 0);
+
+      // Check if this person is part of a valid team (for common pool)
+      const teammates = [data.teammate1, data.teammate2, data.teammate3].filter(
+        (t) => t && t.trim() !== '',
+      );
+      // Check if teammates exist in the database
+      const isTeamMember =
+        teammates.length > 0 &&
+        teammates.every((teammateEmail) => {
+          return allUserEmails.has(teammateEmail);
         });
-        const appScore = scoringSnapshot.docs.reduce((acc, doc) => {
-          const scoreMultiplier = !!doc.data().isSuperVote ? 50 : 1;
-          if (doc.data().score === 4) return acc + scoreMultiplier;
-          if (doc.data().score === 1) return acc - scoreMultiplier;
-          return acc;
-        }, 0);
-        if (scoringSnapshot.empty || organizerReview === undefined) {
-          return {
-            ...data,
-            status: decisionReleased ? (appScore >= 2 ? 'Accepted' : 'Rejected') : 'In Review',
-          };
-        }
+
+      // Generate a unique team ID by sorting all team member emails
+      let teamId = null;
+      if (isTeamMember) {
+        const allTeamEmails = [data.user.preferredEmail, ...teammates].sort();
+        // Create a simple hash from the sorted emails
+        teamId = allTeamEmails
+          .join('|')
+          .split('')
+          .reduce((acc, char) => {
+            return (acc << 5) - acc + char.charCodeAt(0);
+          }, 0)
+          .toString(36);
+      }
+
+      if (scoringSnapshot.empty || organizerReview === undefined) {
         return {
           ...data,
-          scoring: scoringSnapshot.docs.map((doc) => {
-            const data = doc.data();
-            return {
-              score: data.score,
-              note: data.note,
-              reviewer: reviewerMapping.get(data.adminId),
-            };
-          }),
-          status: decisionReleased
-            ? appScore >= 2
-              ? 'Accepted'
-              : 'Rejected'
-            : statusString[organizerReview.data().score - 1],
+          status: decisionReleased ? (appScore >= 2 ? 'Accepted' : 'Rejected') : 'In Review',
+          isAssigned: false,
+          isTeamMember: isTeamMember,
+          teamSize: isTeamMember ? teammates.length + 1 : 1,
+          teamId: teamId,
         };
-      }),
+      }
+      const commonPoolReviewerIds = scoringSnapshot.docs.map((doc) => doc.data().adminId);
+      const commonPoolReviewerInfo = await (commonPoolReviewerIds.length === 0
+        ? []
+        : db
+            .collection(USERS_COLLECTION)
+            .where('id', 'in', commonPoolReviewerIds)
+            .select('id', 'user.firstName', 'user.lastName')
+            .get());
+      const commonPoolReviewerMapping = new Map<string, string>();
+      commonPoolReviewerInfo.forEach((info) => {
+        commonPoolReviewerMapping.set(
+          info.data().id,
+          `${info.data().user.firstName} ${info.data().user.lastName}`,
+        );
+      });
+
+      return {
+        ...data,
+        scoring: scoringSnapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            score: data.score,
+            note: data.note,
+            reviewer: commonPoolReviewerMapping.get(data.adminId),
+          };
+        }),
+        status: decisionReleased
+          ? appScore >= 2
+            ? 'Accepted'
+            : 'Rejected'
+          : appScore >= 2
+          ? 'Accepted'
+          : appScore <= -2
+          ? 'Rejected'
+          : organizerReview
+          ? statusString[organizerReview.data().score - 1]
+          : 'In Review',
+        isAssigned: false,
+        isTeamMember: isTeamMember,
+        teamSize: isTeamMember ? teammates.length + 1 : 1,
+        teamId: teamId,
+      };
+    }),
   );
+
   const assignedApps = await Promise.all(
     assignedAppCollectionRef.docs
-      .filter((doc) => doc.data().user.permissions.includes('in_review'))
+      .filter(
+        (doc) => doc.data().user.permissions.includes('in_review') && !doc.data().inCommonPool,
+      )
       .map(async (doc) => {
         const data = doc.data();
         delete data.reviewer; // Remove reviewer data from response
@@ -340,6 +488,31 @@ async function getAllRegistrations(req: NextApiRequest, res: NextApiResponse) {
           .where('hackerId', '==', doc.id)
           .get();
         const organizerReview = scoringSnapshot.docs.find((d) => d.data().adminId === userData.id);
+
+        // Check if this person is part of a valid team (bidirectional validation)
+        const teammates = [data.teammate1, data.teammate2, data.teammate3].filter(
+          (t) => t && t.trim() !== '',
+        );
+        // Check if teammates exist in the database
+        const isTeamMember =
+          teammates.length > 0 &&
+          teammates.every((teammateEmail) => {
+            return allUserEmails.has(teammateEmail);
+          });
+
+        // Generate a unique team ID by sorting all team member emails
+        let teamId = null;
+        if (isTeamMember) {
+          const allTeamEmails = [data.user.preferredEmail, ...teammates].sort();
+          // Create a simple hash from the sorted emails
+          teamId = allTeamEmails
+            .join('|')
+            .split('')
+            .reduce((acc, char) => {
+              return (acc << 5) - acc + char.charCodeAt(0);
+            }, 0)
+            .toString(36);
+        }
         if (!decisionReleased) {
           return {
             ...data,
@@ -353,6 +526,10 @@ async function getAllRegistrations(req: NextApiRequest, res: NextApiResponse) {
                   },
                 ]
               : undefined,
+            isAssigned: true,
+            isTeamMember: isTeamMember,
+            teamSize: isTeamMember ? teammates.length + 1 : 1, // +1 to include the person themselves
+            teamId: teamId,
           };
         }
         const reviewerIds = scoringSnapshot.docs.map((doc) => doc.data().adminId);
@@ -385,6 +562,10 @@ async function getAllRegistrations(req: NextApiRequest, res: NextApiResponse) {
             };
           }),
           status: appScore >= 2 ? 'Accepted' : 'Rejected',
+          isAssigned: true,
+          isTeamMember: isTeamMember,
+          teamSize: isTeamMember ? teammates.length + 1 : 1, // +1 to include the person themselves
+          teamId: teamId,
         };
       }),
   );
@@ -403,17 +584,31 @@ async function getAllRegistrations(req: NextApiRequest, res: NextApiResponse) {
         ...d.user,
         firstName: 'Anonymous',
         lastName: '',
-        preferredEmail: '',
+        // Keep preferredEmail for grouping purposes, but don't expose it in the response
+        preferredEmail: d.user.preferredEmail,
       },
     }));
   };
 
   const groups = (userData as UserData).user.permissions.includes('super_admin')
-    ? generateGroupsFromUserData(data as Registration[])
-    : generateGroupsFromUserData(hideSensitiveData(data as Registration[]));
+    ? generateGroupsFromUserData(data as unknown as Registration[])
+    : generateGroupsFromUserData(hideSensitiveData(data as unknown as Registration[]));
+
+  // For regular admins, hide emails in the final response after grouping
+  const finalGroups = (userData as UserData).user.permissions.includes('super_admin')
+    ? groups
+    : groups.map((group) =>
+        group.map((member) => ({
+          ...member,
+          user: {
+            ...member.user,
+            preferredEmail: '', // Hide email in final response
+          },
+        })),
+      );
 
   return res.json({
-    groups,
+    groups: finalGroups,
     allApps,
   });
 }

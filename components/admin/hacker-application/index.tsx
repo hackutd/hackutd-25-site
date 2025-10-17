@@ -67,6 +67,8 @@ export default function HackerApplications({
     'In Review',
     'Maybe Yes',
     'Maybe No',
+    'Assigned to Me',
+    'Common Pool',
   ];
 
   return (

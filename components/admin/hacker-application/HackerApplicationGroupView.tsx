@@ -102,9 +102,19 @@ export default function UserAdminGroupView({
                     ? 'border-[#5D5A88] border-[2px]'
                     : ''
                 }
+                ${group.application[0].isTeamMember ? 'border-l-4' : ''}
                 cursor-pointer
                 gap-x-3
               `}
+              style={
+                group.application[0].isTeamMember
+                  ? {
+                      borderLeftColor: `hsl(${
+                        parseInt(group.application[0].teamId || '0', 36) % 360
+                      }, 70%, 60%)`,
+                    }
+                  : {}
+              }
               onClick={() => {
                 onUserGroupClick(getGroupId(group.application));
               }}
@@ -155,7 +165,21 @@ export default function UserAdminGroupView({
                   bg-green-200                
                 `}
               >
-                {group.application.length} member{group.application.length > 1 && 's'}
+                {group.application[0].isTeamMember ? (
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="inline-block w-3 h-3 rounded-full"
+                      style={{
+                        backgroundColor: `hsl(${
+                          parseInt(group.application[0].teamId || '0', 36) % 360
+                        }, 70%, 60%)`,
+                      }}
+                    />
+                    Team member ({group.application[0].teamSize} total)
+                  </div>
+                ) : (
+                  `${group.application.length} member${group.application.length > 1 ? 's' : ''}`
+                )}
               </div>
             </div>
           ))}
