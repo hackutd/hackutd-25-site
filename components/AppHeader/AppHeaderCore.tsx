@@ -181,10 +181,6 @@ export default function AppHeaderCore(props: Props) {
                             optionName: 'Stats at a Glance',
                             onClick: () => router.push('/admin/stats'),
                           },
-                          {
-                            optionName: 'Decision Control',
-                            onClick: () => router.push('/admin/decisions'),
-                          },
                         ]
                       : []),
                     ...(isAdmin
@@ -192,6 +188,14 @@ export default function AppHeaderCore(props: Props) {
                           {
                             optionName: 'Admin Leaderboard',
                             onClick: () => router.push('/admin/leaderboard'),
+                          },
+                        ]
+                      : []),
+                    ...(isAdmin
+                      ? [
+                          {
+                            optionName: 'Scanner',
+                            onClick: () => router.push('/admin/scan'),
                           },
                         ]
                       : []),

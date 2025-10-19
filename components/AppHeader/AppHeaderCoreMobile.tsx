@@ -154,10 +154,6 @@ export default function AppHeaderCoreMobile(props: Props) {
                             optionName: 'Admin Leaderboard',
                             onClick: () => router.push('/admin/leaderboard'),
                           },
-                          {
-                            optionName: 'Decision Control',
-                            onClick: () => router.push('/admin/decisions'),
-                          },
                         ]
                       : []),
                   ]}

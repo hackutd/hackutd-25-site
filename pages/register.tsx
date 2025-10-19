@@ -129,41 +129,24 @@ export default function Register({ allowedRegistrations }: Props) {
   const cleanData = (registrationData: PartialRegistration): Registration => {
     let cleanedValues = { ...registrationData };
     const userValues = {
-      id: registrationData.id || user?.id,
+      id: registrationData.id,
       firstName: registrationData.firstName,
       lastName: registrationData.lastName,
       preferredEmail: registrationData.preferredEmail,
-      permissions: registrationData.permissions || ['hacker'],
+      permissions: registrationData.permissions,
     };
-
-    // Log for debugging
-    console.log('cleanData - input:', registrationData);
-    console.log('cleanData - userValues:', userValues);
-
     delete cleanedValues.firstName;
     delete cleanedValues.lastName;
     delete cleanedValues.permissions;
     delete cleanedValues.preferredEmail;
-
-    const result = {
+    return {
       ...cleanedValues,
       user: userValues,
     };
-
-    console.log('cleanData - output:', result);
-    return result;
   };
 
   const handleSubmit = async (registrationData) => {
     registrationData = cleanData(registrationData);
-
-    // Ensure user object exists after cleaning
-    if (!registrationData.user) {
-      console.error('cleanData failed to create user object:', registrationData);
-      alert('Error: Missing user information. Please try refreshing the page.');
-      return;
-    }
-
     if (registrationData['university'] === 'Other') {
       registrationData['university'] = registrationData['universityManual'];
     }
@@ -212,29 +195,29 @@ export default function Register({ allowedRegistrations }: Props) {
         );
         resumeUrl = data.url;
       }
-      const submissionData = {
-        ...registrationData,
-        id: registrationData.id || user.id,
-        user: {
-          ...registrationData.user,
-          id: registrationData.user?.id || user.id,
-        },
-        resume: resumeUrl,
-      };
-
-      console.log('Submitting application data:', submissionData);
-
       const { data } = await RequestHelper.post<
         Registration,
         { msg: string; registrationData: Registration }
-      >('/api/applications', {}, submissionData);
+      >(
+        '/api/applications',
+        {},
+        {
+          ...registrationData,
+          id: registrationData.id || user.id,
+          user: {
+            ...registrationData.user,
+            id: registrationData.user.id || user.id,
+          },
+          resume: resumeUrl,
+        },
+      );
       alert('Application Submitted');
       updateProfile(data.registrationData);
       updatePartialProfile(null);
       router.push('/profile');
     } catch (error) {
-      console.error('Application submission error:', error);
-      alert('Error submitting application. Please check the console and try again.');
+      console.error(error);
+      console.log('Request creation error');
     }
   };
 
