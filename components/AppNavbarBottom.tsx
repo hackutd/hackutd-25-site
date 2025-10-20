@@ -308,11 +308,15 @@ export default function AppNavbarBottom(props: Props) {
         'bg-[rgba(0,0,0,0.70)] p-3 rounded-xl',
         'w-[90%] mx-auto',
         'pointer-events-auto',
+        'flex items-center justify-center',
       )}
       style={{
-        position: 'sticky',
+        position: 'fixed',
         bottom: '0',
+        left: 0,
+        right: 0,
         zIndex: 9999,
+        minHeight: '50px',
       }}
     >
       <FloatingDock
@@ -321,7 +325,7 @@ export default function AppNavbarBottom(props: Props) {
           distanceMagnify: 80,
         }}
         classes={{
-          wrapperDiv: clsx('gap-4 flex items-center justify-center flex-wrap'),
+          wrapperDiv: clsx('gap-5 flex items-center justify-center flex-wrap'),
         }}
         items={floatingDockItems()}
       />
