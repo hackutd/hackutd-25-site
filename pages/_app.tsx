@@ -129,7 +129,7 @@ function PortalApp({ Component, pageProps }: AppProps) {
                 <link rel="dns-prefetch" href="//s3.amazonaws.com" />
               </Head>
 
-              <div className="min-h-screen flex flex-col">
+              <div id="app-contnet" className="min-h-screen flex flex-col">
                 <AppHeader />
                 {/* Spacer at the top of the page so that content won't be covered by the navbar */}
                 {!noTopSpacerPathnames.has(router.pathname) && (

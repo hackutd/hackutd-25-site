@@ -306,12 +306,14 @@ export default function AppNavbarBottom(props: Props) {
       className={clsx(
         'md:hidden sticky z-[9999] bottom-0',
         'bg-[rgba(0,0,0,0.70)] p-3 rounded-xl',
-        'w-[90%] mx-auto',
+        'w-[95%] mx-auto',
         'pointer-events-auto',
       )}
       style={{
-        position: 'sticky',
+        position: 'fixed',
         bottom: '0',
+        left: 0,
+        right: 0,
         zIndex: 9999,
       }}
     >
@@ -321,7 +323,7 @@ export default function AppNavbarBottom(props: Props) {
           distanceMagnify: 80,
         }}
         classes={{
-          wrapperDiv: clsx('gap-4 flex items-center justify-center flex-wrap'),
+          wrapperDiv: clsx('gap-5 flex items-center justify-center flex-wrap'),
         }}
         items={floatingDockItems()}
       />

@@ -53,7 +53,7 @@ html {
   }
 
   /* Optimize background loading on mobile */
-  body {
+  #app-content body {
     background-attachment: scroll !important;
     background-size: cover !important;
     background-color: transparent !important;
@@ -61,7 +61,8 @@ html {
   }
 
   /* Optimize for mobile memory */
-  * {
+  #app-content,
+  #app-content * {
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
     will-change: auto;
@@ -99,7 +100,7 @@ html {
   }
 
   /* Optimize images */
-  img {
+  #app-content img {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
     contain: layout style paint;
@@ -119,7 +120,7 @@ html {
   }
 
   /* Optimize sections */
-  section {
+  #app-content section {
     contain: layout style paint;
   }
 }
