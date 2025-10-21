@@ -116,29 +116,28 @@ export default function Calendar() {
           <div
             className={`${
               !showFilteredEvents
-                ? `${!hasEvenIndex && filter === 'All' ? 'bg-[#F2F3FF]' : 'bg-white'} 
-                             ${
-                               !isLastEvent && filter === 'All'
-                                 ? 'p-4 border-b border-[#05149C]'
-                                 : 'rounded-b-xl p-4'
-                             }`
-                : 'p-4 border-b border-[#05149C]'
+                ? `${!isLastEvent && filter === 'All' ? 'p-4 border-b' : 'rounded-b-xl p-4'}`
+                : 'p-4 border-b'
             }
                           `}
+            style={{ backgroundColor: '#100101BF', borderBottomColor: '#FF99BD' }}
           >
             <div className="flex justify-between pb-1">
-              <div className="text-md font-bold font-dmSans">{formattedTime}</div>
-              <div className="text-md font-bold font-dmSans">{data.title}</div>
+              <div className="text-md font-bold font-dmSans text-white">{formattedTime}</div>
+              <div className="text-md font-bold font-dmSans text-white">{data.title}</div>
             </div>
             <div className="flex justify-between">
               <div
-                className={`bg-white text-xs rounded-xl py-1 px-2 border-2 font-dmSans ${
+                className={`text-xs rounded-xl py-1 px-2 border-2 font-dmSans ${
                   eventColors[data.type]
                 }`}
+                style={{
+                  backgroundColor: '#100101BF',
+                }}
               >
                 {data.type}
               </div>
-              <div className="text-gray-600 flex items-center font-dmSans">
+              <div className="text-white flex items-center font-dmSans">
                 <LocationOnIcon style={{ fontSize: 'large', marginRight: '2px' }} />
                 {data.location}
               </div>
@@ -181,15 +180,43 @@ export default function Calendar() {
         />
         <link rel="canonical" href="https://legend.hackutd.co/schedule" />
       </Head>
-      <div className="bg-[#F2F3FF]">
-        <div className="text-center text-5xl font-bold text-[#05149C] p-4 font-fredoka">
-          What to Expect?
+
+      <div
+      // style = {{
+      //   backgroundColor: '#0B0B1B',
+      //   backgroundImage: 'url("/assets/sponsorsBG/leaves.PNG")',
+      // }}
+      >
+        <div
+          className="text-center text-5xl font-bold p-4 font-youngSerif"
+          style={{
+            background: 'linear-gradient(354.75deg, #FFD29B 4.2%, #FFD29B 37.67%, #FF5757 95.8%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            filter:
+              'drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000)',
+          }}
+        >
+          What to Expect Day Of?
         </div>
 
         {/* Filter */}
         <div className="md:flex justify-center items-center mx-8">
-          <div className="bg-white border-2 border-blue-900 rounded-3xl px-8 my-4 border-opacity-40">
-            <div className="text-center py-1 text-xl font-bold text-[#05149C] font-poppins">
+          <div
+            className="border-2 border-blue-900 rounded-3xl px-8 my-4 border-opacity-40"
+            style={{ backgroundColor: '#430D12E5' }}
+          >
+            <div
+              className="text-center py-1 text-xl font-bold font-youngSerif"
+              style={{
+                background:
+                  'linear-gradient(354.75deg, #FFD29B 4.2%, #FFD29B 37.67%, #FF5757 95.8%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
               Filters
             </div>
             <div className="flex flex-wrap justify-center mb-2 font-poppins">
@@ -247,19 +274,45 @@ export default function Calendar() {
         {/* Calendar */}
         <div className="md:flex p-1 overflow-y-auto overflow-x-hidden mx-auto lg:w-[80%] w-full h-full">
           <div className="w-full lg:w-1/2 px-4 md:px-0">
-            <div className="text-3xl font-black py-6 text-[#05149C] font-fredoka">
+            <div
+              className="text-3xl font-black py-6 text-[#FFF] font-youngSerif text-center"
+              style={{
+                textShadow:
+                  '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
+              }}
+            >
               Day 1: Saturday
             </div>
-            <div className="bg-white mb-8 mx-2 p-2 border-2 rounded-2xl border-[#05149C] border-opacity-20">
+            <div
+              className="mb-8 mx-2 p-2 border-2 rounded-2xl border-opacity-20"
+              style={{
+                backgroundColor: '#100101BF',
+                borderColor: '#FF99BD',
+                boxShadow: '0px 0px 20px 0px #CD4D4D80',
+              }}
+            >
               {day1Events}
             </div>
           </div>
 
           <div className="w-full lg:w-1/2 md:ml-6 px-4 md:px-0">
-            <div className="text-3xl font-black py-6 text-[#05149C] font-fredoka">
+            <div
+              className="text-3xl font-black py-6 text-[#FFF] font-youngSerif text-center"
+              style={{
+                textShadow:
+                  '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
+              }}
+            >
               Day 2: Sunday
             </div>
-            <div className="bg-white mb-8 mx-2 p-2 border-2 rounded-2xl border-[#05149C] border-opacity-20">
+            <div
+              className="mb-8 mx-2 p-2 border-2 rounded-2xl border-opacity-20"
+              style={{
+                backgroundColor: '#100101BF',
+                borderColor: '#FF99BD',
+                boxShadow: '0px 0px 20px 0px #CD4D4D80',
+              }}
+            >
               {day2Events}
             </div>
           </div>
