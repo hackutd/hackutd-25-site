@@ -46,11 +46,8 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
   // Get all scoring data
   const scoringSnapshot = await db.collection(SCORING_COLLECTION).get();
 
-  // Get total applications count (only hackers, not admins)
-  const applicationsSnapshot = await db
-    .collection(USERS_COLLECTION)
-    .where('user.permissions', 'array-contains', 'hacker')
-    .get();
+  // Get total applications count
+  const applicationsSnapshot = await db.collection(USERS_COLLECTION).get();
   const totalApplications = applicationsSnapshot.size;
 
   // Track unique applications that have been judged at least once

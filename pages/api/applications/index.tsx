@@ -140,16 +140,6 @@ async function handlePostApplications(req: NextApiRequest, res: NextApiResponse)
       message: '',
     });
   }
-
-  // Validate that user object exists
-  if (!body.user || !body.user.id) {
-    console.error('Invalid request body - missing user.id:', body);
-    return res.status(400).json({
-      type: 'invalid',
-      message: 'Missing required user information',
-    });
-  }
-
   let snapshot = await db
     .collection(APPLICATIONS_COLLECTION)
     .where('user.id', '==', body.user.id)
@@ -207,15 +197,6 @@ async function handlePutApplications(req: NextApiRequest, res: NextApiResponse) 
     return res.status(400).json({
       type: 'invalid',
       message: 'Invalid JSON body',
-    });
-  }
-
-  // Validate that user object exists
-  if (!body.user || !body.user.id) {
-    console.error('Invalid request body - missing user.id:', body);
-    return res.status(400).json({
-      type: 'invalid',
-      message: 'Missing required user information',
     });
   }
 
