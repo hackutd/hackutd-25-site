@@ -102,6 +102,16 @@ async function handleUserInfo(req: NextApiRequest, res: NextApiResponse) {
       return res.status(404).json({ code: 'not found', message: "User doesn't exist..." });
     const applicationStatus = await getApplicationDecision(userID);
     const userData = snapshot.data();
+
+    // Add safety checks for user data
+    if (!userData || !userData.user) {
+      console.error('User data is malformed:', userData);
+      return res.status(500).json({
+        code: 'data-error',
+        message: 'User data is malformed.',
+      });
+    }
+
     return res.status(200).json({
       ...userData,
       status: applicationStatus,

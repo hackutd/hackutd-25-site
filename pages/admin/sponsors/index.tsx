@@ -57,15 +57,24 @@ const Page = ({ sponsors_ }: AdminSponsorPageProps) => {
 export default Page;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const protocol = context.req.headers.referer?.split('://')[0] || 'http';
-  const { data } = await RequestHelper.get<Sponsor[]>(
-    `${protocol}://${context.req.headers.host}/api/sponsors`,
-    {},
-  );
+  try {
+    const protocol = context.req.headers.referer?.split('://')[0] || 'http';
+    const { data } = await RequestHelper.get<Sponsor[]>(
+      `${protocol}://${context.req.headers.host}/api/sponsors`,
+      {},
+    );
 
-  return {
-    props: {
-      sponsors_: data,
-    },
-  };
+    return {
+      props: {
+        sponsors_: data || [],
+      },
+    };
+  } catch (error) {
+    console.error('Error loading sponsors:', error);
+    return {
+      props: {
+        sponsors_: [],
+      },
+    };
+  }
 };

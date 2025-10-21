@@ -18,16 +18,24 @@ const SCHEDULE_EVENTS = '/schedule-events';
  *
  */
 async function getScheduleEvents(req: NextApiRequest, res: NextApiResponse) {
-  const snapshot = await db.collection(SCHEDULE_EVENTS).get();
-  let data = [];
-  snapshot.forEach((doc) => {
-    const currentEvent = doc.data();
-    data.push({
-      ...currentEvent,
-      startDate: currentEvent.startDate.toDate(),
+  try {
+    const snapshot = await db.collection(SCHEDULE_EVENTS).get();
+    let data = [];
+    snapshot.forEach((doc) => {
+      const currentEvent = doc.data();
+      if (currentEvent && currentEvent.startDate) {
+        data.push({
+          ...currentEvent,
+          startDate: currentEvent.startDate.toDate(),
+        });
+      }
     });
-  });
-  res.json(data);
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching schedule events:', error);
+    // Return empty array instead of failing
+    res.json([]);
+  }
 }
 
 async function updateEventDatabase(req: NextApiRequest, res: NextApiResponse) {

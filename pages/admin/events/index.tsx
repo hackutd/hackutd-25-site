@@ -201,14 +201,23 @@ export default function EventPage(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const protocol = context.req.headers.referer?.split('://')[0] || 'http';
-  const { data } = await RequestHelper.get<ScheduleEvent[]>(
-    `${protocol}://${context.req.headers.host}/api/schedule`,
-    {},
-  );
-  return {
-    props: {
-      events: data,
-    },
-  };
+  try {
+    const protocol = context.req.headers.referer?.split('://')[0] || 'http';
+    const { data } = await RequestHelper.get<ScheduleEvent[]>(
+      `${protocol}://${context.req.headers.host}/api/schedule`,
+      {},
+    );
+    return {
+      props: {
+        events: data || [],
+      },
+    };
+  } catch (error) {
+    console.error('Error loading events:', error);
+    return {
+      props: {
+        events: [],
+      },
+    };
+  }
 };
