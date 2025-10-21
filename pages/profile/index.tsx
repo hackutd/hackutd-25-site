@@ -356,12 +356,12 @@ export default function ProfilePage() {
                         View Resume
                       </Link>
                     )}
-                    <button
+                    {/* <button
                       className="font-fredoka transition py-3 font-semibold px-6 text-sm text-center whitespace-nowrap text-white w-min bg-[#7A9E7E] rounded-full cursor-pointer hover:brightness-110"
                       onClick={handleEditApplication}
                     >
                       Edit Application
-                    </button>
+                    </button> */}
                     <button
                       className="font-fredoka transition py-3 font-semibold px-6 text-sm text-center whitespace-nowrap text-white w-min bg-red-400 rounded-full cursor-pointer hover:brightness-110"
                       onClick={() => setShowAppDeleteModal(true)}
