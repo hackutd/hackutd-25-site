@@ -53,6 +53,8 @@ export default function UserPage() {
     'In Review',
     'Maybe Yes',
     'Maybe No',
+    'Assigned to Me',
+    'Common Pool',
   ];
 
   const [filterParamsList, setFilterParamsList] = useState<string[]>(filterParams);
@@ -126,14 +128,40 @@ export default function UserPage() {
 
   useEffect(() => {
     if (loading) return;
+
+    // Filter by status
     let filteredUserGroups = userGroups.filter((userGroup) => {
       return filterParamsList.includes(userGroup.application[0].status);
     });
+
+    // Filter by permissions
     filteredUserGroups = filteredUserGroups.filter((userGroup) => {
       return userGroup.application.some((app) =>
         filterParamsList.includes(app.user.permissions[0]),
       );
     });
+
+    // Filter by assignment status
+    const hasAssignedFilter = filterParamsList.includes('Assigned to Me');
+    const hasCommonPoolFilter = filterParamsList.includes('Common Pool');
+
+    // Only apply assignment filter if one (or both) is selected but not both
+    // If both are selected or neither, show all
+    if (hasAssignedFilter || hasCommonPoolFilter) {
+      if (hasAssignedFilter && !hasCommonPoolFilter) {
+        // Show only assigned
+        filteredUserGroups = filteredUserGroups.filter((userGroup) => {
+          return userGroup.application[0].isAssigned === true;
+        });
+      } else if (!hasAssignedFilter && hasCommonPoolFilter) {
+        // Show only common pool
+        filteredUserGroups = filteredUserGroups.filter((userGroup) => {
+          return userGroup.application[0].isAssigned === false;
+        });
+      }
+      // If both are selected, show all (no additional filtering)
+    }
+
     timer = setTimeout(() => {
       if (searchQuery !== '') {
         const newFiltered = filteredUserGroups.filter(

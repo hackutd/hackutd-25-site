@@ -1,5 +1,10 @@
 const { app, firestore } = require('firebase-admin');
 const admin = require('firebase-admin');
+const path = require('path');
+
+// Load environment variables from .env.local
+require('dotenv').config({ path: path.resolve(__dirname, '../.env.local') });
+
 const { generateGroupsFromUserData } = require('../pages/api/users');
 
 /**
@@ -75,7 +80,7 @@ async function assignReviewers() {
     // Get all non-reviewed applications
     const applicationsSnapshot = await db
       .collection(REGISTRATION_COLLECTIONS)
-      .where('user.permissions', '==', ['hacker'])
+      .where('user.permissions', 'array-contains', 'hacker')
       .get();
 
     // get all applications that need review and have role of hacker
@@ -91,18 +96,20 @@ async function assignReviewers() {
     // Shuffle the applications to avoid bias
     shuffle(applicationsNeededForReview);
 
-    // Get all organizers
+    // Get all organizers (exclude super_admin)
     const organizersSnapshot = await db
       .collection(REGISTRATION_COLLECTIONS)
-      .where('user.permissions', 'array-contains-any', ['super_admin', 'admin'])
+      .where('user.permissions', 'array-contains', 'admin')
       .get();
-    const organizers = organizersSnapshot.docs.map((doc) => {
-      return {
-        id: doc.id,
-        data: doc.data(),
-        reviewCount: doc.data().reviewCount || 0,
-      };
-    });
+    const organizers = organizersSnapshot.docs
+      .filter((doc) => !doc.data().user.permissions.includes('super_admin'))
+      .map((doc) => {
+        return {
+          id: doc.id,
+          data: doc.data(),
+          reviewCount: doc.data().reviewCount || 0,
+        };
+      });
 
     // Sort organizers by review count in ascending order
     organizers.sort((a, b) => a.reviewCount - b.reviewCount);

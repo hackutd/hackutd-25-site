@@ -18,6 +18,7 @@ interface Props {
 export default function HackerApplicationGroupCarousel({ group, appViewState }: Props) {
   const { user } = useAuthContext();
   const updateGroupVerdict = useUserGroup((state) => state.updateGroupVerdict);
+  const updateMemberVerdict = useUserGroup((state) => state.updateMemberVerdict);
   const groupId = useMemo(() => getGroupId(group), [group]);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, watchDrag: false });
@@ -88,18 +89,22 @@ export default function HackerApplicationGroupCarousel({ group, appViewState }: 
                           },
                         },
                         {
-                          scores: group.map((member, idx) => ({
-                            adminId: user.id,
-                            hackerId: member.id,
-                            score: groupScore,
-                            note: notes[idx],
-                            isSuperVote: appViewState === ApplicationViewState.ALL,
-                          })),
+                          scores: [
+                            {
+                              adminId: user.id,
+                              hackerId: member.id, // Only score the current team member
+                              score: groupScore,
+                              note: notes[idx],
+                              isSuperVote: appViewState === ApplicationViewState.ALL,
+                            },
+                          ],
                         },
                       );
                       alert(data.msg);
-                      updateGroupVerdict(
+                      // Update the verdict for the specific team member, not the entire group
+                      updateMemberVerdict(
                         groupId,
+                        member.id,
                         groupScore === 1 ? 'Rejected' : groupScore === 4 ? 'Accepted' : 'Maybe',
                       );
                     } catch (err) {
