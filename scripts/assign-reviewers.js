@@ -54,7 +54,7 @@ function initializeApi() {
 initializeApi();
 
 const db = firestore();
-const REGISTRATION_COLLECTIONS = '/registration';
+const REGISTRATION_COLLECTIONS = '/registrations';
 
 /**
  * Shuffle an array (Fisher-Yates shuffle).

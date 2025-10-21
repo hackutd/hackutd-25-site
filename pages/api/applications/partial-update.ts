@@ -70,6 +70,7 @@ async function handlePartialUpdate(req: NextApiRequest, res: NextApiResponse) {
 
   // Extract user data from token
   let userData;
+  let userId;
   try {
     userData = await extractUserDataFromToken(userToken);
     if (!userData) {
@@ -79,6 +80,16 @@ async function handlePartialUpdate(req: NextApiRequest, res: NextApiResponse) {
       });
     }
     console.log('User data extracted:', userData);
+
+    // Handle both nested and flat user data structures
+    userId = userData.user?.id || userData.id;
+
+    if (!userId) {
+      console.error('Could not extract user ID from token data');
+      return res.status(401).json({
+        msg: 'Invalid token data structure',
+      });
+    }
   } catch (error) {
     console.error('Error extracting user data from token:', error);
     return res.status(401).json({
@@ -86,16 +97,18 @@ async function handlePartialUpdate(req: NextApiRequest, res: NextApiResponse) {
     });
   }
 
-  // Get the existing application
-  const snapshot = await db
-    .collection(APPLICATIONS_COLLECTION)
-    .where('user.id', '==', userData.user.id)
-    .get();
+  // Get the existing application - try with nested structure first, then flat
+  let snapshot = await db.collection(APPLICATIONS_COLLECTION).where('user.id', '==', userId).get();
+
+  // If not found with nested structure, try with flat structure
+  if (snapshot.empty) {
+    snapshot = await db.collection(APPLICATIONS_COLLECTION).where('id', '==', userId).get();
+  }
 
   console.log('Found applications:', snapshot.size);
 
   if (snapshot.empty) {
-    console.error('No application found for user:', userData.user.id);
+    console.error('No application found for user:', userId);
     return res.status(404).json({
       msg: 'Application does not exist',
     });
