@@ -22,6 +22,38 @@ const SCORING_MAYBE_NO = 2;
 const SCORING_MAYBE_YES = 3;
 const SCORING_YES = 4;
 
+async function getTeamMembers(hackerId: string): Promise<string[]> {
+  const hackerApplication = await db.collection(REGISTRATION_COLLECTION).doc(hackerId).get();
+  const data = hackerApplication.data();
+  if (!data) return [hackerId];
+
+  const teammates = [data.teammate1, data.teammate2, data.teammate3].filter(
+    (t) => t && t.trim() !== '',
+  );
+
+  // Find all team members by checking who has this person as a teammate
+  const teamMembers = new Set([hackerId]);
+  teammates.forEach((teammateEmail) => {
+    teamMembers.add(teammateEmail);
+  });
+
+  // Check if other people have this person as a teammate
+  const allApps = await db
+    .collection(REGISTRATION_COLLECTION)
+    .where('user.permissions', 'array-contains', 'hacker')
+    .get();
+
+  allApps.docs.forEach((doc) => {
+    const appData = doc.data();
+    const appTeammates = [appData.teammate1, appData.teammate2, appData.teammate3];
+    if (appTeammates.includes(data.user.preferredEmail)) {
+      teamMembers.add(doc.id);
+    }
+  });
+
+  return Array.from(teamMembers);
+}
+
 async function checkAppShouldEnterCommonPool(hackerId: string, isInATeam: boolean) {
   const hackerApplication = await db.collection(REGISTRATION_COLLECTION).doc(hackerId).get();
   // NOTE: if app already had `inCommonPool` flag, there's no reason to move it to common pool again
@@ -41,6 +73,7 @@ async function checkAppShouldEnterCommonPool(hackerId: string, isInATeam: boolea
     (doc) => doc.data().score === SCORING_MAYBE_YES || doc.data().score === SCORING_MAYBE_NO,
   );
   if (hasMaybeVerdict) return true;
+
   // NOTE: appScore can only be either -2, 0, or 2
   const appScore = scoring.docs.reduce((acc, curr) => {
     const currentScore = curr.data().score;
@@ -50,10 +83,32 @@ async function checkAppShouldEnterCommonPool(hackerId: string, isInATeam: boolea
     }
     return acc + 1;
   }, 0);
+
+  // If individual gets outright rejected (negative score), remove them from review process
   if (scoring.docs.length === 2 && appScore < 0) {
-    // NOTE: if appScore is negative and 2 assigned officers already reviewed app, then user will go to common pool if whole team is rejected
-    return isInATeam;
+    // Remove individual from review process (fully rejected)
+    await db
+      .collection(REGISTRATION_COLLECTION)
+      .doc(hackerId)
+      .update({
+        'user.permissions': ['hacker'], // Remove 'in_review' permission
+        inCommonPool: false,
+      });
+
+    // If this was a team member, move the rest of the team to common pool
+    if (isInATeam) {
+      const teamMembers = await getTeamMembers(hackerId);
+      for (const teamMemberId of teamMembers) {
+        if (teamMemberId !== hackerId) {
+          // Move other team members to common pool for individual judgment
+          await moveAppToCommonPool(teamMemberId);
+        }
+      }
+    }
+
+    return false; // Don't move to common pool, they're fully rejected
   }
+
   return appScore === 0;
 }
 
@@ -66,6 +121,60 @@ async function moveAppToCommonPool(hackerId: string) {
       merge: true,
     },
   );
+}
+
+async function checkTeamMajorityAcceptance(hackerId: string): Promise<boolean> {
+  const teamMembers = await getTeamMembers(hackerId);
+  if (teamMembers.length < 2) return false; // Not a team
+
+  let acceptedCount = 0;
+  let totalScoredCount = 0;
+
+  for (const teamMemberId of teamMembers) {
+    const teamMemberScoring = await db
+      .collection(SCORING_COLLECTION)
+      .where('hackerId', '==', teamMemberId)
+      .where('appIsAssigned', '==', true)
+      .get();
+
+    if (teamMemberScoring.docs.length >= 2) {
+      // Has been fully reviewed
+      totalScoredCount++;
+      const teamMemberScore = teamMemberScoring.docs.reduce((acc, curr) => {
+        const currentScore = curr.data().score;
+        if (currentScore === SCORING_NO) return acc - 1;
+        if (currentScore === SCORING_YES) return acc + 1;
+        return acc;
+      }, 0);
+
+      if (teamMemberScore > 0) {
+        // Accepted
+        acceptedCount++;
+      }
+    }
+  }
+
+  // If majority of scored team members are accepted, accept whole team
+  if (totalScoredCount > 0 && acceptedCount > totalScoredCount / 2) {
+    return true;
+  }
+
+  return false;
+}
+
+async function acceptWholeTeam(hackerId: string) {
+  const teamMembers = await getTeamMembers(hackerId);
+
+  for (const teamMemberId of teamMembers) {
+    // Remove from review process (accepted)
+    await db
+      .collection(REGISTRATION_COLLECTION)
+      .doc(teamMemberId)
+      .update({
+        'user.permissions': ['hacker'], // Remove 'in_review' permission
+        inCommonPool: false,
+      });
+  }
 }
 
 async function handlePostRequest(req: NextApiRequest, res: NextApiResponse) {
@@ -84,7 +193,12 @@ async function handlePostRequest(req: NextApiRequest, res: NextApiResponse) {
     });
   }
 
-  const isTeam = req.body.scores.length > 1;
+  // Check if this is a team member by looking at the hacker's teammates
+  const firstScore = req.body.scores[0];
+  const hackerDoc = await db.collection(REGISTRATION_COLLECTION).doc(firstScore.hackerId).get();
+  const isTeam =
+    hackerDoc.exists &&
+    (hackerDoc.data().teammate1 || hackerDoc.data().teammate2 || hackerDoc.data().teammate3);
 
   // NOTE: req.body will be of type { scores: ScoringDataType[] }
   try {
@@ -138,6 +252,44 @@ async function handlePostRequest(req: NextApiRequest, res: NextApiResponse) {
           );
           if (appShouldBeMovedToCommonPool) {
             await moveAppToCommonPool(scoring.hackerId);
+          }
+
+          // Check if team should be accepted based on majority
+          // Only check when the current score is an acceptance (score = 4) and after both reviewers have completed their reviews
+          if (isTeam && scoring.score === 4) {
+            // Only check for team acceptance when accepting someone
+            const currentScoring = await db
+              .collection(SCORING_COLLECTION)
+              .where('hackerId', '==', scoring.hackerId)
+              .where('appIsAssigned', '==', true)
+              .get();
+
+            // Only check for team acceptance if this team member has been fully reviewed (2 scores)
+            if (currentScoring.docs.length >= 2) {
+              // Additional check: only accept team if at least 2 team members have been fully reviewed
+              const teamMembers = await getTeamMembers(scoring.hackerId);
+              let fullyReviewedCount = 0;
+
+              for (const teamMemberId of teamMembers) {
+                const memberScoring = await db
+                  .collection(SCORING_COLLECTION)
+                  .where('hackerId', '==', teamMemberId)
+                  .where('appIsAssigned', '==', true)
+                  .get();
+
+                if (memberScoring.docs.length >= 2) {
+                  fullyReviewedCount++;
+                }
+              }
+
+              // Only check for team acceptance if at least 2 team members have been fully reviewed
+              if (fullyReviewedCount >= 2) {
+                const shouldAcceptTeam = await checkTeamMajorityAcceptance(scoring.hackerId);
+                if (shouldAcceptTeam) {
+                  await acceptWholeTeam(scoring.hackerId);
+                }
+              }
+            }
           }
         }
       }),

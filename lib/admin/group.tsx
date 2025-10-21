@@ -14,6 +14,7 @@ interface UserGroupState {
   setUserGroup: (groups: ApplicationEntry[]) => void;
   setAllUserGroup: (allUsers: ApplicationEntry[]) => void;
   updateGroupVerdict: (groupId: string, newVerdict: string) => void;
+  updateMemberVerdict: (groupId: string, memberId: string, newVerdict: string) => void;
 }
 
 export const useUserGroup = create<UserGroupState>((set) => ({
@@ -32,6 +33,19 @@ export const useUserGroup = create<UserGroupState>((set) => ({
           ? {
               ...group,
               application: group.application.map((member) => ({ ...member, status: newVerdict })),
+            }
+          : group,
+      ),
+    })),
+  updateMemberVerdict: (groupId, memberId, newVerdict) =>
+    set((state) => ({
+      groups: state.groups.map((group) =>
+        getGroupId(group.application) === groupId
+          ? {
+              ...group,
+              application: group.application.map((member) =>
+                member.id === memberId ? { ...member, status: newVerdict } : member,
+              ),
             }
           : group,
       ),

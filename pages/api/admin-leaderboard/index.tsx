@@ -46,17 +46,20 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
   // Get all scoring data
   const scoringSnapshot = await db.collection(SCORING_COLLECTION).get();
 
-  // Get total applications count
-  const applicationsSnapshot = await db.collection(USERS_COLLECTION).get();
+  // Get total applications count (only hackers, not admins)
+  const applicationsSnapshot = await db
+    .collection(USERS_COLLECTION)
+    .where('user.permissions', 'array-contains', 'hacker')
+    .get();
   const totalApplications = applicationsSnapshot.size;
 
   // Track unique applications that have been judged at least once
   const judgedApplicationIds = new Set<string>();
 
-  // First, get all admin users
+  // First, get all admin users (exclude super_admin)
   const adminUsersSnapshot = await db
     .collection(USERS_COLLECTION)
-    .where('user.permissions', 'array-contains-any', ['admin', 'super_admin', 'organizer', 'judge'])
+    .where('user.permissions', 'array-contains-any', ['admin', 'organizer', 'judge'])
     .get();
 
   // Initialize all admin stats with zeros
@@ -73,8 +76,12 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
 
   const adminNames = new Map<string, string>();
 
-  // Initialize all admin users with zero stats
+  // Initialize all admin users with zero stats (filter out super_admins just in case)
   adminUsersSnapshot.forEach((doc) => {
+    // Skip super admins
+    if (doc.data().user.permissions.includes('super_admin')) {
+      return;
+    }
     const data = doc.data();
     const adminId = doc.id;
     const adminName = `${data.user.firstName} ${data.user.lastName}`;

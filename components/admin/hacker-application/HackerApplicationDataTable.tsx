@@ -58,15 +58,35 @@ export default function HackerApplicationDataTable({
           cursor-pointer hover:bg-[rgb(255,255,255,0.2)] items-center transition
           ${bgColor}
           ${blur}
+          ${group.application[0].isTeamMember ? 'border-l-4' : ''}
         `}
+          style={
+            group.application[0].isTeamMember
+              ? {
+                  borderLeftColor: `hsl(${
+                    parseInt(group.application[0].teamId || '0', 36) % 360
+                  }, 70%, 60%)`,
+                }
+              : {}
+          }
           onClick={() => onUserGroupClick(getGroupId(group.application))}
         >
           <div
             className={`
-            flex items-center justify-center w-2/12 h-full py-3 
+            flex flex-col items-center justify-center w-2/12 h-full py-3 gap-1
             whitespace-nowrap overflow-hidden text-ellipsis max-w-[100%]
           `}
           >
+            {group.application[0].isTeamMember && (
+              <span
+                className="inline-block w-4 h-4 rounded-full mb-1"
+                style={{
+                  backgroundColor: `hsl(${
+                    parseInt(group.application[0].teamId || '0', 36) % 360
+                  }, 70%, 60%)`,
+                }}
+              />
+            )}
             <span
               className={`
               py-1 px-6 rounded-full 
@@ -94,6 +114,20 @@ export default function HackerApplicationDataTable({
             >
               {group.application[0].status}
             </span>
+            {group.application[0].isAssigned !== undefined && (
+              <span
+                className={`
+                  text-xs py-0.5 px-2 rounded-full font-semibold
+                  ${
+                    group.application[0].isAssigned
+                      ? 'bg-red-100 text-red-700 border border-red-300'
+                      : 'bg-blue-100 text-blue-700 border border-blue-300'
+                  }
+                `}
+              >
+                {group.application[0].isAssigned ? '📌 Assigned' : '🌐 Common Pool'}
+              </span>
+            )}
           </div>
           {user.permissions.includes('super_admin') && (
             <div
@@ -103,9 +137,19 @@ export default function HackerApplicationDataTable({
             >
               <div
                 className={`
-            whitespace-nowrap overflow-hidden text-ellipsis w-[100%]
+            whitespace-nowrap overflow-hidden text-ellipsis w-[100%] flex items-center gap-2 justify-center
           `}
               >
+                {group.application[0].isTeamMember && (
+                  <span
+                    className="inline-block w-3 h-3 rounded-full flex-shrink-0"
+                    style={{
+                      backgroundColor: `hsl(${
+                        parseInt(group.application[0].teamId || '0', 36) % 360
+                      }, 70%, 60%)`,
+                    }}
+                  />
+                )}
                 <HiddenInfo
                   locked={appViewState === ApplicationViewState.REVIEWABLE}
                   canUnlock={appViewState === ApplicationViewState.ALL}
@@ -129,11 +173,21 @@ export default function HackerApplicationDataTable({
             } h-full py-3j
           `}
           >
-            <p
+            <div
               className={`
-            whitespace-nowrap overflow-hidden text-ellipsis w-[100%]
+            whitespace-nowrap overflow-hidden text-ellipsis w-[100%] flex items-center gap-2 justify-center
           `}
             >
+              {group.application[0].isTeamMember && (
+                <span
+                  className="inline-block w-3 h-3 rounded-full flex-shrink-0"
+                  style={{
+                    backgroundColor: `hsl(${
+                      parseInt(group.application[0].teamId || '0', 36) % 360
+                    }, 70%, 60%)`,
+                  }}
+                />
+              )}
               <HiddenInfo
                 locked={appViewState === ApplicationViewState.REVIEWABLE}
                 v={Array.from(new Set(group.application.map((eachUser) => eachUser.university)))
@@ -141,7 +195,7 @@ export default function HackerApplicationDataTable({
                   .join(', ')}
                 canUnlock={appViewState === ApplicationViewState.ALL}
               />
-            </p>
+            </div>
           </div>
 
           <div
@@ -149,15 +203,27 @@ export default function HackerApplicationDataTable({
             flex text-center items-center text-base text-[rgb(19,19,19)] w-2/12 h-full py-3
           `}
           >
-            <p
+            <div
               className={`
-            whitespace-nowrap overflow-hidden text-ellipsis w-[100%]
+            whitespace-nowrap overflow-hidden text-ellipsis w-[100%] flex items-center gap-2 justify-center
           `}
             >
-              {Array.from(new Set(group.application.map((eachUser) => eachUser.major)))
-                .sort((a, b) => a.localeCompare(b))
-                .join(', ')}
-            </p>
+              {group.application[0].isTeamMember && (
+                <span
+                  className="inline-block w-3 h-3 rounded-full flex-shrink-0"
+                  style={{
+                    backgroundColor: `hsl(${
+                      parseInt(group.application[0].teamId || '0', 36) % 360
+                    }, 70%, 60%)`,
+                  }}
+                />
+              )}
+              <span>
+                {Array.from(new Set(group.application.map((eachUser) => eachUser.major)))
+                  .sort((a, b) => a.localeCompare(b))
+                  .join(', ')}
+              </span>
+            </div>
           </div>
 
           <div
@@ -165,15 +231,27 @@ export default function HackerApplicationDataTable({
             flex text-center items-center text-base text-[rgb(19,19,19)] w-2/12 h-full py-3
           `}
           >
-            <p
+            <div
               className={`
-            whitespace-nowrap overflow-hidden text-ellipsis w-[100%]
+            whitespace-nowrap overflow-hidden text-ellipsis w-[100%] flex items-center gap-2 justify-center
           `}
             >
-              {Array.from(new Set(group.application.map((eachUser) => eachUser.studyLevel)))
-                .sort((a, b) => a.localeCompare(b))
-                .join(', ')}
-            </p>
+              {group.application[0].isTeamMember && (
+                <span
+                  className="inline-block w-3 h-3 rounded-full flex-shrink-0"
+                  style={{
+                    backgroundColor: `hsl(${
+                      parseInt(group.application[0].teamId || '0', 36) % 360
+                    }, 70%, 60%)`,
+                  }}
+                />
+              )}
+              <span>
+                {Array.from(new Set(group.application.map((eachUser) => eachUser.studyLevel)))
+                  .sort((a, b) => a.localeCompare(b))
+                  .join(', ')}
+              </span>
+            </div>
           </div>
         </div>,
       );
@@ -189,7 +267,7 @@ export default function HackerApplicationDataTable({
 
   useEffect(() => {
     setHackerApplicationsSlice(hackerApplications.slice(0, pageSize));
-  }, [hackerApplications, userGroups]);
+  }, [hackerApplications]);
 
   const nextPage = () => {
     setHackerApplicationsSlice(

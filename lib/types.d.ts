@@ -360,6 +360,10 @@ declare module '*.md' {
 type UserIdentifier = Omit<Registration, 'scans'> & {
   status: string;
   selected: boolean;
+  isAssigned?: boolean;
+  isTeamMember?: boolean;
+  teamSize?: number;
+  teamId?: string | null;
   scoring?: {
     score: number;
     note: string;

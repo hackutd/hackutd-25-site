@@ -139,8 +139,20 @@ export default function ViewHackerApplication({
           }
         }}
       />
-      <h1 className="text-3xl my-3 text-[#5D5A88] font-bold">
-        Team member {userIndex}/{groupLength}
+      <h1 className="text-3xl my-3 text-[#5D5A88] font-bold flex items-center gap-3">
+        {currentApplicant.isTeamMember && (
+          <span
+            className="inline-block w-6 h-6 rounded-full border-2 border-white shadow-md"
+            style={{
+              backgroundColor: `hsl(${
+                parseInt(currentApplicant.teamId || '0', 36) % 360
+              }, 70%, 60%)`,
+            }}
+          />
+        )}
+        {currentApplicant.isTeamMember
+          ? `Team member ${userIndex}/${groupLength} (Team of ${currentApplicant.teamSize})`
+          : `Individual Applicant ${userIndex}/${groupLength}`}
       </h1>
       <div className="flex-wrap gap-y-2 flex flex-row justify-between items-center">
         <p
