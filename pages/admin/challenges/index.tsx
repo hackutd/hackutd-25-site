@@ -234,14 +234,23 @@ export default function ChallengePage(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const protocol = context.req.headers.referer?.split('://')[0] || 'http';
-  const { data } = await RequestHelper.get<Challenge[]>(
-    `${protocol}://${context.req.headers.host}/api/challenges`,
-    {},
-  );
-  return {
-    props: {
-      challenges: data,
-    },
-  };
+  try {
+    const protocol = context.req.headers.referer?.split('://')[0] || 'http';
+    const { data } = await RequestHelper.get<Challenge[]>(
+      `${protocol}://${context.req.headers.host}/api/challenges`,
+      {},
+    );
+    return {
+      props: {
+        challenges: data || [],
+      },
+    };
+  } catch (error) {
+    console.error('Error loading challenges:', error);
+    return {
+      props: {
+        challenges: [],
+      },
+    };
+  }
 };

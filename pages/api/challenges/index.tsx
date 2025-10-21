@@ -18,12 +18,21 @@ const CHALLENGES = '/challenges';
  *
  */
 async function getChallenges(req: NextApiRequest, res: NextApiResponse) {
-  const snapshot = await db.collection(CHALLENGES).get();
-  let data = [];
-  snapshot.forEach((doc) => {
-    data.push(doc.data());
-  });
-  res.json(data);
+  try {
+    const snapshot = await db.collection(CHALLENGES).get();
+    let data = [];
+    snapshot.forEach((doc) => {
+      const docData = doc.data();
+      if (docData) {
+        data.push(docData);
+      }
+    });
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching challenges:', error);
+    // Return empty array instead of failing
+    res.json([]);
+  }
 }
 
 async function updateChallengeDatabase(req: NextApiRequest, res: NextApiResponse) {

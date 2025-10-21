@@ -78,13 +78,21 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
 
   // Initialize all admin users with zero stats (filter out super_admins just in case)
   adminUsersSnapshot.forEach((doc) => {
-    // Skip super admins
-    if (doc.data().user.permissions.includes('super_admin')) {
+    const data = doc.data();
+
+    // Skip if user data is malformed
+    if (!data || !data.user) {
+      console.warn('Malformed user data for admin:', doc.id);
       return;
     }
-    const data = doc.data();
+
+    // Skip super admins
+    if (data.user?.permissions?.includes('super_admin')) {
+      return;
+    }
+
     const adminId = doc.id;
-    const adminName = `${data.user.firstName} ${data.user.lastName}`;
+    const adminName = `${data.user.firstName || 'Unknown'} ${data.user.lastName || ''}`.trim();
 
     adminStats.set(adminId, {
       totalReviews: 0,
@@ -94,7 +102,7 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
       superVotes: 0,
     });
 
-    adminNames.set(adminId, adminName);
+    adminNames.set(adminId, adminName || 'Unknown Admin');
   });
 
   // Now process actual scoring data
