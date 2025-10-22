@@ -43,26 +43,21 @@ async function userIsAuthorized(token: string): Promise<boolean> {
 }
 
 async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
-  // Get all scoring data
-  const scoringSnapshot = await db.collection(SCORING_COLLECTION).get();
-
-  // Get total applications count (only hackers, not admins)
-  const applicationsSnapshot = await db
+  // Get total applications count using aggregation (1 read instead of 2,583)
+  const applicationsCountSnapshot = await db
     .collection(USERS_COLLECTION)
     .where('user.permissions', 'array-contains', 'hacker')
+    .count()
     .get();
-  const totalApplications = applicationsSnapshot.size;
+  const totalApplications = applicationsCountSnapshot.data().count;
 
-  // Track unique applications that have been judged at least once
-  const judgedApplicationIds = new Set<string>();
-
-  // First, get all admin users (exclude super_admin)
+  // Get admin users for names (we still need this for the leaderboard display)
   const adminUsersSnapshot = await db
     .collection(USERS_COLLECTION)
     .where('user.permissions', 'array-contains-any', ['admin', 'organizer', 'judge'])
     .get();
 
-  // Initialize all admin stats with zeros
+  // Initialize admin stats and names
   const adminStats = new Map<
     string,
     {
@@ -75,6 +70,7 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
   >();
 
   const adminNames = new Map<string, string>();
+  const adminIds = new Set<string>();
 
   // Initialize all admin users with zero stats (filter out super_admins just in case)
   adminUsersSnapshot.forEach((doc) => {
@@ -103,43 +99,61 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
     });
 
     adminNames.set(adminId, adminName || 'Unknown Admin');
+    adminIds.add(adminId);
   });
 
-  // Now process actual scoring data
-  scoringSnapshot.forEach((doc) => {
-    const data = doc.data();
-    const adminId = data.adminId;
-    const hackerId = data.hackerId;
-    const score = data.score;
-    const isSuperVote = data.isSuperVote || false;
+  // Get scoring data for each admin individually (more targeted queries)
+  const scoringPromises = Array.from(adminIds).map(async (adminId) => {
+    const scoringSnapshot = await db
+      .collection(SCORING_COLLECTION)
+      .where('adminId', '==', adminId)
+      .get();
 
-    // Track applications that have been judged at least once
-    if (hackerId) {
-      judgedApplicationIds.add(hackerId);
-    }
+    return { adminId, scoringSnapshot };
+  });
 
-    // Only process if this admin is in our admin list
-    if (adminStats.has(adminId)) {
-      const stats = adminStats.get(adminId)!;
-      stats.totalReviews++;
+  const scoringResults = await Promise.all(scoringPromises);
 
-      if (isSuperVote) {
-        stats.superVotes++;
+  // Track unique applications that have been judged at least once
+  const judgedApplicationIds = new Set<string>();
+
+  // Process scoring data for each admin
+  scoringResults.forEach(({ adminId, scoringSnapshot }) => {
+    scoringSnapshot.forEach((doc) => {
+      const data = doc.data();
+      const hackerId = data.hackerId;
+      const score = data.score;
+      const isSuperVote = data.isSuperVote || false;
+      const appIsAssigned = data.appIsAssigned || false;
+
+      // Track applications that have been judged at least once
+      if (hackerId) {
+        judgedApplicationIds.add(hackerId);
       }
 
-      switch (score) {
-        case 1: // Reject
-          stats.rejects++;
-          break;
-        case 2: // Maybe No
-        case 3: // Maybe Yes
-          stats.maybes++;
-          break;
-        case 4: // Accept
-          stats.accepts++;
-          break;
+      // Process stats for this admin
+      if (adminStats.has(adminId)) {
+        const stats = adminStats.get(adminId)!;
+        stats.totalReviews++;
+
+        if (isSuperVote) {
+          stats.superVotes++;
+        }
+
+        switch (score) {
+          case 1: // Reject
+            stats.rejects++;
+            break;
+          case 2: // Maybe No
+          case 3: // Maybe Yes
+            stats.maybes++;
+            break;
+          case 4: // Accept
+            stats.accepts++;
+            break;
+        }
       }
-    }
+    });
   });
 
   // Convert to array and calculate rates
