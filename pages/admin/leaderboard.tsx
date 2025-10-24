@@ -24,7 +24,7 @@ interface LeaderboardResponse {
   judgedApplications: number;
 }
 
-const allowedRoles = ['super_admin'];
+const allowedRoles = ['super_admin', 'admin'];
 
 export default function AdminLeaderboardPage() {
   const { user, isSignedIn } = useAuthContext();
