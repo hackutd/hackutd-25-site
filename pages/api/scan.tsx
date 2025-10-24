@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { auth, firestore } from 'firebase-admin';
 import initializeApi from '../../lib/admin/init';
 import { userIsAuthorized } from '../../lib/authorization/check-authorization';
+// Registration type is available globally from lib/types.d.ts
 
 initializeApi();
 
@@ -95,7 +96,23 @@ async function handleScan(req: NextApiRequest, res: NextApiResponse) {
     headers,
   } = req;
 
-  const bodyData = JSON.parse(body);
+  let bodyData;
+  try {
+    // Handle both cases: body already parsed or needs parsing
+    if (typeof body === 'string') {
+      bodyData = JSON.parse(body);
+    } else if (typeof body === 'object' && body !== null) {
+      bodyData = body;
+    } else {
+      throw new Error('Invalid body type');
+    }
+  } catch (error) {
+    console.error('Could not parse request JSON body:', error);
+    return res.status(400).json({
+      code: 'invalid-json',
+      message: 'Invalid JSON in request body',
+    });
+  }
 
   //
   // Check if request header contains token
@@ -115,7 +132,13 @@ async function handleScan(req: NextApiRequest, res: NextApiResponse) {
     const snapshot = await db.collection(REGISTRATION_COLLECTION).doc(bodyData.id).get();
     if (!snapshot.exists)
       return res.status(404).json({ code: 'not found', message: "User doesn't exist..." });
-    let scans = (snapshot.data().scans ?? []).map((obj) =>
+
+    const userData = snapshot.data();
+    if (!userData) {
+      return res.status(404).json({ code: 'not found', message: 'User data not found...' });
+    }
+
+    let scans = (userData.scans ?? []).map((obj: any) =>
       typeof obj === 'string' ? obj : obj.name,
     );
 
@@ -125,7 +148,7 @@ async function handleScan(req: NextApiRequest, res: NextApiResponse) {
     if (!userCheckedIn && scanIsCheckInEvent && ENABLE_ACCEPT_REJECT_FEATURE) {
       // if user is reject and not eligible for late check-in yet, throw error
       const userIsRejected = await checkUserIsRejected(snapshot.id);
-      const lateCheckInEligible = await checkLateCheckInEligible(snapshot.data() as Registration);
+      const lateCheckInEligible = await checkLateCheckInEligible(userData as Registration);
       if (userIsRejected && !lateCheckInEligible) {
         return res
           .status(400)

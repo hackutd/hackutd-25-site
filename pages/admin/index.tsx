@@ -70,7 +70,7 @@ export default function Admin({ questions }: { questions: QADocument[] }) {
         <meta name="description" content="HackPortal's Admin Page" />
       </Head>
       {user.permissions.includes('super_admin') && (
-        <div className="2xl:px-32 md:px-16 px-6">
+        <div className="2xl:px-32 md:px-16 px-6 mt-16">
           <ErrorList
             errors={errors}
             onClose={(idx: number) => {
@@ -107,7 +107,7 @@ export default function Admin({ questions }: { questions: QADocument[] }) {
           </div>
         </div>
       )}
-      <div className="2xl:px-32 md:px-16 px-6">
+      <div className="2xl:px-32 md:px-16 px-6 mt-8">
         <h1 className="font-bold text-xl text-[#FFFFFF]">Pending Questions: </h1>
         {questions.map((question, idx) => (
           <Link key={idx} passHref href={`/admin/resolve/${question.id}`}>
