@@ -98,8 +98,8 @@ export default function FloatingDock(props: Props) {
         <FloatingDockItem
           key={i}
           className={props.classes?.itemDiv}
-          originalHeight={originalHeights[i] || 0}
-          originalWidth={originalWidths[i] || 0}
+          originalHeight={originalHeights[i] ?? 0}
+          originalWidth={originalWidths[i] ?? 0}
           widthScaleFactor={widthScaleFactor}
           distanceMagnify={distanceMagnify}
           cursorFromCenter={cursorFromCenters[i]}
