@@ -321,8 +321,8 @@ export default function AppNavbarBottom(props: Props) {
     >
       <FloatingDock
         settings={{
-          widthScaleFactor: 0.5,
-          distanceMagnify: 80,
+          widthScaleFactor: 0,
+          distanceMagnify: 0,
         }}
         classes={{
           wrapperDiv: clsx('gap-5 flex items-center justify-center flex-wrap'),
