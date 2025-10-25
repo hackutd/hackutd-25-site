@@ -14,7 +14,7 @@ const SCANTYPES_COLLECTION = '/scan-types';
 // Used to dictate that user attempted to claim swag without checking in
 const ILLEGAL_SCAN_NAME = 'Illegal Scan';
 
-const ENABLE_ACCEPT_REJECT_FEATURE = true;
+const ENABLE_ACCEPT_REJECT_FEATURE = false;
 
 /**
  *
@@ -168,13 +168,75 @@ async function handleScan(req: NextApiRequest, res: NextApiResponse) {
       });
     }
 
-    if (scans.includes(bodyData.scan)) return res.status(201).json({ code: 'duplicate' });
-    scans.push({
+    // Check for duplicate scans (unless reclaimable)
+    const scanTypeSnapshot = await db
+      .collection(SCANTYPES_COLLECTION)
+      .where('name', '==', bodyData.scan)
+      .get();
+    let scanType = null;
+    if (!scanTypeSnapshot.empty) {
+      scanType = scanTypeSnapshot.docs[0].data();
+      console.log('Scan type found:', scanType);
+    } else {
+      console.log('No scan type found for:', bodyData.scan);
+    }
+
+    // Check if scan is reclaimable
+    const isReclaimable = scanType?.isReclaimable || false;
+
+    if (!isReclaimable && scans.includes(bodyData.scan)) {
+      return res.status(201).json({ code: 'duplicate' });
+    }
+
+    // Calculate points to award
+    const pointsToAward = scanType?.netPoints || 0;
+    console.log('Points to award:', pointsToAward);
+    const currentPoints = userData.points || 0;
+
+    // Check if user has enough points for negative point scans (spending)
+    if (pointsToAward < 0 && currentPoints < Math.abs(pointsToAward)) {
+      return res.status(400).json({
+        code: 'insufficient-points',
+        message: `Insufficient points! You need ${Math.abs(
+          pointsToAward,
+        )} points but only have ${currentPoints}.`,
+        required: Math.abs(pointsToAward),
+        current: currentPoints,
+      });
+    }
+
+    const newPoints = currentPoints + pointsToAward;
+
+    // Add scan record
+    const scanRecord = {
       name: bodyData.scan,
       timestamp: new Date().toISOString(),
+      netPoints: pointsToAward,
+    };
+    scans.push(scanRecord);
+
+    // Update user document with new points and scan record
+    try {
+      await db.collection(REGISTRATION_COLLECTION).doc(bodyData.id).update({
+        scans,
+        points: newPoints,
+      });
+      console.log('Successfully updated user points:', newPoints);
+    } catch (updateError) {
+      console.error('Error updating user points:', updateError);
+      throw updateError;
+    }
+
+    res.status(200).json({
+      pointsAwarded: pointsToAward,
+      newTotalPoints: newPoints,
+      message:
+        pointsToAward > 0
+          ? `+${pointsToAward} points awarded!`
+          : pointsToAward < 0
+          ? `${pointsToAward} points deducted!`
+          : 'Scan recorded!',
     });
-    await db.collection(REGISTRATION_COLLECTION).doc(bodyData.id).update({ scans });
-    res.status(200).json({});
   } catch (error) {
     console.error('Error when fetching applications', error);
     res.status(500).json({

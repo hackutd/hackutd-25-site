@@ -37,15 +37,43 @@ async function handleGetScanTypes(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
+    console.log('Testing database connection...');
+
+    // Test database connection first
+    try {
+      await db.collection('test').limit(1).get();
+      console.log('Database connection successful');
+    } catch (dbError) {
+      console.error('Database connection failed:', dbError);
+      return res.status(500).json({
+        code: 'database-connection-error',
+        message: 'Database connection failed',
+      });
+    }
+
+    console.log('Fetching scan types from collection:', SCAN_TYPE_COLLECTION);
     const snapshot = await db.collection(SCAN_TYPE_COLLECTION).get();
+    console.log('Scan types snapshot size:', snapshot.size);
+
+    if (snapshot.empty) {
+      console.log('No scan types found in database - returning empty array');
+      return res.status(200).json([]);
+    }
+
     const scantypes = snapshot.docs.map((snap) => {
-      // TODO: Verify the application is accurate and report if something is off
-      return snap.data();
+      const data = snap.data();
+      console.log('Scan type data:', data);
+      return {
+        id: snap.id,
+        ...data,
+      };
     });
-    scantypes.sort((a, b) => a.precedence - b.precedence);
+
+    scantypes.sort((a, b) => ((a as any).precedence || 0) - ((b as any).precedence || 0));
+    console.log('Returning scan types:', scantypes);
     res.status(200).json(scantypes);
   } catch (error) {
-    console.error('Error when fetching applications', error);
+    console.error('Error when fetching scan types:', error);
     res.status(500).json({
       code: 'internal-error',
       message: 'Something went wrong when processing this request. Try again later.',

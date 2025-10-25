@@ -64,6 +64,9 @@ export default function Admin() {
     isPermanentScan: false,
     startTime: new Date(),
     endTime: new Date(),
+    netPoints: 0,
+    isSwag: false,
+    isReclaimable: false,
   });
 
   const handleScanClick = (data: ScanTypeInterface, idx: number) => {
@@ -168,7 +171,7 @@ export default function Admin() {
   }
 
   return (
-    <div className="relative flex flex-col flex-grow">
+    <div className="relative flex flex-col flex-grow bg-white">
       <Head>
         <title>HackUTD 2025 - Admin</title>
         <meta name="description" content="HackPortal's Admin Page" />
@@ -233,7 +236,13 @@ export default function Admin() {
                   <div>
                     <div className="text-2xl font-black text-center">Edit Scan</div>
                     <ScanForm
-                      formData={currentScan}
+                      formData={{
+                        ...currentScan,
+                        name: currentScan.name || '',
+                        netPoints: currentScan.netPoints || 0,
+                        isSwag: currentScan.isSwag || false,
+                        isReclaimable: currentScan.isReclaimable || false,
+                      }}
                       onFormChange={(data) =>
                         setCurrentScan({ ...data, precedence: currentScan.precedence })
                       }

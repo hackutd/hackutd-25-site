@@ -62,6 +62,9 @@ async function createScan(req: NextApiRequest, res: NextApiResponse) {
       ...scanData,
       startTime: new Date(scanData.startTime),
       endTime: new Date(scanData.endTime),
+      netPoints: scanData.netPoints || 0,
+      isSwag: scanData.isSwag || false,
+      isReclaimable: scanData.isReclaimable || false,
     });
     return res.status(201).json({
       msg: 'ScanType created',

@@ -47,19 +47,28 @@ async function deleteScanType(req: NextApiRequest, res: NextApiResponse) {
       });
     }
 
-    if (!scanData || !scanData.name) {
+    // Extract the actual scan data from the wrapper
+    const actualScanData = scanData.scanData || scanData;
+
+    if (!actualScanData) {
       return res.status(400).json({
-        msg: 'Scan data and name are required',
+        msg: 'Scan data is required',
       });
     }
-    if (scanData.isCheckIn) {
+
+    if (!actualScanData.name) {
+      return res.status(400).json({
+        msg: 'Scan name is required',
+      });
+    }
+    if (actualScanData.isCheckIn) {
       return res.status(400).json({
         msg: 'Check-in scan can not be deleted',
       });
     }
     const snapshot = await db
       .collection(SCANTYPES_COLLECTION)
-      .where('name', '==', scanData.name)
+      .where('name', '==', actualScanData.name)
       .get();
     if (snapshot.empty) {
       return res.status(404).json({

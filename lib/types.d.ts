@@ -126,6 +126,8 @@ type Registration = {
 
   disclaimer: string[];
   codeOfConduct: string[];
+  mlhPrivacyPolicy: string[];
+  mlhNotifications?: string[];
   // if currentRegistrationPage is undefined, then user already created profile before this field is being added
   // if currentRegistrationPage is less than 1,000,000,000, then user haven't finished creating profile yet
   // otherwise, user finished creating profile
@@ -138,6 +140,12 @@ type Registration = {
     notificationMethod: string;
     contactInfo: string;
   };
+  points?: number;
+  scans?: Array<{
+    name: string;
+    timestamp: string;
+    netPoints?: number;
+  }>;
 };
 
 /**
@@ -422,6 +430,8 @@ type PartialRegistration = {
 
   disclaimer: string[];
   codeOfConduct: string[];
+  mlhPrivacyPolicy: string[];
+  mlhNotifications?: string[];
   // if currentRegistrationPage is undefined, then user already created profile before this field is being added
   // if currentRegistrationPage is less than 1,000,000,000, then user haven't finished creating profile yet
   // otherwise, user finished creating profile

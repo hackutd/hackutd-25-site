@@ -19,6 +19,14 @@ export default function ScanForm({
 }: ScanFormProps) {
   const handleInputChange = (field: keyof ScanFormData, value: any) => {
     onFormChange({
+      name: formData.name || '',
+      isCheckIn: formData.isCheckIn || false,
+      isPermanentScan: formData.isPermanentScan || false,
+      startTime: formData.startTime || new Date(),
+      endTime: formData.endTime || new Date(),
+      netPoints: formData.netPoints || 0,
+      isSwag: formData.isSwag || false,
+      isReclaimable: formData.isReclaimable || false,
       ...formData,
       [field]: value,
     });
@@ -31,7 +39,7 @@ export default function ScanForm({
           className="p-3 rounded-lg w-full border-[1px] focus:border-primaryDark"
           type="text"
           name="name"
-          value={formData.name}
+          value={formData.name || ''}
           onChange={(e) => handleInputChange('name', e.target.value)}
           placeholder="Enter name of scantype"
         />
@@ -56,7 +64,7 @@ export default function ScanForm({
             type="checkbox"
             id="isCheckin"
             name="isCheckin"
-            checked={formData.isCheckIn}
+            checked={formData.isCheckIn || false}
             onChange={(e) => handleInputChange('isCheckIn', e.target.checked)}
           />
           <h1>Is this for check-in event?</h1>
@@ -66,10 +74,40 @@ export default function ScanForm({
             type="checkbox"
             id="isPermanent"
             name="isPermanent"
-            checked={formData.isPermanentScan}
+            checked={formData.isPermanentScan || false}
             onChange={(e) => handleInputChange('isPermanentScan', e.target.checked)}
           />
           <h1>Will this scan be available throughout the event?</h1>
+        </div>
+        <div className="my-4">
+          <input
+            className="p-3 rounded-lg w-full border-[1px] focus:border-primaryDark"
+            type="number"
+            name="netPoints"
+            value={formData.netPoints || 0}
+            onChange={(e) => handleInputChange('netPoints', parseInt(e.target.value) || 0)}
+            placeholder="Enter points to award (positive) or deduct (negative)"
+          />
+        </div>
+        <div className="flex flex-row gap-x-2 items-center my-4">
+          <input
+            type="checkbox"
+            id="isSwag"
+            name="isSwag"
+            checked={formData.isSwag || false}
+            onChange={(e) => handleInputChange('isSwag', e.target.checked)}
+          />
+          <h1>Is this for swag/merchandise?</h1>
+        </div>
+        <div className="flex flex-row gap-x-2 items-center my-4">
+          <input
+            type="checkbox"
+            id="isReclaimable"
+            name="isReclaimable"
+            checked={formData.isReclaimable || false}
+            onChange={(e) => handleInputChange('isReclaimable', e.target.checked)}
+          />
+          <h1>Can this scan be reclaimed multiple times?</h1>
         </div>
       </div>
       <div className="flex justify-around">

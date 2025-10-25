@@ -45,6 +45,7 @@ export default function Dashboard(props: {
     setAnnouncements(props.announcements);
     // ordering challenges as speficied in firebase
     setChallenges(props.challenges.sort((a, b) => (a.rank > b.rank ? 1 : -1)));
+
     if (firebase.messaging.isSupported()) {
       firebase.messaging().onMessage((payload) => {
         setAnnouncements((prev) => [
@@ -66,12 +67,43 @@ export default function Dashboard(props: {
 
   // Check if spotlight time/date interval encompasses current time/date
   const validTimeDate = (startDate, endDate) => {
+    // Handle null/undefined dates
+    if (!startDate || !endDate) {
+      return false;
+    }
+
     const currDate = firebase.firestore.Timestamp.now();
-    if (currDate.seconds > startDate._seconds && currDate.seconds < endDate._seconds) {
-      return true;
+
+    // Handle different date formats
+    let startSeconds, endSeconds;
+
+    if (startDate._seconds) {
+      // Firestore Timestamp object
+      startSeconds = startDate._seconds;
+    } else if (startDate.seconds) {
+      // Alternative timestamp format
+      startSeconds = startDate.seconds;
+    } else if (startDate instanceof Date) {
+      // JavaScript Date object
+      startSeconds = Math.floor(startDate.getTime() / 1000);
     } else {
       return false;
     }
+
+    if (endDate._seconds) {
+      // Firestore Timestamp object
+      endSeconds = endDate._seconds;
+    } else if (endDate.seconds) {
+      // Alternative timestamp format
+      endSeconds = endDate.seconds;
+    } else if (endDate instanceof Date) {
+      // JavaScript Date object
+      endSeconds = Math.floor(endDate.getTime() / 1000);
+    } else {
+      return false;
+    }
+
+    return currDate.seconds > startSeconds && currDate.seconds < endSeconds;
   };
 
   var eventCountString;
@@ -100,6 +132,7 @@ export default function Dashboard(props: {
 
         <section id="mainContent" className="2xl:px-32 md:px-16 px-6 bg-white">
           <DashboardHeader />
+
           {/* Spotlight & Announcements */}
           <div className="flex flex-wrap md:my-16 my-10">
             {/* Spotlight Events */}

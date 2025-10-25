@@ -16,7 +16,7 @@ interface ScannerViewProps {
 
 export default function ScannerView({ currentScan, userToken, onDone }: ScannerViewProps) {
   const [scanData, setScanData] = useState<string>();
-  const [success, setSuccess] = useState<SuccessMessage>();
+  const [success, setSuccess] = useState<string>();
   const [scannedUserInfo, setScannedUserInfo] = useState<UserProfile>();
 
   const handleScan = async (data: string) => {
@@ -55,11 +55,25 @@ export default function ScannerView({ currentScan, userToken, onDone }: ScannerV
       } else if (result.status === 403) {
         setSuccess(successStrings.notCheckedIn);
       } else if (result.status === 400) {
-        setSuccess(successStrings.lateCheckinIneligible);
+        const resultData = await result.json();
+        if (resultData.code === 'insufficient-points') {
+          setSuccess(
+            `Insufficient points! You need ${resultData.required} points but only have ${resultData.current}.`,
+          );
+        } else {
+          setSuccess(successStrings.lateCheckinIneligible);
+        }
       } else if (result.status !== 200) {
         setSuccess(successStrings.unexpectedError);
       } else {
-        setSuccess(successStrings.claimed);
+        const resultData = await result.json();
+        if (resultData.pointsAwarded !== undefined) {
+          setSuccess(
+            `${successStrings.claimed} ${resultData.message} Total: ${resultData.newTotalPoints} points`,
+          );
+        } else {
+          setSuccess(successStrings.claimed);
+        }
       }
     } catch (err) {
       console.error(err);
@@ -79,7 +93,7 @@ export default function ScannerView({ currentScan, userToken, onDone }: ScannerV
           <>
             <div
               className="text-center text-3xl font-black"
-              style={{ color: getSuccessColor(success!) }}
+              style={{ color: getSuccessColor(success! as SuccessMessage) }}
             >
               <p>{success ?? 'Unexpected error!'}</p>
               {scannedUserInfo && (
