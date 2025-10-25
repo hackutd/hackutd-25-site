@@ -16,15 +16,8 @@ type Props = {
 };
 
 export default function FloatingDock(props: Props) {
-  const originalWidths = props.items.map((item) => {
-    const el = item.props?.id ? document.getElementById(item.props.id) : null;
-    return el?.getBoundingClientRect().width ?? 0;
-  });
-
-  const originalHeights = props.items.map((item) => {
-    const el = item.props?.id ? document.getElementById(item.props.id) : null;
-    return el?.getBoundingClientRect().height ?? 0;
-  });
+  const [originalWidths, setOriginalWidths] = useState<number[]>([]);
+  const [originalHeights, setOriginalHeights] = useState<number[]>([]);
 
   // in pixels
   const widthScaleFactor = props.settings?.widthScaleFactor ?? 0.25;
@@ -36,6 +29,20 @@ export default function FloatingDock(props: Props) {
   const [cursorFromCenters, setCursorFromCenters] = useState<number[]>(
     Array(props.items.length).fill(distanceMagnify),
   );
+
+  useEffect(() => {
+    const widths = props.items.map((item) => {
+      const el = item.props?.id ? document.getElementById(item.props.id) : null;
+      return el?.getBoundingClientRect().width ?? 0;
+    });
+
+    const heights = props.items.map((item) => {
+      const el = item.props?.id ? document.getElementById(item.props.id) : null;
+      return el?.getBoundingClientRect().height ?? 0;
+    });
+    setOriginalWidths(widths);
+    setOriginalHeights(heights);
+  }, [props.items]); // once items load, re-measure
 
   useEffect(() => {
     const box = boxRef.current;
@@ -91,8 +98,8 @@ export default function FloatingDock(props: Props) {
         <FloatingDockItem
           key={i}
           className={props.classes?.itemDiv}
-          originalHeight={originalHeights[i]}
-          originalWidth={originalWidths[i]}
+          originalHeight={originalHeights[i] || 0}
+          originalWidth={originalWidths[i] || 0}
           widthScaleFactor={widthScaleFactor}
           distanceMagnify={distanceMagnify}
           cursorFromCenter={cursorFromCenters[i]}
