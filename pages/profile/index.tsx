@@ -17,6 +17,7 @@ import DeleteProfileDialog from '@/components/profile/DeleteProfileDialog';
 import ApplicationEditForm from '@/components/profile/ApplicationEditForm';
 import QRCode from '@/components/dashboard/QRCode';
 import Loading from '@/components/icon/Loading';
+import PointsCard from '@/components/dashboard/PointsCard';
 
 /**
  * A page that allows a user to modify app or profile settings and see their data.
@@ -38,6 +39,14 @@ export default function ProfilePage() {
   const [uploading, setUploading] = useState<boolean>(false);
   const [showAppDeleteModal, setShowAppDeleteModal] = useState<boolean>(false);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
+  const [userPoints, setUserPoints] = useState(0);
+  const [userScans, setUserScans] = useState<
+    Array<{
+      name: string;
+      timestamp: string;
+      netPoints?: number;
+    }>
+  >([]);
   const resumeRef = useRef(null);
 
   const isValidUrl = (s: string) => {
@@ -75,6 +84,30 @@ export default function ProfilePage() {
   useEffect(() => {
     if (hasProfile && !profile) window.location.reload();
   }, [profile]);
+
+  // Fetch user points data
+  useEffect(() => {
+    const fetchUserPoints = async () => {
+      if (isSignedIn && user?.id) {
+        try {
+          const response = await RequestHelper.get(`/api/userinfo?id=${user.id}`, {
+            headers: {
+              Authorization: user.token || '',
+            },
+          });
+          if (response.data) {
+            const userData = response.data as any;
+            setUserPoints(userData.points || 0);
+            setUserScans(userData.scans || []);
+          }
+        } catch (error) {
+          console.error('Error fetching user points:', error);
+        }
+      }
+    };
+
+    fetchUserPoints();
+  }, [isSignedIn, user]);
 
   const formatStudyLevel = (s: string) => {
     if (s === 'grad') return 'Graduate Student';
@@ -423,6 +456,11 @@ export default function ProfilePage() {
                 value={profile?.user.preferredEmail}
                 {...textFieldOverrides}
               />
+            </div>
+
+            {/* Points Section */}
+            <div className="mt-8">
+              <PointsCard points={userPoints} scans={userScans} />
             </div>
           </div>
         </div>

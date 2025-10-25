@@ -5,6 +5,9 @@ export interface ScanType {
   startTime: Date;
   endTime: Date;
   precedence: number;
+  netPoints: number;
+  isSwag: boolean;
+  isReclaimable: boolean;
 }
 
 export interface ScanFormData {
@@ -13,6 +16,9 @@ export interface ScanFormData {
   isPermanentScan: boolean;
   startTime: Date;
   endTime: Date;
+  netPoints: number;
+  isSwag: boolean;
+  isReclaimable: boolean;
 }
 
 export interface UserProfile {
@@ -23,6 +29,12 @@ export interface UserProfile {
     permissions: string[];
     preferredEmail: string;
   };
+  points?: number;
+  scans?: Array<{
+    name: string;
+    timestamp: string;
+    netPoints?: number;
+  }>;
 }
 
 export const successStrings = {
@@ -37,8 +49,11 @@ export const successStrings = {
 
 export type SuccessMessage = (typeof successStrings)[keyof typeof successStrings];
 
-export function getSuccessColor(success: SuccessMessage): string {
-  if (success === successStrings.claimed) {
+export function getSuccessColor(success: SuccessMessage | string): string {
+  if (
+    success === successStrings.claimed ||
+    (typeof success === 'string' && success.includes('Scan claimed...'))
+  ) {
     return '#5fde05';
   }
   return '#ff0000';
