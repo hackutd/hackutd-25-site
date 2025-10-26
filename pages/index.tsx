@@ -202,28 +202,41 @@ export default function Home({
       </div>
 
       <div
-        className="w-full relative"
+        className="relative w-full" // fixed minimum height
         style={{
           backgroundColor: '#0B0B1B',
           backgroundImage: 'url("/assets/sponsorsBG/leaves.PNG")',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
+          backgroundRepeat: 'repeat',
+          backgroundSize: 'contain',
         }}
       >
-        <div className="my-72">
-          <HomePreEventsSimple />
-        </div>
+        <div
+          className="absolute left-0 w-full pointer-events-none"
+          style={{
+            top: '0%', // Start from the very top
+            height: '50%', // Cover upper portion
+            background:
+              'linear-gradient(to bottom, rgba(11,11,27,1) 0%, rgba(11,11,27,0.8) 15%, rgba(11,11,27,0.5) 35%, rgba(11,11,27,0.2) 60%, transparent 100%)',
+            zIndex: 1,
+          }}
+        />
 
-        <div className="my-72">
-          <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
-        </div>
+        <div className="relative z-10">
+          <div className="my-72">
+            <HomePreEventsSimple />
+          </div>
 
-        {/* <div className="my-72">
-          <HomeChallengesComponent challenges={challenges} />
-        </div> */}
+          <div className="my-72">
+            <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
+          </div>
 
-        <div className="my-72">
-          <HomeFaq answeredQuestions={answeredQuestion} />
+          {/* <div className="my-72">
+            <HomeChallengesComponent challenges={challenges} />
+          </div> */}
+
+          <div className="my-72">
+            <HomeFaq answeredQuestions={answeredQuestion} />
+          </div>
         </div>
 
         <div
@@ -234,6 +247,17 @@ export default function Home({
             background:
               'linear-gradient(to bottom, transparent 0%, rgba(11,11,27,0.1) 20%, rgba(11,11,27,0.4) 60%, rgba(11,11,27,0.8) 100%)',
             zIndex: 1,
+          }}
+        />
+
+        <div
+          className="absolute left-0 w-full pointer-events-none"
+          style={{
+            bottom: '-400px',
+            height: '800px',
+            background:
+              'linear-gradient(to bottom, transparent 0%, rgba(11, 11, 27, 0.7) 35%, rgba(11, 11, 27, 0.95) 50%, rgba(11, 11, 27, 1) 70%, rgba(11, 11, 27, 1) 100%)',
+            zIndex: 5,
           }}
         />
       </div>
