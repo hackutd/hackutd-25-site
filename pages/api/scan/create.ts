@@ -19,7 +19,29 @@ async function checkIfCheckInAlreadyExists() {
 
 async function createScan(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const scanData = JSON.parse(req.body);
+    let scanData;
+    try {
+      // Handle both cases: body already parsed or needs parsing
+      if (typeof req.body === 'string') {
+        scanData = JSON.parse(req.body);
+      } else if (typeof req.body === 'object' && req.body !== null) {
+        scanData = req.body;
+      } else {
+        throw new Error('Invalid body type');
+      }
+    } catch (error) {
+      console.error('Could not parse request JSON body:', error);
+      return res.status(400).json({
+        msg: 'Invalid JSON in request body',
+      });
+    }
+
+    if (!scanData || !scanData.name) {
+      return res.status(400).json({
+        msg: 'Scan data and name are required',
+      });
+    }
+
     scanData.name = scanData.name.trim();
     if (await checkIfNameAlreadyExists(scanData.name)) {
       return res.status(400).json({
@@ -40,6 +62,9 @@ async function createScan(req: NextApiRequest, res: NextApiResponse) {
       ...scanData,
       startTime: new Date(scanData.startTime),
       endTime: new Date(scanData.endTime),
+      netPoints: scanData.netPoints || 0,
+      isSwag: scanData.isSwag || false,
+      isReclaimable: scanData.isReclaimable || false,
     });
     return res.status(201).json({
       msg: 'ScanType created',

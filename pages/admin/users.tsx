@@ -42,6 +42,12 @@ export default function UserPage() {
   // });
   const [filteredGroups, setFilteredGroups] = useState<ApplicationEntry[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [userReviewStats, setUserReviewStats] = useState({
+    totalReviews: 0,
+    accepts: 0,
+    rejects: 0,
+    maybes: 0,
+  });
   // const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
 
   const filterParams = [
@@ -125,6 +131,46 @@ export default function UserPage() {
   useEffect(() => {
     fetchInitData();
   }, []);
+
+  // Fetch user's review stats to match leaderboard counts
+  useEffect(() => {
+    const fetchUserReviewStats = async () => {
+      if (!user) return;
+
+      try {
+        const { data } = await RequestHelper.get<{
+          adminStats: Array<{
+            adminId: string;
+            totalReviews: number;
+            accepts: number;
+            rejects: number;
+            maybes: number;
+          }>;
+        }>('/api/admin-leaderboard', {
+          headers: {
+            Authorization: user.token,
+          },
+        });
+
+        // Find the current user's stats
+        const currentUserStats = data.adminStats.find((admin) => admin.adminId === user.id);
+        if (currentUserStats) {
+          setUserReviewStats({
+            totalReviews: currentUserStats.totalReviews,
+            accepts: currentUserStats.accepts,
+            rejects: currentUserStats.rejects,
+            maybes: currentUserStats.maybes,
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching user review stats:', error);
+      }
+    };
+
+    if (user) {
+      fetchUserReviewStats();
+    }
+  }, [user]);
 
   useEffect(() => {
     if (loading) return;
@@ -266,90 +312,63 @@ export default function UserPage() {
   // };
   //
   const numAppsReviewed = useMemo(() => {
+    // Count all reviews by the current user across all applications in the userGroups
+    // This matches the leaderboard methodology of counting individual reviews
     return userGroups
       .map((obj) => obj.application)
-      .reduce(
-        (acc, curr) =>
-          acc +
-          (curr.every((applicant) =>
-            applicant.scoring?.some((s) => s.reviewer === `${user.firstName} ${user.lastName}`),
-          )
-            ? 1
-            : 0),
-        0,
-      );
-  }, [userGroups]);
+      .flat()
+      .reduce((acc, curr) => {
+        const userReviews =
+          curr.scoring?.filter((s) => s.reviewer === `${user.firstName} ${user.lastName}`) || [];
+        return acc + userReviews.length;
+      }, 0);
+  }, [userGroups, user.firstName, user.lastName]);
 
   const numAppsAccepted = useMemo(() => {
-    if (user.permissions.includes('super_admin')) {
-      return userGroups
-        .map((obj) => obj.application)
-        .reduce((acc, curr) => {
-          const appScore = curr.some((app) => app.status === 'Accepted') ? 1 : 0;
-          return acc + appScore;
-        }, 0);
-    }
     return userGroups
       .map((obj) => obj.application)
-      .reduce(
-        (acc, curr) =>
-          acc +
-          (curr.every((applicant) =>
-            applicant.scoring?.some(
-              (s) => s.reviewer === `${user.firstName} ${user.lastName}` && s.score === 4,
-            ),
-          )
-            ? 1
-            : 0),
-        0,
-      );
-  }, [userGroups]);
+      .flat()
+      .reduce((acc, curr) => {
+        const userAccepts =
+          curr.scoring?.filter(
+            (s) => s.reviewer === `${user.firstName} ${user.lastName}` && s.score === 4,
+          ) || [];
+        return acc + userAccepts.length;
+      }, 0);
+  }, [userGroups, user.firstName, user.lastName]);
   const numAppsRejected = useMemo(() => {
-    if (user.permissions.includes('super_admin')) {
-      return userGroups
-        .map((obj) => obj.application)
-        .reduce((acc, curr) => {
-          const appScore = curr.some((app) => app.status === 'Rejected') ? 1 : 0;
-          return acc + appScore;
-        }, 0);
-    }
     return userGroups
       .map((obj) => obj.application)
-      .reduce(
-        (acc, curr) =>
-          acc +
-          (curr.every((applicant) =>
-            applicant.scoring?.some(
-              (s) => s.reviewer === `${user.firstName} ${user.lastName}` && s.score === 1,
-            ),
-          )
-            ? 1
-            : 0),
-        0,
-      );
-  }, [userGroups]);
+      .flat()
+      .reduce((acc, curr) => {
+        const userRejects =
+          curr.scoring?.filter(
+            (s) => s.reviewer === `${user.firstName} ${user.lastName}` && s.score === 1,
+          ) || [];
+        return acc + userRejects.length;
+      }, 0);
+  }, [userGroups, user.firstName, user.lastName]);
 
   const numAppsMaybe = useMemo(() => {
     return userGroups
       .map((obj) => obj.application)
-      .reduce(
-        (acc, curr) =>
-          acc +
-          (curr.every((applicant) =>
-            applicant.scoring?.some(
-              (s) =>
-                s.reviewer === `${user.firstName} ${user.lastName}` && s.score > 1 && s.score < 4,
-            ),
-          )
-            ? 1
-            : 0),
-        0,
-      );
-  }, [userGroups]);
+      .flat()
+      .reduce((acc, curr) => {
+        const userMaybes =
+          curr.scoring?.filter(
+            (s) =>
+              s.reviewer === `${user.firstName} ${user.lastName}` && s.score > 1 && s.score < 4,
+          ) || [];
+        return acc + userMaybes.length;
+      }, 0);
+  }, [userGroups, user.firstName, user.lastName]);
 
   const acceptanceRate = useMemo(
-    () => `${((numAppsAccepted * 100) / numAppsReviewed).toFixed(2)}%`,
-    [numAppsReviewed, numAppsAccepted],
+    () =>
+      userReviewStats.totalReviews > 0
+        ? `${((userReviewStats.accepts * 100) / userReviewStats.totalReviews).toFixed(2)}%`
+        : '0%',
+    [userReviewStats.totalReviews, userReviewStats.accepts],
   );
 
   if (!user || !isAuthorized({ ...user, questions: [] }))
@@ -394,18 +413,18 @@ export default function UserPage() {
                 />
               </svg>
             }
-            title="Apps reviewed"
-            value={numAppsReviewed}
+            title="Individual Reviews"
+            value={userReviewStats.totalReviews}
           />
           <AdminStatsCard
             icon={<CheckIcon color="green" />}
-            title="Apps accepted"
-            value={numAppsAccepted}
+            title="Individual Accepts"
+            value={userReviewStats.accepts}
           />
           <AdminStatsCard
             icon={<XCircleIcon color="red" />}
-            title="Apps rejected"
-            value={numAppsRejected}
+            title="Individual Rejects"
+            value={userReviewStats.rejects}
           />
           <AdminStatsCard
             icon={

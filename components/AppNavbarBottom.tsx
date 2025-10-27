@@ -304,7 +304,7 @@ export default function AppNavbarBottom(props: Props) {
   const navbarContent = (
     <div
       className={clsx(
-        'md:hidden sticky z-[9999] bottom-0',
+        'md:hidden z-[9999]',
         'bg-[rgba(0,0,0,0.70)] p-3 rounded-xl',
         'w-[90%] mx-auto',
         'pointer-events-auto',
