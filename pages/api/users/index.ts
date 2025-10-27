@@ -391,6 +391,30 @@ async function getAllRegistrations(req: NextApiRequest, res: NextApiResponse) {
           .collection(SCORING_COLLECTION)
           .where('hackerId', '==', doc.id)
           .get();
+
+        // Skip applications that have never been reviewed (0 reviews)
+        // Applications in common pool should have at least 1 review
+        if (scoringSnapshot.empty) {
+          return null; // Skip this application
+        }
+
+        // Check consensus threshold - remove apps with +3 or -3 scores
+        const totalScore = scoringSnapshot.docs.reduce((acc, doc) => {
+          const score = doc.data().score;
+          const multiplier = doc.data().isSuperVote ? 50 : 1;
+
+          if (score === 4) return acc + multiplier; // Accept
+          if (score === 1) return acc - multiplier; // Reject
+          return acc; // Maybe (score 2 or 3)
+        }, 0);
+
+        // Skip applications that have reached consensus threshold
+        if (totalScore >= 3 || totalScore <= -3) {
+          console.log(
+            `Skipping app ${doc.id} from users API - consensus reached (score: ${totalScore})`,
+          );
+          return null; // Skip this application
+        }
         const reviewerIds = scoringSnapshot.docs.map((doc) => doc.data().adminId);
         const organizerReview = scoringSnapshot.docs.find((d) => d.data().adminId === userData.id);
         const reviewerInfo =
@@ -495,6 +519,9 @@ async function getAllRegistrations(req: NextApiRequest, res: NextApiResponse) {
         };
       }),
     );
+
+    // Filter out null values (applications with 0 reviews that shouldn't be in common pool)
+    const filteredCommonAppWithScores = commonAppWithScores.filter((app) => app !== null);
 
     const assignedApps = await Promise.all(
       assignedAppCollectionRef.docs
@@ -604,10 +631,16 @@ async function getAllRegistrations(req: NextApiRequest, res: NextApiResponse) {
 
     // Shuffle assigned apps and common pool apps separately
     shuffle(assignedApps);
-    shuffle(commonAppWithScores);
+    shuffle(filteredCommonAppWithScores);
 
-    // Combine with assigned apps first, then common pool apps
-    const data = [...assignedApps, ...commonAppWithScores];
+    const sortedCommonPoolApps = filteredCommonAppWithScores.sort((a, b) => {
+      const aReviewCount = (a as any)?.scoring?.length || 0;
+      const bReviewCount = (b as any)?.scoring?.length || 0;
+      return aReviewCount - bReviewCount; // 0 reviews first, then 1, 2, 3, etc.
+    });
+
+    // Combine with assigned apps first, then sorted common pool apps
+    const data = [...assignedApps, ...sortedCommonPoolApps];
     // Hide sensitive data
     const hideSensitiveData = (data: Registration[]) => {
       return data.map((d) => ({

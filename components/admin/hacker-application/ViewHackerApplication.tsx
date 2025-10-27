@@ -13,6 +13,7 @@ interface Props {
   currentNote: string;
   onScoreSubmit: (groupScore: number) => Promise<void>;
   appViewState: ApplicationViewState;
+  isRefreshing?: boolean;
 }
 
 interface BasicInfoProps {
@@ -66,6 +67,7 @@ export default function ViewHackerApplication({
   onScoreSubmit,
   userIndex,
   appViewState,
+  isRefreshing = false,
 }: Props) {
   const { user } = useAuthContext();
 
@@ -257,35 +259,46 @@ export default function ViewHackerApplication({
             <>
               <p className="font-bold text-xl text-black">Application Score</p>
 
-              <p className="text-8xl font-dmSans">
-                {currentApplicant.scoring.reduce((acc: number, curr) => {
-                  const scoreMultiplier = !!curr.isSuperVote ? 50 : 1;
-                  return curr.score === 4
-                    ? acc + scoreMultiplier
-                    : curr.score === 1
-                    ? acc - scoreMultiplier
-                    : acc;
-                }, 0)}
-              </p>
+              {isRefreshing ? (
+                <div className="flex flex-col items-center">
+                  <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#5D5A88]"></div>
+                  <p className="text-sm text-gray-600 mt-2">Updating score...</p>
+                </div>
+              ) : (
+                <>
+                  <p className="text-8xl font-dmSans">
+                    {currentApplicant.scoring.reduce((acc: number, curr) => {
+                      const scoreMultiplier = !!curr.isSuperVote ? 50 : 1;
+                      return curr.score === 4
+                        ? acc + scoreMultiplier
+                        : curr.score === 1
+                        ? acc - scoreMultiplier
+                        : acc;
+                    }, 0)}
+                  </p>
 
-              <p className="italic text-gray-600">
-                <span className="text-green-500">
-                  {currentApplicant.scoring.filter((score) => score.score === 4).length} accepted
-                </span>{' '}
-                /{' '}
-                <span className="text-red-500">
-                  {currentApplicant.scoring.filter((score) => score.score === 1).length} rejected
-                </span>{' '}
-                /{' '}
-                <span className="text-yellow-500">
-                  {
-                    currentApplicant.scoring.filter(
-                      (score) => score.score === 2 || score.score === 3,
-                    ).length
-                  }{' '}
-                  maybe
-                </span>
-              </p>
+                  <p className="italic text-gray-600">
+                    <span className="text-green-500">
+                      {currentApplicant.scoring.filter((score) => score.score === 4).length}{' '}
+                      accepted
+                    </span>{' '}
+                    /{' '}
+                    <span className="text-red-500">
+                      {currentApplicant.scoring.filter((score) => score.score === 1).length}{' '}
+                      rejected
+                    </span>{' '}
+                    /{' '}
+                    <span className="text-yellow-500">
+                      {
+                        currentApplicant.scoring.filter(
+                          (score) => score.score === 2 || score.score === 3,
+                        ).length
+                      }{' '}
+                      maybe
+                    </span>
+                  </p>
+                </>
+              )}
             </>
           )}
           {user.permissions.includes('super_admin') && (

@@ -19,6 +19,7 @@ export default function HackerApplicationGroupCarousel({ group, appViewState }: 
   const { user } = useAuthContext();
   const updateGroupVerdict = useUserGroup((state) => state.updateGroupVerdict);
   const updateMemberVerdict = useUserGroup((state) => state.updateMemberVerdict);
+  const updateMemberScoring = useUserGroup((state) => state.updateMemberScoring);
   const groupId = useMemo(() => getGroupId(group), [group]);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, watchDrag: false });
@@ -32,10 +33,57 @@ export default function HackerApplicationGroupCarousel({ group, appViewState }: 
   }, [emblaApi]);
 
   const [notes, setNotes] = useState(group.map((_) => ''));
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     setNotes(group.map((_) => ''));
   }, [group]);
+
+  // Function to update scoring data locally after score submission
+  const refreshApplicationData = async (memberId: string, newScore: number, note: string) => {
+    try {
+      setIsRefreshing(true);
+
+      // Fetch the complete scoring data from the database
+      const { data: scoringData } = await RequestHelper.get<
+        Array<{
+          score: number;
+          note: string;
+          adminId: string;
+          reviewer: string;
+          isSuperVote: boolean;
+        }>
+      >(`/api/applications/scoring/${memberId}`, {
+        headers: {
+          Authorization: user.token,
+        },
+      });
+
+      // Update the member's scoring data with the complete data from database
+      updateMemberScoring(groupId, memberId, scoringData || []);
+
+      // Add a small delay to show the loading state
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    } catch (error) {
+      console.error('Error updating application data:', error);
+
+      // Fallback: if API fails, just add the new score locally
+      const currentMember = group.find((member) => member.id === memberId);
+      if (currentMember) {
+        const newScoringEntry = {
+          score: newScore,
+          note: note,
+          adminId: user.id,
+          reviewer: `${user.firstName} ${user.lastName}`,
+          isSuperVote: appViewState === ApplicationViewState.ALL,
+        };
+        const updatedScoring = [...(currentMember.scoring || []), newScoringEntry];
+        updateMemberScoring(groupId, memberId, updatedScoring);
+      }
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   return (
     <div className="h-full flex w-full p-3">
@@ -67,6 +115,7 @@ export default function HackerApplicationGroupCarousel({ group, appViewState }: 
                   }}
                   currentApplicant={member}
                   currentNote={notes[idx]}
+                  isRefreshing={isRefreshing}
                   onScoreSubmit={async (groupScore) => {
                     try {
                       const { data } = await RequestHelper.post<
@@ -107,6 +156,9 @@ export default function HackerApplicationGroupCarousel({ group, appViewState }: 
                         member.id,
                         groupScore === 1 ? 'Rejected' : groupScore === 4 ? 'Accepted' : 'Maybe',
                       );
+
+                      // Refresh the application data to show updated scores
+                      await refreshApplicationData(member.id, groupScore, notes[idx]);
                     } catch (err) {
                       alert('Error submitting score. Please try again later...');
                       console.error(err);

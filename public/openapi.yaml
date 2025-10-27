@@ -563,6 +563,13 @@ paths:
           schema:
             type: string
           description: Bearer token for authentication (can also be sent in Authorization header)
+        - name: maxReviews
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+          description: Maximum number of reviews an application can have to be included in results (e.g., 2 for applications with ≤ 2 reviews)
       responses:
         '200':
           description: Applications retrieved successfully
