@@ -30,15 +30,45 @@ async function updateUserDoc(targetScanName: string) {
 
 async function deleteScanType(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { scanData } = req.body;
-    if (scanData.isCheckIn) {
+    let scanData;
+    try {
+      // Handle both cases: body already parsed or needs parsing
+      if (typeof req.body === 'string') {
+        scanData = JSON.parse(req.body);
+      } else if (typeof req.body === 'object' && req.body !== null) {
+        scanData = req.body;
+      } else {
+        throw new Error('Invalid body type');
+      }
+    } catch (error) {
+      console.error('Could not parse request JSON body:', error);
+      return res.status(400).json({
+        msg: 'Invalid JSON in request body',
+      });
+    }
+
+    // Extract the actual scan data from the wrapper
+    const actualScanData = scanData.scanData || scanData;
+
+    if (!actualScanData) {
+      return res.status(400).json({
+        msg: 'Scan data is required',
+      });
+    }
+
+    if (!actualScanData.name) {
+      return res.status(400).json({
+        msg: 'Scan name is required',
+      });
+    }
+    if (actualScanData.isCheckIn) {
       return res.status(400).json({
         msg: 'Check-in scan can not be deleted',
       });
     }
     const snapshot = await db
       .collection(SCANTYPES_COLLECTION)
-      .where('name', '==', scanData.name)
+      .where('name', '==', actualScanData.name)
       .get();
     if (snapshot.empty) {
       return res.status(404).json({

@@ -8,8 +8,15 @@ const db = firestore();
 const SCANTYPES_COLLECTION = '/scan-types';
 const REGISTRATION_COLLECTION = '/registrations';
 
-async function checkIfNameAlreadyExists(name: string) {
+async function checkIfNameAlreadyExists(name: string, excludePrecedence?: number) {
   const snapshot = await db.collection(SCANTYPES_COLLECTION).where('name', '==', name).get();
+
+  if (excludePrecedence !== undefined) {
+    // Filter out the current scan being updated
+    const filteredDocs = snapshot.docs.filter((doc) => doc.data().precedence !== excludePrecedence);
+    return filteredDocs.length > 0;
+  }
+
   return !snapshot.empty;
 }
 
@@ -41,12 +48,50 @@ async function updateUserDoc(oldScanName: string, newScanName: string) {
 }
 
 async function updateScanType(req: NextApiRequest, res: NextApiResponse) {
-  const { scanData } = req.body;
-  scanData.name = scanData.name.trim();
+  let scanData;
+  try {
+    // Handle both cases: body already parsed or needs parsing
+    if (typeof req.body === 'string') {
+      scanData = JSON.parse(req.body);
+    } else if (typeof req.body === 'object' && req.body !== null) {
+      scanData = req.body;
+    } else {
+      throw new Error('Invalid body type');
+    }
+  } catch (error) {
+    console.error('Could not parse request JSON body:', error);
+    return res.status(400).json({
+      msg: 'Invalid JSON in request body',
+    });
+  }
+
+  console.log('Received scan data:', scanData);
+
+  // Extract the actual scan data from the wrapper
+  const actualScanData = scanData.scanData || scanData;
+  console.log('Actual scan data:', actualScanData);
+  console.log('Scan name:', actualScanData?.name);
+
+  if (!actualScanData) {
+    console.log('Validation failed: missing scan data');
+    return res.status(400).json({
+      msg: 'Scan data is required',
+    });
+  }
+
+  // Only require name if we're updating the name
+  if (actualScanData.name !== undefined && !actualScanData.name) {
+    console.log('Validation failed: name is empty');
+    return res.status(400).json({
+      msg: 'Scan name cannot be empty',
+    });
+  }
+
+  actualScanData.name = actualScanData.name.trim();
   try {
     const snapshot = await db
       .collection(SCANTYPES_COLLECTION)
-      .where('precedence', '==', scanData.precedence)
+      .where('precedence', '==', actualScanData.precedence)
       .get();
     if (snapshot.empty) {
       return res.status(404).json({
@@ -54,21 +99,24 @@ async function updateScanType(req: NextApiRequest, res: NextApiResponse) {
       });
     }
 
-    if (!(await checkIfNameAlreadyExists(scanData.name))) {
+    if (await checkIfNameAlreadyExists(actualScanData.name, actualScanData.precedence)) {
       return res.status(400).json({
-        msg: 'Scantype does not exists',
+        msg: 'Scantype already exists',
       });
     }
 
     snapshot.forEach(async (doc) => {
-      await updateUserDoc(doc.data().name, scanData.name);
+      await updateUserDoc(doc.data().name, actualScanData.name);
       await db
         .collection(SCANTYPES_COLLECTION)
         .doc(doc.id)
         .update({
-          ...scanData,
-          startTime: new Date(scanData.startTime),
-          endTime: new Date(scanData.endTime),
+          ...actualScanData,
+          startTime: new Date(actualScanData.startTime),
+          endTime: new Date(actualScanData.endTime),
+          netPoints: actualScanData.netPoints || 0,
+          isSwag: actualScanData.isSwag || false,
+          isReclaimable: actualScanData.isReclaimable || false,
         });
     });
     return res.status(200).json({

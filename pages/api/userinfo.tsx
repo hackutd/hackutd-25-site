@@ -117,6 +117,8 @@ async function handleUserInfo(req: NextApiRequest, res: NextApiResponse) {
       status: applicationStatus,
       createdAt: snapshot.createTime.toDate(),
       updatedAt: snapshot.updateTime.toDate(),
+      points: userData.points || 0,
+      scans: userData.scans || [],
       user: {
         ...userData.user,
         group: determineColorByTeamIdx(computeHash(userData.id)),

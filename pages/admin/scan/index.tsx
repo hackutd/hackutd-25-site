@@ -64,6 +64,9 @@ export default function Admin() {
     isPermanentScan: false,
     startTime: new Date(),
     endTime: new Date(),
+    netPoints: 0,
+    isSwag: false,
+    isReclaimable: false,
   });
 
   const handleScanClick = (data: ScanTypeInterface, idx: number) => {
@@ -168,7 +171,7 @@ export default function Admin() {
   }
 
   return (
-    <div className="relative flex flex-col flex-grow">
+    <div className="relative flex flex-col flex-grow bg-white">
       <Head>
         <title>HackUTD 2025 - Admin</title>
         <meta name="description" content="HackPortal's Admin Page" />
@@ -180,25 +183,27 @@ export default function Admin() {
 
       {showNewScanForm ? (
         <>
-          <button
-            className="text-primaryDark font-bold md:text-lg text-base flex items-center px-6"
-            onClick={() => setShowNewScanForm(false)}
-          >
-            <ChevronLeftIcon />
-            Return to scanner
-          </button>
-          <div className="text-2xl font-black text-center">Add New Scan</div>
-          <ScanForm
-            formData={newScanForm}
-            onFormChange={setNewScanForm}
-            onSubmit={handleCreateScan}
-            onCancel={() => setShowNewScanForm(false)}
-            submitLabel="Add Scan"
-          />
+          <div className="mt-16">
+            <button
+              className="text-primaryDark font-bold md:text-lg text-base flex items-center px-6"
+              onClick={() => setShowNewScanForm(false)}
+            >
+              <ChevronLeftIcon />
+              Return to scanner
+            </button>
+            <div className="text-2xl font-black text-center">Add New Scan</div>
+            <ScanForm
+              formData={newScanForm}
+              onFormChange={setNewScanForm}
+              onSubmit={handleCreateScan}
+              onCancel={() => setShowNewScanForm(false)}
+              submitLabel="Add Scan"
+            />
+          </div>
         </>
       ) : (
         <>
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-center mt-16">
             <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center md:h-auto max-h-[26rem] max-w-full overflow-y-auto p-2">
               {scansFetched ? (
                 scanTypes.map((scan, idx) => (
@@ -231,7 +236,13 @@ export default function Admin() {
                   <div>
                     <div className="text-2xl font-black text-center">Edit Scan</div>
                     <ScanForm
-                      formData={currentScan}
+                      formData={{
+                        ...currentScan,
+                        name: currentScan.name || '',
+                        netPoints: currentScan.netPoints || 0,
+                        isSwag: currentScan.isSwag || false,
+                        isReclaimable: currentScan.isReclaimable || false,
+                      }}
                       onFormChange={(data) =>
                         setCurrentScan({ ...data, precedence: currentScan.precedence })
                       }
@@ -283,7 +294,7 @@ export default function Admin() {
               !showDeleteScanDialog &&
               !startScan &&
               user.permissions.includes('super_admin') && (
-                <div className="mx-auto my-5">
+                <div className="mx-auto my-8 mt-12">
                   <button
                     className="py-3 px-4 font-bold rounded-lg hover:bg-secondary bg-primaryDark text-white hover:text-primaryDark border-[1px] border-transparent hover:border-primaryDark transition duration-300 ease-in-out"
                     onClick={() => setShowNewScanForm(true)}
