@@ -18,6 +18,7 @@ const db = firestore();
 
 const APPLICATIONS_COLLECTION = '/registrations';
 const SCORING_COLLECTION = '/scoring';
+const USERS_COLLECTION = '/registrations';
 
 /**
  * Handles GET requests to /api/application/reviews/[reviewerId].
@@ -33,7 +34,7 @@ async function handleGetApplicationForReviewFromCommonPool(
 ) {
   // TODO: Handle user authorization
   const {
-    query: { token },
+    query: { token, maxReviews },
     headers,
   } = req;
 
@@ -86,6 +87,34 @@ async function handleGetApplicationForReviewFromCommonPool(
           .where('hackerId', '==', doc.id)
           .get();
 
+        // Apply review count filter if maxReviews parameter is provided
+        if (maxReviews !== undefined) {
+          const reviewCount = scoringSnapshot.docs.length;
+          const maxReviewCount = parseInt(maxReviews as string, 10);
+
+          if (!isNaN(maxReviewCount) && reviewCount > maxReviewCount) {
+            return; // Skip this application if it has more reviews than the limit
+          }
+        }
+
+        // Check consensus threshold - remove apps with +3 or -3 scores
+        if (!scoringSnapshot.empty) {
+          const totalScore = scoringSnapshot.docs.reduce((acc, doc) => {
+            const score = doc.data().score;
+            const multiplier = doc.data().isSuperVote ? 50 : 1;
+
+            if (score === 4) return acc + multiplier; // Accept
+            if (score === 1) return acc - multiplier; // Reject
+            return acc; // Maybe (score 2 or 3)
+          }, 0);
+
+          // Skip applications that have reached consensus threshold
+          if (totalScore >= 3 || totalScore <= -3) {
+            console.log(`Skipping app ${doc.id} - consensus reached (score: ${totalScore})`);
+            return; // Skip this application
+          }
+        }
+
         delete data.user; // Remove user data from response
         delete data.reviewer; // Remove reviewer data from response
         delete data.github; // Remove github data from response
@@ -96,14 +125,33 @@ async function handleGetApplicationForReviewFromCommonPool(
         if (scoringSnapshot.empty) {
           return data;
         } else {
-          // return application data with score and note
+          // Get reviewer information for all scores
+          const reviewerIds = scoringSnapshot.docs.map((doc) => doc.data().adminId);
+
+          const reviewerInfo =
+            reviewerIds.length === 0
+              ? { docs: [] }
+              : await db
+                  .collection(USERS_COLLECTION)
+                  .where(firestore.FieldPath.documentId(), 'in', reviewerIds)
+                  .get();
+
+          const reviewerMapping = new Map<string, string>();
+          reviewerInfo.docs.forEach((info) => {
+            const reviewerName = `${info.data().user.firstName} ${info.data().user.lastName}`;
+            reviewerMapping.set(info.id, reviewerName);
+          });
+
+          // return application data with score, note, and reviewer
           return {
             ...data,
             scoring: scoringSnapshot.docs.map((doc) => {
-              const data = doc.data();
+              const scoreData = doc.data();
+              const reviewerName = reviewerMapping.get(scoreData.adminId) || 'Unknown Reviewer';
               return {
-                score: data.score,
-                note: data.note,
+                score: scoreData.score,
+                note: scoreData.note,
+                reviewer: reviewerName,
               };
             }),
           };
@@ -111,7 +159,10 @@ async function handleGetApplicationForReviewFromCommonPool(
       }),
     );
 
-    return res.status(200).json(applications);
+    // Filter out undefined values (applications that were skipped)
+    const filteredApplications = applications.filter((app) => app !== undefined);
+
+    return res.status(200).json(filteredApplications);
   } catch (error) {
     console.error('Error when fetching applications from common pool', error);
     res.status(500).json({

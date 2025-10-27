@@ -22,6 +22,7 @@ interface LeaderboardResponse {
   adminStats: AdminReviewStats[];
   totalApplications: number;
   judgedApplications: number;
+  applicationsReviewedTwice: number;
 }
 
 const allowedRoles = ['super_admin', 'admin'];
@@ -33,6 +34,7 @@ export default function AdminLeaderboardPage() {
     adminStats: [],
     totalApplications: 0,
     judgedApplications: 0,
+    applicationsReviewedTwice: 0,
   });
   const [error, setError] = useState<string>('');
   const [sortBy, setSortBy] = useState<'totalReviews' | 'accepts' | 'rejects' | 'acceptanceRate'>(
@@ -48,6 +50,7 @@ export default function AdminLeaderboardPage() {
             Authorization: user.token,
           },
         });
+
         setLeaderboardData(data);
       } catch (err) {
         console.error('Error fetching leaderboard data:', err);
@@ -94,10 +97,10 @@ export default function AdminLeaderboardPage() {
           </div>
 
           {/* Summary Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-7 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-8 gap-4 mb-8">
             <div className="bg-white rounded-lg p-6 shadow-md">
               <div className="text-2xl font-bold text-[#5D5A88]">
-                {leaderboardData.adminStats.length}
+                {leaderboardData.adminStats?.length || 0}
               </div>
               <div className="text-gray-600">Total Admins</div>
             </div>
@@ -123,27 +126,43 @@ export default function AdminLeaderboardPage() {
             </div>
             <div className="bg-white rounded-lg p-6 shadow-md">
               <div className="text-2xl font-bold text-green-600">
-                {leaderboardData.adminStats.reduce((sum, admin) => sum + admin.totalReviews, 0)}
+                {leaderboardData.adminStats?.reduce((sum, admin) => sum + admin.totalReviews, 0) ||
+                  0}
               </div>
               <div className="text-gray-600">Total Reviews</div>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-md">
               <div className="text-2xl font-bold text-blue-600">
-                {leaderboardData.adminStats.reduce((sum, admin) => sum + admin.accepts, 0)}
+                {leaderboardData.adminStats?.reduce((sum, admin) => sum + admin.accepts, 0) || 0}
               </div>
               <div className="text-gray-600">Total Accepts</div>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-md">
               <div className="text-2xl font-bold text-red-600">
-                {leaderboardData.adminStats.reduce((sum, admin) => sum + admin.rejects, 0)}
+                {leaderboardData.adminStats?.reduce((sum, admin) => sum + admin.rejects, 0) || 0}
               </div>
               <div className="text-gray-600">Total Rejects</div>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-md">
               <div className="text-2xl font-bold text-yellow-600">
-                {leaderboardData.adminStats.reduce((sum, admin) => sum + admin.maybes, 0)}
+                {leaderboardData.adminStats?.reduce((sum, admin) => sum + admin.maybes, 0) || 0}
               </div>
               <div className="text-gray-600">Total Maybes</div>
+            </div>
+            <div className="bg-white rounded-lg p-6 shadow-md">
+              <div className="text-2xl font-bold text-orange-600">
+                {leaderboardData.applicationsReviewedTwice || 0}
+              </div>
+              <div className="text-gray-600">Reviewed 2+ Times</div>
+              <div className="text-sm text-gray-500 mt-1">
+                {leaderboardData.judgedApplications > 0
+                  ? `${Math.round(
+                      (leaderboardData.applicationsReviewedTwice /
+                        leaderboardData.judgedApplications) *
+                        100,
+                    )}% of judged apps`
+                  : '0% of judged apps'}
+              </div>
             </div>
           </div>
 
@@ -196,7 +215,7 @@ export default function AdminLeaderboardPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {leaderboardData.adminStats
+                  {(leaderboardData.adminStats || [])
                     .sort((a, b) => {
                       const aValue = a[sortBy];
                       const bValue = b[sortBy];

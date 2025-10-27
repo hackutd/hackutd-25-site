@@ -123,6 +123,38 @@ async function moveAppToCommonPool(hackerId: string) {
   );
 }
 
+async function checkConsensusThreshold(hackerId: string): Promise<boolean> {
+  // Get all scoring data for this application
+  const scoringSnapshot = await db
+    .collection(SCORING_COLLECTION)
+    .where('hackerId', '==', hackerId)
+    .get();
+
+  // Calculate total score (accepts = +1, rejects = -1, maybes = 0)
+  const totalScore = scoringSnapshot.docs.reduce((acc, doc) => {
+    const score = doc.data().score;
+    const multiplier = doc.data().isSuperVote ? 50 : 1; // Super votes count as 50x
+
+    if (score === 4) return acc + multiplier; // Accept
+    if (score === 1) return acc - multiplier; // Reject
+    return acc; // Maybe (score 2 or 3)
+  }, 0);
+
+  // Remove from common pool if strong consensus reached
+  if (totalScore >= 3 || totalScore <= -3) {
+    await db
+      .collection(REGISTRATION_COLLECTION)
+      .doc(hackerId)
+      .update({
+        inCommonPool: false,
+        'user.permissions': ['hacker'], // Remove 'in_review' permission
+      });
+    return true; // Application was removed from common pool
+  }
+
+  return false; // Application remains in common pool
+}
+
 async function checkTeamMajorityAcceptance(hackerId: string): Promise<boolean> {
   const teamMembers = await getTeamMembers(hackerId);
   if (teamMembers.length < 2) return false; // Not a team
@@ -252,6 +284,15 @@ async function handlePostRequest(req: NextApiRequest, res: NextApiResponse) {
           );
           if (appShouldBeMovedToCommonPool) {
             await moveAppToCommonPool(scoring.hackerId);
+          }
+
+          // Check for consensus threshold (remove from common pool if +3 or -3)
+          const wasRemovedFromCommonPool = await checkConsensusThreshold(scoring.hackerId);
+          if (wasRemovedFromCommonPool) {
+            console.log(
+              `Application ${scoring.hackerId} removed from common pool due to consensus threshold`,
+            );
+            return; // Skip further processing if removed from common pool
           }
 
           // Check if team should be accepted based on majority

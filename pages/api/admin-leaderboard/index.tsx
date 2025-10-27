@@ -25,6 +25,7 @@ interface LeaderboardResponse {
   adminStats: AdminReviewStats[];
   totalApplications: number;
   judgedApplications: number;
+  applicationsReviewedTwice: number;
 }
 
 async function userIsAuthorized(token: string): Promise<boolean> {
@@ -72,7 +73,7 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
   const adminNames = new Map<string, string>();
   const adminIds = new Set<string>();
 
-  // Initialize all admin users with zero stats (filter out super_admins just in case)
+  // Initialize all admin users with zero stats (include super_admins)
   adminUsersSnapshot.forEach((doc) => {
     const data = doc.data();
 
@@ -82,10 +83,10 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
       return;
     }
 
-    // Skip super admins
-    if (data.user?.permissions?.includes('super_admin')) {
-      return;
-    }
+    // Include super admins in leaderboard
+    // if (data.user?.permissions?.includes('super_admin')) {
+    //   return;
+    // }
 
     const adminId = doc.id;
     const adminName = `${data.user.firstName || 'Unknown'} ${data.user.lastName || ''}`.trim();
@@ -114,11 +115,21 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
 
   const scoringResults = await Promise.all(scoringPromises);
 
+  console.log('Admin leaderboard debug:');
+  console.log('- Total applications:', totalApplications);
+  console.log('- Admin users found:', adminUsersSnapshot.docs.length);
+  console.log('- Admin IDs:', Array.from(adminIds));
+  console.log('- Scoring results:', scoringResults.length);
+
   // Track unique applications that have been judged at least once
   const judgedApplicationIds = new Set<string>();
 
+  // Track applications that have been reviewed at least twice
+  const applicationReviewCounts = new Map<string, number>();
+
   // Process scoring data for each admin
   scoringResults.forEach(({ adminId, scoringSnapshot }) => {
+    console.log(`Processing admin ${adminId}: ${scoringSnapshot.docs.length} reviews`);
     scoringSnapshot.forEach((doc) => {
       const data = doc.data();
       const hackerId = data.hackerId;
@@ -129,6 +140,10 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
       // Track applications that have been judged at least once
       if (hackerId) {
         judgedApplicationIds.add(hackerId);
+
+        // Count reviews per application
+        const currentCount = applicationReviewCounts.get(hackerId) || 0;
+        applicationReviewCounts.set(hackerId, currentCount + 1);
       }
 
       // Process stats for this admin
@@ -180,10 +195,20 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
   // Sort by total reviews (descending)
   const sortedLeaderboardData = leaderboardData.sort((a, b) => b.totalReviews - a.totalReviews);
 
+  // Count applications that have been reviewed at least twice
+  const applicationsReviewedTwice = Array.from(applicationReviewCounts.values()).filter(
+    (count) => count >= 2,
+  ).length;
+
+  console.log('Final leaderboard data:', sortedLeaderboardData);
+  console.log('- Judged applications:', judgedApplicationIds.size);
+  console.log('- Applications reviewed twice:', applicationsReviewedTwice);
+
   return {
     adminStats: sortedLeaderboardData,
     totalApplications,
     judgedApplications: judgedApplicationIds.size, // Applications judged at least once
+    applicationsReviewedTwice, // Applications reviewed at least twice
   };
 }
 
