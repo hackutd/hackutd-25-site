@@ -150,9 +150,26 @@ async function handleScan(req: NextApiRequest, res: NextApiResponse) {
       const userIsRejected = await checkUserIsRejected(snapshot.id);
       const lateCheckInEligible = await checkLateCheckInEligible(userData as Registration);
       if (userIsRejected && !lateCheckInEligible) {
-        return res
-          .status(400)
-          .json({ code: 'non eligible', message: 'User is not eligible for late check-in yet...' });
+        const waitlistNumber = userData.waitListInfo?.waitlistNumber;
+        const lateCheckInManager = await db
+          .collection('/miscellaneous')
+          .doc('lateCheckInManager')
+          .get();
+        const upperBound = lateCheckInManager.exists
+          ? lateCheckInManager.data()?.allowedCheckInUpperBound
+          : 'not set';
+
+        const message =
+          waitlistNumber !== undefined
+            ? `Sorry! You're not eligible for late check-in. Your waitlist position (#${waitlistNumber}) is beyond the current allowed range (up to #${upperBound}). Please check back later as organizers may expand the range.`
+            : `Sorry! You're not eligible for late check-in. You don't have a waitlist position assigned. Please contact an organizer for assistance.`;
+
+        return res.status(400).json({
+          code: 'late-checkin-ineligible',
+          message,
+          waitlistNumber,
+          allowedUpperBound: upperBound,
+        });
       }
     }
 
@@ -195,13 +212,16 @@ async function handleScan(req: NextApiRequest, res: NextApiResponse) {
 
     // Check if user has enough points for negative point scans (spending)
     if (pointsToAward < 0 && currentPoints < Math.abs(pointsToAward)) {
+      const pointsNeeded = Math.abs(pointsToAward);
+      const pointsShort = pointsNeeded - currentPoints;
+
       return res.status(400).json({
         code: 'insufficient-points',
-        message: `Insufficient points! You need ${Math.abs(
-          pointsToAward,
-        )} points but only have ${currentPoints}.`,
-        required: Math.abs(pointsToAward),
+        message: `Oops! You need ${pointsNeeded} points for ${bodyData.scan}, but you only have ${currentPoints} points. You're ${pointsShort} points short! Attend more events or activities to earn points.`,
+        required: pointsNeeded,
         current: currentPoints,
+        shortage: pointsShort,
+        itemName: bodyData.scan,
       });
     }
 

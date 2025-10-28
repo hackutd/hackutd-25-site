@@ -28,6 +28,13 @@ async function getStatsData() {
     statRecords[field] = {};
   }
 
+  // Ensure all array fields are initialized
+  arrayFields.forEach((field) => {
+    if (!statRecords[field]) {
+      statRecords[field] = {};
+    }
+  });
+
   const generalStats: GeneralStats & statRecordTypes = {
     superAdminCount: 0,
     checkedInCount: 0,
@@ -53,10 +60,28 @@ async function getStatsData() {
   const snapshot = await db.collection(USERS_COLLECTION).get();
   snapshot.forEach((doc) => {
     const userData = doc.data();
+
+    // Handle malformed users more carefully
+    if (!userData) {
+      console.warn('Completely missing user data:', doc.id);
+      return; // Skip only if completely missing
+    }
+
+    // Skip users without proper user structure - don't auto-assign permissions
+    if (!userData.user) {
+      console.warn('Missing user object, skipping:', doc.id);
+      return;
+    }
+
     const date = doc.createTime.toDate();
     const stringDate = `${date.getMonth() + 1}-${date.getDate()}`;
-    if (userData['scans']) {
-      if ((userData['scans'] as any[]).find((obj) => obj.name === checkInEventName) !== undefined) {
+    if (userData['scans'] && Array.isArray(userData['scans'])) {
+      // Handle both string and object formats for scans
+      const hasCheckIn = userData['scans'].some((scan: any) => {
+        const scanName = typeof scan === 'string' ? scan : scan.name;
+        return scanName === checkInEventName;
+      });
+      if (hasCheckIn) {
         generalStats.checkedInCount++;
       }
     }
@@ -70,12 +95,34 @@ async function getStatsData() {
     generalStats.timestamp[stringDate]++;
 
     for (let arrayField of arrayFields) {
-      if (!userData[arrayField]) continue;
-      userData[arrayField].forEach((data: string) => {
-        if (arrayField === 'scans' && data === checkInEventName) generalStats.checkedInCount++;
-        else {
-          if (!generalStats[arrayField].hasOwnProperty(data)) generalStats[arrayField][data] = 0;
-          generalStats[arrayField][data]++;
+      if (!userData[arrayField] || !Array.isArray(userData[arrayField])) continue;
+
+      userData[arrayField].forEach((data: any) => {
+        // Handle scans specially since they can be strings or objects
+        if (arrayField === 'scans') {
+          const scanName = typeof data === 'string' ? data : data.name;
+          if (scanName && scanName !== checkInEventName) {
+            // Don't double-count check-ins, but count other scans
+            // Ensure the field object exists
+            if (!generalStats[arrayField]) {
+              generalStats[arrayField] = {};
+            }
+            if (!generalStats[arrayField].hasOwnProperty(scanName)) {
+              generalStats[arrayField][scanName] = 0;
+            }
+            generalStats[arrayField][scanName]++;
+          }
+        } else {
+          // Handle other array fields normally (strings)
+          const fieldValue = typeof data === 'string' ? data : data.toString();
+          // Ensure the field object exists
+          if (!generalStats[arrayField]) {
+            generalStats[arrayField] = {};
+          }
+          if (!generalStats[arrayField].hasOwnProperty(fieldValue)) {
+            generalStats[arrayField][fieldValue] = 0;
+          }
+          generalStats[arrayField][fieldValue]++;
         }
       });
     }
@@ -88,19 +135,34 @@ async function getStatsData() {
       generalStats[singleField][userData[singleField]]++;
     }
 
-    const userPermission = userData.user.permissions[0];
+    // Handle user permissions - only count users with valid permissions
+    const userPermissions = userData.user?.permissions;
+
+    if (!userPermissions || !Array.isArray(userPermissions) || userPermissions.length === 0) {
+      console.warn('User has no valid permissions, skipping:', doc.id);
+      return;
+    }
+
+    const userPermission = userPermissions[0];
 
     switch (userPermission) {
       case 'super_admin': {
         generalStats.superAdminCount++;
         break;
       }
-      case 'admin': {
+      case 'admin':
+      case 'organizer':
+      case 'judge': {
         generalStats.adminCount++;
         break;
       }
       case 'hacker': {
         generalStats.hackerCount++;
+        break;
+      }
+      default: {
+        console.warn('Unknown permission type:', userPermission, 'for user:', doc.id);
+        // Don't count unknown permission types
         break;
       }
     }

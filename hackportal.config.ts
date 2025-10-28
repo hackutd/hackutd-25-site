@@ -619,7 +619,15 @@ export const fieldNames = {
 };
 
 //name fields that are checkbox questions belong here
-export const arrayField = ['companies', 'dietary', 'disclaimer', 'codeOfConduct'];
+export const arrayField = [
+  'companies',
+  'dietary',
+  'disclaimer',
+  'codeOfConduct',
+  'mlhPrivacyPolicy',
+  'mlhNotifications',
+  'scans',
+];
 //any other fields belong here
 export const singleField = [
   'age',
