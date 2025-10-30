@@ -27,7 +27,7 @@ interface LeaderboardResponse {
   confirmedRejected: number;
 }
 
-const allowedRoles = ['super_admin', 'admin'];
+const allowedRoles = ['super_admin'];
 
 export default function AdminLeaderboardPage() {
   const { user, isSignedIn } = useAuthContext();
