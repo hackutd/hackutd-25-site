@@ -23,18 +23,23 @@ interface LeaderboardResponse {
   totalApplications: number;
   judgedApplications: number;
   applicationsReviewedTwice: number;
+  confirmedAccepted: number;
+  confirmedRejected: number;
 }
 
 const allowedRoles = ['super_admin', 'admin'];
 
 export default function AdminLeaderboardPage() {
   const { user, isSignedIn } = useAuthContext();
+  const isSuperAdmin = user?.permissions?.includes('super_admin') || false;
   const [loading, setLoading] = useState(true);
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardResponse>({
     adminStats: [],
     totalApplications: 0,
     judgedApplications: 0,
     applicationsReviewedTwice: 0,
+    confirmedAccepted: 0,
+    confirmedRejected: 0,
   });
   const [error, setError] = useState<string>('');
   const [sortBy, setSortBy] = useState<'totalReviews' | 'accepts' | 'rejects' | 'acceptanceRate'>(
@@ -97,7 +102,11 @@ export default function AdminLeaderboardPage() {
           </div>
 
           {/* Summary Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-8 gap-4 mb-8">
+          <div
+            className={`grid grid-cols-1 sm:grid-cols-2 ${
+              isSuperAdmin ? 'lg:grid-cols-5' : 'lg:grid-cols-4'
+            } gap-4 mb-8`}
+          >
             <div className="bg-white rounded-lg p-6 shadow-md">
               <div className="text-2xl font-bold text-[#5D5A88]">
                 {leaderboardData.adminStats?.length || 0}
@@ -164,9 +173,26 @@ export default function AdminLeaderboardPage() {
                   : '0% of judged apps'}
               </div>
             </div>
+            {isSuperAdmin && (
+              <>
+                <div className="bg-white rounded-lg p-6 shadow-md">
+                  <div className="text-2xl font-bold text-emerald-600">
+                    {leaderboardData.confirmedAccepted || 0}
+                  </div>
+                  <div className="text-gray-600">Confirmed Accepted</div>
+                  <div className="text-sm text-gray-500 mt-1">Applications with ≥ 2 points</div>
+                </div>
+                <div className="bg-white rounded-lg p-6 shadow-md">
+                  <div className="text-2xl font-bold text-rose-600">
+                    {leaderboardData.confirmedRejected || 0}
+                  </div>
+                  <div className="text-gray-600">Confirmed Rejected</div>
+                  <div className="text-sm text-gray-500 mt-1">Applications with &lt; 2 points</div>
+                </div>
+              </>
+            )}
           </div>
 
-          {/* Sorting Controls */}
           <div className="bg-white rounded-lg p-4 shadow-md mb-6">
             <div className="flex flex-wrap items-center gap-4">
               <div>
@@ -270,7 +296,6 @@ export default function AdminLeaderboardPage() {
             </div>
           </div>
 
-          {/* Legend */}
           <div className="mt-6 bg-white rounded-lg p-4 shadow-md">
             <h3 className="text-lg font-semibold text-[#5D5A88] mb-3">Legend</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">

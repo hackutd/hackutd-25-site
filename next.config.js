@@ -29,6 +29,11 @@ const withPWA = require('next-pwa')({
           'https://hackutd.notion.site/HackUTD-2025-Lost-in-the-Pages-Travel-Reimbursement-13e0d994cbb981c5a336f1dda3e5d3be',
         permanent: true,
       },
+      {
+        source: '/discord',
+        destination: 'https://discord.gg/sCJb7J98QD',
+        permanent: false,
+      },
     ];
   },
 

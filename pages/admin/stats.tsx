@@ -55,7 +55,7 @@ export default function AdminStatsPage() {
   }
 
   return (
-    <div className="flex flex-col flex-grow">
+    <div className="flex flex-col flex-grow bg-white min-h-screen">
       <Head>
         <title>HackUTD 2024 - Admin</title>
         <meta name="description" content="HackPortal's Admin Page" />
@@ -63,25 +63,60 @@ export default function AdminStatsPage() {
       {/* <AdminHeader /> */}
       <div className="w-full xl:w-3/5 mx-auto p-6 flex flex-col gap-y-6">
         <div className="flex-col gap-y-3 w-full md:flex-row flex justify-around gap-x-2">
-          <AdminStatsCard icon={<CheckIcon />} title="Check-Ins" value={statsData.checkedInCount} />
+          <AdminStatsCard
+            icon={<CheckIcon />}
+            title="Check-Ins"
+            value={allCandidatesStats.checkedInCount}
+          />
           <AdminStatsCard
             icon={<AccountCircleIcon />}
             title="Hackers"
-            value={statsData.hackerCount}
+            value={allCandidatesStats.hackerCount}
           />
           <AdminStatsCard
             icon={<SupervisorAccountIcon />}
             title="Admins"
-            value={statsData.adminCount}
+            value={allCandidatesStats.adminCount}
           />
           <AdminStatsCard
             icon={<EngineeringIcon />}
             title="Super Admin"
-            value={statsData.superAdminCount}
+            value={allCandidatesStats.superAdminCount}
           />
         </div>
 
-        {/* Dietary Restrictions for All Candidates */}
+        {allCandidatesStats &&
+          allCandidatesStats.scans &&
+          Object.keys(allCandidatesStats.scans).length > 0 && (
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <svg
+                  className="w-6 h-6 text-blue-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <h2 className="text-xl font-bold text-gray-800">Scan Type Counts</h2>
+              </div>
+              <NivoBarChart
+                name="Scan Counts"
+                items={Object.entries(allCandidatesStats.scans)
+                  .sort(([, a], [, b]) => (b as number) - (a as number))
+                  .map(([scanType, count]) => ({
+                    itemName: scanType,
+                    itemValue: count.toString(),
+                  }))}
+              />
+            </div>
+          )}
+
         {allCandidatesStats && allCandidatesStats.dietary && (
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center gap-2 mb-4">

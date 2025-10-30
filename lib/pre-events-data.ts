@@ -31,6 +31,25 @@ export interface PreEventData {
 
 export const PRE_EVENTS_DATA: PreEventData[] = [
   {
+    id: 'pnc-bank-meet-and-greet',
+    title: 'PNC Bank Meet & Greet',
+    description:
+      'Join us for an exclusive PNC BANK Meet and Greet. Mingle with industry experts, play fun games, and enjoy free food while expanding your professional network!',
+    type: 'Sponsor',
+    track: 'General',
+    startDate: '2025-11-06T19:00:00-06:00',
+    endDate: '2025-11-06T20:30:00-06:00',
+    location: 'ECSS 2.311',
+    roomNumber: 'ECSS 2.311',
+    isVirtual: false,
+    registrationRequired: false,
+    maxCapacity: 150,
+    currentRegistrations: 0,
+    speakers: ['PNC Bank'],
+    organizer: 'PNC Bank',
+    tags: ['Networking', 'Free Food', 'Sponsor'],
+  },
+  {
     id: 'hackathon-101',
     title: 'Hackathon 101',
     description:

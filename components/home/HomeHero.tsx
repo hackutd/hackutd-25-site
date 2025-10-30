@@ -158,7 +158,7 @@ export default function HomeHero() {
               />
             </div>
 
-            <div className={`${isMobile ? 'mt-24' : 'mt-8'} text-center`}>
+            {/* <div className={`${isMobile ? 'mt-24' : 'mt-8'} text-center`}>
               <button
                 onClick={() => {
                   // Redirect based on user authentication and profile status
@@ -195,7 +195,7 @@ export default function HomeHero() {
                   Apply Now
                 </span>
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
