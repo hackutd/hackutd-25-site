@@ -70,8 +70,8 @@ export default function HomePreEventsSimple() {
     );
   };
 
-  const upcomingEvents = PRE_EVENTS_DATA.filter(
-    (event) => new Date(event.startDate) > new Date(),
+  const upcomingSponsorEvents = PRE_EVENTS_DATA.filter(
+    (event) => event.type === 'Sponsor' && new Date(event.startDate) > new Date(),
   ).sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
 
   return (
@@ -89,37 +89,8 @@ export default function HomePreEventsSimple() {
       >
         Pre-Events!
       </div>
-      <div className="md:flex p-1 overflow-y-auto overflow-x-hidden mx-auto lg:w-[80%] w-full h-full">
-        <div className="w-full lg:w-1/2 px-4 md:px-0">
-          <div
-            className="text-3xl font-black py-6 text-[#FFF] font-youngSerif text-center"
-            style={{
-              textShadow:
-                '1px 1px 0 #FF99BD, -1px -1px 0 #FF99BD, 1px -1px 0 #FF99BD, -1px 1px 0 #FF99BD',
-            }}
-          >
-            HackUTD Workshops
-          </div>
-          <div
-            className="mb-8 mx-2 p-2 border-2 rounded-2xl border-opacity-20"
-            style={{
-              backgroundColor: '#100101BF',
-              borderColor: '#FF99BD',
-              boxShadow: '0px 0px 20px 0px #CD4D4D80',
-            }}
-          >
-            {upcomingEvents.map((event, index) => (
-              <Event
-                key={event.id}
-                data={event}
-                index={index}
-                arrayLength={upcomingEvents.length}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="w-full lg:w-1/2 md:ml-6 px-4 md:px-0">
+      <div className="p-1 overflow-y-auto overflow-x-hidden mx-auto lg:w-[60%] w-full h-full">
+        <div className="w-full px-4 md:px-0">
           <div
             className="text-3xl font-black py-6 text-[#FFF] font-youngSerif text-center"
             style={{
@@ -137,9 +108,20 @@ export default function HomePreEventsSimple() {
               boxShadow: '0px 0px 20px 0px #CD4D4D80',
             }}
           >
-            <div className="p-4 text-center" style={{ backgroundColor: '#100101BF' }}>
-              <div className="text-lg font-bold font-dmSans text-white">Stay tuned!</div>
-            </div>
+            {upcomingSponsorEvents.length > 0 ? (
+              upcomingSponsorEvents.map((event, index) => (
+                <Event
+                  key={event.id}
+                  data={event}
+                  index={index}
+                  arrayLength={upcomingSponsorEvents.length}
+                />
+              ))
+            ) : (
+              <div className="p-4 text-center" style={{ backgroundColor: '#100101BF' }}>
+                <div className="text-lg font-bold font-dmSans text-white">Stay tuned!</div>
+              </div>
+            )}
           </div>
         </div>
       </div>
