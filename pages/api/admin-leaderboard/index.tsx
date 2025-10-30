@@ -26,6 +26,8 @@ interface LeaderboardResponse {
   totalApplications: number;
   judgedApplications: number;
   applicationsReviewedTwice: number;
+  confirmedAccepted: number;
+  confirmedRejected: number;
 }
 
 async function userIsAuthorized(token: string): Promise<boolean> {
@@ -127,6 +129,9 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
   // Track applications that have been reviewed at least twice
   const applicationReviewCounts = new Map<string, number>();
 
+  // Track application scores for final decision calculation
+  const applicationScores = new Map<string, number>();
+
   // Process scoring data for each admin
   scoringResults.forEach(({ adminId, scoringSnapshot }) => {
     console.log(`Processing admin ${adminId}: ${scoringSnapshot.docs.length} reviews`);
@@ -144,6 +149,19 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
         // Count reviews per application
         const currentCount = applicationReviewCounts.get(hackerId) || 0;
         applicationReviewCounts.set(hackerId, currentCount + 1);
+
+        // Calculate application scores for final decisions
+        const currentScore = applicationScores.get(hackerId) || 0;
+        const scoreMultiplier = isSuperVote ? 50 : 1;
+
+        if (score === 4) {
+          // Accept scores add to total
+          applicationScores.set(hackerId, currentScore + scoreMultiplier);
+        } else if (score === 1) {
+          // Reject scores subtract from total
+          applicationScores.set(hackerId, currentScore - scoreMultiplier);
+        }
+        // Maybe scores (2 and 3) don't change the total (neutral)
       }
 
       // Process stats for this admin
@@ -200,15 +218,32 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
     (count) => count >= 2,
   ).length;
 
+  // Calculate confirmed accepted and rejected applications
+  const APPLICATION_POINT_THRESHOLD = 2;
+  let confirmedAccepted = 0;
+  let confirmedRejected = 0;
+
+  applicationScores.forEach((score) => {
+    if (score >= APPLICATION_POINT_THRESHOLD) {
+      confirmedAccepted++;
+    } else {
+      confirmedRejected++;
+    }
+  });
+
   console.log('Final leaderboard data:', sortedLeaderboardData);
   console.log('- Judged applications:', judgedApplicationIds.size);
   console.log('- Applications reviewed twice:', applicationsReviewedTwice);
+  console.log('- Confirmed accepted:', confirmedAccepted);
+  console.log('- Confirmed rejected:', confirmedRejected);
 
   return {
     adminStats: sortedLeaderboardData,
     totalApplications,
     judgedApplications: judgedApplicationIds.size, // Applications judged at least once
     applicationsReviewedTwice, // Applications reviewed at least twice
+    confirmedAccepted, // Applications with score >= 2 (confirmed accepted)
+    confirmedRejected, // Applications with score < 2 (confirmed rejected)
   };
 }
 
