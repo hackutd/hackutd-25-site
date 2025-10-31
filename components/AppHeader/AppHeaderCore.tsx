@@ -101,6 +101,12 @@ export default function AppHeaderCore(props: Props) {
           }
         },
       },
+      {
+        text: 'Hackerpack',
+        onClick: () => {
+          window.open('https://guide.hackutd.co/dayof/', '_blank');
+        },
+      },
     ];
 
     navItems.map((item, idx) => {

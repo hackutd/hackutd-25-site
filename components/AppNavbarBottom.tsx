@@ -192,8 +192,7 @@ export default function AppNavbarBottom(props: Props) {
     );
     itemIdx++;
 
-    // BookmarkIcon
-    /*
+    // BookmarkIcon (Hackerpack)
     items.push(
       <button
         id={itemIdRoot + itemIdx}
@@ -202,7 +201,7 @@ export default function AppNavbarBottom(props: Props) {
           if (Object.hasOwn(callbackRegistry, router.pathname)) {
             await callbackRegistry[router.pathname]();
           }
-          await router.push('/hackerpacks');
+          window.open('https://guide.hackutd.co/dayof/', '_blank');
         }}
       >
         <svg
@@ -222,7 +221,6 @@ export default function AppNavbarBottom(props: Props) {
       </button>,
     );
     itemIdx++;
-    */
 
     // AdminIcon
     items.push(
@@ -325,7 +323,7 @@ export default function AppNavbarBottom(props: Props) {
           distanceMagnify: 80,
         }}
         classes={{
-          wrapperDiv: clsx('gap-5 flex items-center justify-center flex-wrap'),
+          wrapperDiv: clsx('gap-5 flex items-center justify-center nowrap overflow-x-auto'),
         }}
         items={floatingDockItems()}
       />
