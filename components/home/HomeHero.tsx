@@ -1,75 +1,100 @@
-import BackgroundCircles from '../BackgroundCircles';
+import { useEffect, useState } from 'react';
 import AppHeader from '../AppHeader';
 import Image from 'next/image';
 
+const imageSequence = [
+  'sky.PNG',
+  'bgClouds.PNG',
+  'bg.PNG',
+  'foreground.PNG',
+  'bgTrees.PNG',
+  'bgGrass.PNG',
+  'frontSideTrees.PNG',
+  'moon.PNG',
+  'fox.PNG',
+  'deer.PNG',
+  'cat.PNG',
+  'bird.PNG',
+];
+
 export default function HomeHero() {
+  const [loadedCount, setLoadedCount] = useState(0);
+  const [allLoaded, setAllLoaded] = useState(false);
+
+  useEffect(() => {
+    if (loadedCount === imageSequence.length) {
+      setTimeout(() => {
+        setAllLoaded(true);
+      }, 300); // small buffer after load
+    }
+  }, [loadedCount]);
+
   return (
-    <section className="min-h-screen bg-contain bg-white flex flex-col-reverse md:flex-col">
+    <section className="relative min-h-screen bg-contain bg-white flex flex-col-reverse md:flex-col">
       {/* App header */}
       <AppHeader />
 
-      <div className="flex h-screen w-full relative">
-        {/* <div className="w-full h-full absolute top-0 left-0 z-0">
-          <BackgroundCircles />
-        </div> */}
+      {/* Wrapper for all absolutely positioned stuff */}
+      <div className="relative w-full h-screen">
+        {/* Preloader */}
+        {!allLoaded && (
+          <div className="absolute inset-0 z-50 flex justify-center items-center bg-black text-white">
+            <p className="text-xl animate-pulse">Loading...</p>
+          </div>
+        )}
 
-        <div className="relative z-10 shrink-0 w-full flex">
-          {/* MLH sticker */}
-          {/* <div className="absolute top-0 right-4 z-20">
-            <Image
-              src={MLH_Sticker.src}
-              height={MLH_Sticker.height}
-              width={MLH_Sticker.width}
-              alt="MLH sticker"
-              className="w-full h-full object-cover"
-            />
-          </div> */}
-
-          {/* Big welcome */}
-          <div
-            className="w-full flex flex-col gap-2 justify-center items-center relative"
-            style={{
-              backgroundImage: `url('/assets/topDrawing/frontSideTrees.PNG'),
-                                url('/assets/topDrawing/bird.PNG'),
-                                url('/assets/topDrawing/cat.PNG'),
-                                url('/assets/topDrawing/deer.PNG'),
-                                url('/assets/topDrawing/fox.PNG'),
-                                url('/assets/topDrawing/bgGrass.PNG'), 
-                                url('/assets/topDrawing/bgTrees.PNG'),
-                                url('/assets/topDrawing/foreground.PNG'), 
-                                url('/assets/topDrawing/bg.PNG'), 
-                                url('/assets/topDrawing/bgClouds.PNG'),
-                                url('/assets/topDrawing/moon.PNG'), 
-                                url('/assets/topDrawing/sky.PNG')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-            }}
-          >
-            {/* <p className="font-nunito text-[#FFF] text-xl md:text-3xl">Welcome To</p> */}
+        {/* Image Layers */}
+        {imageSequence.map((name, index) => {
+          const delay = index * 0.1;
+          return (
             <div
-              className="w-full max-w-[600px] md:max-w-[800px] z-10 absolute"
-              style={{ top: '33%', transform: 'translateY(-50%)' }}
+              key={name}
+              className={`absolute top-0 left-0 w-full h-full transition-all duration-50 ease-in-out ${
+                allLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+              }`}
+              style={{
+                zIndex: index,
+                transitionDelay: `${delay}s`,
+              }}
             >
               <Image
-                src="/assets/Vectorized-Title.svg"
-                alt="HACKPORTAL"
-                width={800}
-                height={200}
-                className="w-full h-auto drop-shadow-2xl"
+                src={`/assets/topDrawing/compressed-images/${name}`}
+                alt={name}
+                fill
+                onLoad={() => setLoadedCount((prev) => prev + 1)}
+                className="object-cover"
+                loading="eager"
+                priority={index < 3}
               />
             </div>
+          );
+        })}
+
+        {/* Title Content */}
+        <div className="relative z-[9999] w-full h-full flex justify-center items-center">
+          <div
+            className={`w-full max-w-[600px] md:max-w-[800px] absolute transition-all duration-50 ease-in-out ${
+              allLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+            }`}
+            style={{
+              top: '30%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              transitionDelay: `${imageSequence.length * 0.2 + 0.2}s`,
+            }}
+          >
+            <Image
+              src="/assets/Vectorized-Title.svg"
+              alt="HACKPORTAL"
+              width={800}
+              height={200}
+              className="w-full h-auto drop-shadow-2xl"
+              loading="eager"
+              priority
+            />
           </div>
         </div>
       </div>
-
-      {/* Bottom banner */}
-      {/* <div className="font-dmSans w-full flex justify-center bg-[#7B81FF] text-white h-[1.75rem] text-nowrap overflow-hidden">
-        <p className="text-lg">
-          SAMPLE TEXT • SAMPLE TEXT • SAMPLE TEXT • SAMPLE TEXT • SAMPLE TEXT • SAMPLE TEXT • SAMPLE
-          TEXT • SAMPLE TEXT • SAMPLE TEXT
-        </p>
-      </div> */}
     </section>
   );
 }

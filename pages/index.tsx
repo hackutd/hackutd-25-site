@@ -52,9 +52,9 @@ export default function Home({
       <div
         className="overflow-x-hidden w-full"
         style={{
-          backgroundImage: `url("/assets/pathDrawing/bushLeft.PNG"),
-                            url("/assets/pathDrawing/pathOutline.PNG"),
-                            url("/assets/pathDrawing/bg.PNG")`,
+          backgroundImage: `url("/assets/pathDrawing/compressed-images/bushLeft.PNG"),
+                            url("/assets/pathDrawing/compressed-images/pathOutline.PNG"),
+                            url("/assets/pathDrawing/compressed-images/bg.PNG")`,
           backgroundSize: 'cover',
           backgroundRepeat: 'repeat',
           zIndex: 2,
