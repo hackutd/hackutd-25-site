@@ -95,9 +95,15 @@ const HomeAboutText = () => {
           {/* Fox image below the about text */}
           <div className="relative w-full flex justify-center -mt-4">
             <img
-              src="/assets/pathDrawing/fox.webp"
+              src="/assets/pathDrawing/sfox.GIF"
               alt="Fox"
-              className="w-80 md:w-96 lg:w-[500px] xl:w-[500px] 2xl:w-[600px] h-auto md:-mt-12 lg:-mt-16"
+              className="
+                w-80 md:w-96 lg:w-[500px] xl:w-[500px] 2xl:w-[600px]
+                h-auto
+                md:-mt-12 lg:-mt-16
+                scale-[1.4]        /* enlarge by 40% */
+                origin-center      /* scale from the middle */
+              "
             />
           </div>
         </div>
