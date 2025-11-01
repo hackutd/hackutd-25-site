@@ -28,7 +28,8 @@ initFirebase();
  */
 function BottomSpacer() {
   // Always show spacer since navbar is now always visible
-  return <div className="md:hidden h-[80px] shrink-0" />;
+  // Increased to account for navbar height + bottom spacing + safe area
+  return <div className="md:hidden h-[100px] shrink-0" />;
 }
 
 /**

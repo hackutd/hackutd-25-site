@@ -310,11 +310,12 @@ export default function AppNavbarBottom(props: Props) {
       )}
       style={{
         position: 'fixed',
-        bottom: '0',
+        bottom: '16px',
         left: 0,
         right: 0,
         zIndex: 9999,
         minHeight: '50px',
+        paddingBottom: 'max(12px, env(safe-area-inset-bottom))',
       }}
     >
       <FloatingDock
