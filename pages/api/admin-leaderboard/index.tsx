@@ -88,7 +88,6 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
 
     // Skip if user data is malformed
     if (!data || !data.user) {
-      console.warn('Malformed user data for admin:', doc.id);
       return;
     }
 
@@ -137,14 +136,6 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
 
   const scoringResults = await Promise.all([...scoringPromises, ...superAdminScoringPromises]);
 
-  console.log('Admin leaderboard debug:');
-  console.log('- Total applications:', totalApplications);
-  console.log('- Admin users found:', adminUsersSnapshot.docs.length);
-  console.log('- Super admin users found:', superAdminUsersSnapshot.docs.length);
-  console.log('- Admin IDs:', Array.from(adminIds));
-  console.log('- Super Admin IDs:', Array.from(superAdminIds));
-  console.log('- Scoring results:', scoringResults.length);
-
   // Track unique applications that have been judged at least once
   const judgedApplicationIds = new Set<string>();
 
@@ -156,11 +147,6 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
 
   // Process scoring data for each admin and super admin
   scoringResults.forEach(({ adminId, scoringSnapshot, isSuperAdmin }) => {
-    console.log(
-      `Processing ${isSuperAdmin ? 'super admin' : 'admin'} ${adminId}: ${
-        scoringSnapshot.docs.length
-      } reviews`,
-    );
     scoringSnapshot.forEach((doc) => {
       const data = doc.data();
       const hackerId = data.hackerId;
@@ -257,12 +243,6 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
       confirmedRejected++;
     }
   });
-
-  console.log('Final leaderboard data:', sortedLeaderboardData);
-  console.log('- Judged applications:', judgedApplicationIds.size);
-  console.log('- Applications reviewed twice:', applicationsReviewedTwice);
-  console.log('- Confirmed accepted:', confirmedAccepted);
-  console.log('- Confirmed rejected:', confirmedRejected);
 
   return {
     adminStats: sortedLeaderboardData,
