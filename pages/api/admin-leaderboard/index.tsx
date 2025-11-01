@@ -60,6 +60,12 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
     .where('user.permissions', 'array-contains-any', ['admin', 'organizer', 'judge'])
     .get();
 
+  // Get super admin users separately (for stats only, not leaderboard)
+  const superAdminUsersSnapshot = await db
+    .collection(USERS_COLLECTION)
+    .where('user.permissions', 'array-contains', 'super_admin')
+    .get();
+
   // Initialize admin stats and names
   const adminStats = new Map<
     string,
@@ -74,8 +80,9 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
 
   const adminNames = new Map<string, string>();
   const adminIds = new Set<string>();
+  const superAdminIds = new Set<string>();
 
-  // Initialize all admin users with zero stats (include super_admins)
+  // Initialize all admin users with zero stats (for leaderboard display)
   adminUsersSnapshot.forEach((doc) => {
     const data = doc.data();
 
@@ -84,11 +91,6 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
       console.warn('Malformed user data for admin:', doc.id);
       return;
     }
-
-    // Include super admins in leaderboard
-    // if (data.user?.permissions?.includes('super_admin')) {
-    //   return;
-    // }
 
     const adminId = doc.id;
     const adminName = `${data.user.firstName || 'Unknown'} ${data.user.lastName || ''}`.trim();
@@ -105,6 +107,14 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
     adminIds.add(adminId);
   });
 
+  // Track super admin IDs (for stats calculation only, not for leaderboard)
+  superAdminUsersSnapshot.forEach((doc) => {
+    const data = doc.data();
+    if (data && data.user) {
+      superAdminIds.add(doc.id);
+    }
+  });
+
   // Get scoring data for each admin individually (more targeted queries)
   const scoringPromises = Array.from(adminIds).map(async (adminId) => {
     const scoringSnapshot = await db
@@ -112,15 +122,27 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
       .where('adminId', '==', adminId)
       .get();
 
-    return { adminId, scoringSnapshot };
+    return { adminId, scoringSnapshot, isSuperAdmin: false };
   });
 
-  const scoringResults = await Promise.all(scoringPromises);
+  // Get scoring data for super admins (for stats calculation only)
+  const superAdminScoringPromises = Array.from(superAdminIds).map(async (adminId) => {
+    const scoringSnapshot = await db
+      .collection(SCORING_COLLECTION)
+      .where('adminId', '==', adminId)
+      .get();
+
+    return { adminId, scoringSnapshot, isSuperAdmin: true };
+  });
+
+  const scoringResults = await Promise.all([...scoringPromises, ...superAdminScoringPromises]);
 
   console.log('Admin leaderboard debug:');
   console.log('- Total applications:', totalApplications);
   console.log('- Admin users found:', adminUsersSnapshot.docs.length);
+  console.log('- Super admin users found:', superAdminUsersSnapshot.docs.length);
   console.log('- Admin IDs:', Array.from(adminIds));
+  console.log('- Super Admin IDs:', Array.from(superAdminIds));
   console.log('- Scoring results:', scoringResults.length);
 
   // Track unique applications that have been judged at least once
@@ -132,9 +154,13 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
   // Track application scores for final decision calculation
   const applicationScores = new Map<string, number>();
 
-  // Process scoring data for each admin
-  scoringResults.forEach(({ adminId, scoringSnapshot }) => {
-    console.log(`Processing admin ${adminId}: ${scoringSnapshot.docs.length} reviews`);
+  // Process scoring data for each admin and super admin
+  scoringResults.forEach(({ adminId, scoringSnapshot, isSuperAdmin }) => {
+    console.log(
+      `Processing ${isSuperAdmin ? 'super admin' : 'admin'} ${adminId}: ${
+        scoringSnapshot.docs.length
+      } reviews`,
+    );
     scoringSnapshot.forEach((doc) => {
       const data = doc.data();
       const hackerId = data.hackerId;
@@ -142,15 +168,15 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
       const isSuperVote = data.isSuperVote || false;
       const appIsAssigned = data.appIsAssigned || false;
 
-      // Track applications that have been judged at least once
+      // Track applications that have been judged at least once (including by super admins)
       if (hackerId) {
         judgedApplicationIds.add(hackerId);
 
-        // Count reviews per application
+        // Count reviews per application (including super admin reviews)
         const currentCount = applicationReviewCounts.get(hackerId) || 0;
         applicationReviewCounts.set(hackerId, currentCount + 1);
 
-        // Calculate application scores for final decisions
+        // Calculate application scores for final decisions (including super admin scores)
         const currentScore = applicationScores.get(hackerId) || 0;
         const scoreMultiplier = isSuperVote ? 50 : 1;
 
@@ -164,8 +190,9 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
         // Maybe scores (2 and 3) don't change the total (neutral)
       }
 
-      // Process stats for this admin
-      if (adminStats.has(adminId)) {
+      // Process stats for this admin ONLY if they're not a super admin
+      // Super admins should not appear on the leaderboard itself
+      if (!isSuperAdmin && adminStats.has(adminId)) {
         const stats = adminStats.get(adminId)!;
         stats.totalReviews++;
 
