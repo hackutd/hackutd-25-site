@@ -88,6 +88,12 @@ export default function AppHeaderCoreMobile(props: Props) {
           }
         },
       },
+      {
+        text: 'Hackerpack',
+        onClick: () => {
+          window.open('https://guide.hackutd.co/dayof/', '_blank');
+        },
+      },
     ];
 
     navItems.forEach((item, idx) => {

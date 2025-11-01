@@ -101,6 +101,12 @@ export default function AppHeaderCore(props: Props) {
           }
         },
       },
+      {
+        text: 'Hackerpack',
+        onClick: () => {
+          window.open('https://guide.hackutd.co/dayof/', '_blank');
+        },
+      },
     ];
 
     navItems.map((item, idx) => {
@@ -230,9 +236,9 @@ export default function AppHeaderCore(props: Props) {
 
     // Profile/Apply button
     // TODO: Read after applications open
-    items.push(
-      <div id={itemIdRoot + itemIdx} className="p-2 text-white cursor-pointer">
-        {user && hasProfile && (
+    if (user && hasProfile) {
+      items.push(
+        <div id={itemIdRoot + itemIdx} className="p-2 text-white cursor-pointer">
           <button
             onClick={async () => {
               if (Object.hasOwn(callbackRegistry, router.pathname)) {
@@ -243,10 +249,10 @@ export default function AppHeaderCore(props: Props) {
           >
             <div className="py-3 px-5 rounded-[30px] bg-[#2D5016] font-bold">Profile</div>
           </button>
-        )}
-      </div>,
-    );
-    itemIdx++;
+        </div>,
+      );
+      itemIdx++;
+    }
 
     return items;
   };
@@ -260,7 +266,7 @@ export default function AppHeaderCore(props: Props) {
       >
         <FloatingDock
           classes={{
-            wrapperDiv: clsx('gap-4 flex items-center justify-center flex-wrap'),
+            wrapperDiv: clsx('gap-4 flex items-center justify-center nowrap overflow-x-auto'),
           }}
           items={mainDockItems()}
         />
