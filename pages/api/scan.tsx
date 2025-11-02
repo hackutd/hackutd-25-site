@@ -81,6 +81,20 @@ async function checkIfScanIsCheckIn(scan: string) {
 }
 
 /**
+ * Check if user has agreed to MLH Privacy Policy
+ *
+ * @param userData The user's registration data
+ * @returns true if user has agreed to MLH terms, false otherwise
+ */
+function hasAgreedToMLH(userData: Registration): boolean {
+  return !!(
+    userData.mlhPrivacyPolicy &&
+    Array.isArray(userData.mlhPrivacyPolicy) &&
+    userData.mlhPrivacyPolicy.length > 0
+  );
+}
+
+/**
  * Handles GET requests to /api/scantypes.
  *
  * This returns all scantypes the user is authorized to see.
@@ -145,9 +159,28 @@ async function handleScan(req: NextApiRequest, res: NextApiResponse) {
     const userCheckedIn = await userAlreadyCheckedIn(scans);
     const scanIsCheckInEvent = await checkIfScanIsCheckIn(bodyData.scan);
 
+    // Check if user is rejected (important for late check-in users)
+    const userIsRejected = await checkUserIsRejected(snapshot.id);
+
+    // Check MLH agreement ONLY at check-in scan (like airplane emergency seat agreement!)
+    // For rejected users: This catches them at late check-in (when they walk in)
+    // For accepted users: This catches them at regular check-in
+    const needsMLHAgreement = !hasAgreedToMLH(userData as Registration);
+
+    if (needsMLHAgreement && scanIsCheckInEvent) {
+      return res.status(428).json({
+        code: 'mlh-agreement-required',
+        message: userIsRejected
+          ? 'MLH Privacy Policy agreement required for late check-in (rejected status - walk-in)'
+          : 'MLH Privacy Policy agreement required before check-in',
+        userId: bodyData.id,
+        isWalkIn: userIsRejected, // Indicates this is a late check-in / walk-in scenario
+      });
+    }
+
     if (!userCheckedIn && scanIsCheckInEvent && ENABLE_ACCEPT_REJECT_FEATURE) {
       // if user is reject and not eligible for late check-in yet, throw error
-      const userIsRejected = await checkUserIsRejected(snapshot.id);
+      // Note: userIsRejected already calculated above for MLH check
       const lateCheckInEligible = await checkLateCheckInEligible(userData as Registration);
       if (userIsRejected && !lateCheckInEligible) {
         const waitlistNumber = userData.waitListInfo?.waitlistNumber;

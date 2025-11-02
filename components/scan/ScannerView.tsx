@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import QRCodeReader from '@/components/dashboard/QRCodeReader';
+import MLHAgreementDialog from '@/components/scan/MLHAgreementDialog';
 import {
   ScanType,
   UserProfile,
@@ -18,6 +19,10 @@ export default function ScannerView({ currentScan, userToken, onDone }: ScannerV
   const [scanData, setScanData] = useState<string>();
   const [success, setSuccess] = useState<string>();
   const [scannedUserInfo, setScannedUserInfo] = useState<UserProfile>();
+  const [showMLHDialog, setShowMLHDialog] = useState(false);
+  const [pendingUserId, setPendingUserId] = useState<string>('');
+  const [pendingScanName, setPendingScanName] = useState<string>('');
+  const [isWalkIn, setIsWalkIn] = useState(false);
 
   const handleScan = async (data: string) => {
     if (!data.startsWith('hack:')) {
@@ -28,6 +33,7 @@ export default function ScannerView({ currentScan, userToken, onDone }: ScannerV
 
     const query = new URL(`/api/scan`, window.location.origin);
     query.searchParams.append('id', data.replaceAll('hack:', ''));
+    const userId = data.split(':')[1];
 
     try {
       const result = await fetch(query.toString(), {
@@ -35,18 +41,29 @@ export default function ScannerView({ currentScan, userToken, onDone }: ScannerV
         headers: { Authorization: userToken },
         method: 'POST',
         body: JSON.stringify({
-          id: data.replaceAll('hack:', ''),
+          id: userId,
           scan: currentScan.name,
         }),
       });
 
       setScanData(data);
-      const userId = data.split(':')[1];
       const userResponse = await fetch(`/api/userinfo?id=${userId}`, {
         headers: { Authorization: userToken },
       });
       const userPayload = await userResponse.json();
       setScannedUserInfo(userPayload.data);
+
+      // Handle MLH agreement required (428 Precondition Required)
+      if (result.status === 428) {
+        const resultData = await result.json();
+        if (resultData.code === 'mlh-agreement-required') {
+          setPendingUserId(userId);
+          setPendingScanName(currentScan.name);
+          setIsWalkIn(resultData.isWalkIn || false);
+          setShowMLHDialog(true);
+          return; // Stop here, dialog will handle the rest
+        }
+      }
 
       if (result.status === 404) {
         setSuccess(successStrings.invalidUser);
@@ -82,8 +99,69 @@ export default function ScannerView({ currentScan, userToken, onDone }: ScannerV
     }
   };
 
+  const handleMLHAgree = async () => {
+    // Close dialog
+    setShowMLHDialog(false);
+
+    // Retry the scan after agreement
+    setSuccess('MLH Agreement recorded! Completing check-in...');
+
+    // Wait a moment then retry scan
+    setTimeout(async () => {
+      try {
+        const result = await fetch('/api/scan', {
+          mode: 'cors',
+          headers: { Authorization: userToken },
+          method: 'POST',
+          body: JSON.stringify({
+            id: pendingUserId,
+            scan: pendingScanName,
+          }),
+        });
+
+        if (result.status === 200) {
+          const resultData = await result.json();
+          if (resultData.pointsAwarded !== undefined) {
+            setSuccess(
+              `${successStrings.claimed} ${resultData.message} Total: ${resultData.newTotalPoints} points`,
+            );
+          } else {
+            setSuccess(successStrings.claimed);
+          }
+        } else {
+          setSuccess('Check-in completed!');
+        }
+      } catch (err) {
+        console.error('Error completing check-in after MLH agreement:', err);
+        setSuccess('MLH agreement recorded, but check-in may need to be retried.');
+      }
+    }, 1000);
+  };
+
+  const handleMLHCancel = () => {
+    setShowMLHDialog(false);
+    setScanData(undefined);
+    setPendingUserId('');
+    setPendingScanName('');
+    setIsWalkIn(false);
+    setSuccess(undefined);
+    setScannedUserInfo(undefined);
+  };
+
   return (
     <div className="my-6">
+      {/* MLH Agreement Dialog */}
+      {showMLHDialog && scannedUserInfo && (
+        <MLHAgreementDialog
+          userName={`${scannedUserInfo.user.firstName} ${scannedUserInfo.user.lastName}`}
+          userId={pendingUserId}
+          userToken={userToken}
+          onAgree={handleMLHAgree}
+          onCancel={handleMLHCancel}
+          isWalkIn={isWalkIn}
+        />
+      )}
+
       <div className="flex flex-col gap-y-4">
         <div className="text-center text-xl font-black">{currentScan.name}</div>
 

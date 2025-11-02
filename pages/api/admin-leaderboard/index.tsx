@@ -134,7 +134,23 @@ async function getAdminLeaderboardData(): Promise<LeaderboardResponse> {
     return { adminId, scoringSnapshot, isSuperAdmin: true };
   });
 
+  // Get scoring data for auto-reject-system (for converted incomplete registrations)
+  // These should count toward confirmed rejected stats but not appear on leaderboard
+  const autoRejectScoring = await db
+    .collection(SCORING_COLLECTION)
+    .where('adminId', '==', 'auto-reject-system')
+    .get();
+
   const scoringResults = await Promise.all([...scoringPromises, ...superAdminScoringPromises]);
+
+  // Add auto-reject scores to results (treated like super admin - counts for stats but not leaderboard)
+  if (!autoRejectScoring.empty) {
+    scoringResults.push({
+      adminId: 'auto-reject-system',
+      scoringSnapshot: autoRejectScoring,
+      isSuperAdmin: true, // Treat like super admin so it doesn't appear on leaderboard
+    });
+  }
 
   // Track unique applications that have been judged at least once
   const judgedApplicationIds = new Set<string>();
