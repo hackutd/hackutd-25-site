@@ -22,7 +22,8 @@ export default function HomeSpeakers() {
         className="relative w-full min-h-screen flex flex-col justify-center items-center overflow-x-hidden px-4"
         style={{ maxWidth: '100vw', overflowX: 'hidden', width: '100%' }}
       >
-        <div className="relative w-full max-w-[500px] h-[170px] 2xl:max-w-[800px] 2xl:h-[300px] z-20">
+        {/* Speaker Banner (this now serves as the main header for the section) */}
+        <div className="relative w-full max-w-[500px] h-[170px] 2xl:max-w-[800px] 2xl:h-[300px] z-20 mt-12">
           <Image
             src="/assets/SpeakerRoll.png"
             alt="Keynote Speaker Banner"
@@ -41,35 +42,50 @@ export default function HomeSpeakers() {
         </div>
 
         {/* -------------------- DESKTOP LAYOUT (HIDDEN ON MOBILE) -------------------- */}
-        <div className="hidden xl:block w-full max-w-6xl 2xl:max-w-8xl -mt-24">
-          {/* Background vector border */}
-          <div className="w-full flex justify-center">
-            <Image
-              src={Vector}
-              alt="Vector Border"
-              width={600}
-              height={400}
-              className="w-[70vw] h-auto max-h-[70vh] 2xl:w-[80vw] 2xl:max-h-[80vh] max-w-full object-contain"
-            />
-          </div>
-          {/* Content overlay with absolute positioning */}
-          <div className="absolute inset-0 flex flex-col lg:flex-row justify-center items-center gap-6 lg:gap-10 p-4 lg:p-8 2xl:mt-32">
+        {/* The negative margin pulls this section up slightly to overlap with the banner */}
+        <div className="hidden xl:block w-full max-w-6xl 2xl:max-w-8xl -mt-16 md:-mt-24">
+          {/* Content now sits in a normal flow, not absolutely positioned */}
+          <div className="flex flex-col lg:flex-row justify-center items-center gap-6 lg:gap-10 p-4 lg:p-8">
             {/* Speaker Image */}
             <div className="flex justify-center flex-shrink-0">
               <div className="w-[200px] h-[200px] md:w-[250px] md:h-[250px] lg:w-[300px] lg:h-[300px] 2xl:w-[400px] 2xl:h-[400px] border border-orange-400 shadow-[0_0_30px_10px_rgba(255,165,0,0.5)] bg-black/80 rounded-lg flex items-center justify-center">
-                <span className="text-white text-xl md:text-2xl 2xl:text-4xl font-bold font-youngSerif">
-                  Coming Soon
-                </span>
+                <Image
+                  src={data.img || SpeakerImage}
+                  alt={data.name || 'Keynote Speaker'}
+                  width={300}
+                  height={300}
+                  className="w-full h-full object-cover rounded-lg"
+                />
               </div>
             </div>
             {/* Speaker Details */}
             <div className="relative w-full max-w-[500px] lg:max-w-[400px] 2xl:max-w-[600px] min-h-[280px] lg:h-80 2xl:h-96">
               <div className="absolute inset-0 rounded-3xl bg-black/80 border border-orange-400 shadow-[0_0_30px_10px_rgba(255,165,0,0.5)]"></div>
               <div className="relative flex flex-col justify-center items-center gap-y-2 p-4 lg:p-6 h-full">
-                <div className="flex items-center justify-center h-full">
-                  <span className="text-white text-xl md:text-2xl 2xl:text-4xl font-bold font-youngSerif">
-                    Coming Soon
-                  </span>
+                <div className="flex flex-col items-center justify-center h-full text-center px-4">
+                  {data?.title || data?.name ? (
+                    <>
+                      {data?.title && (
+                        <div className="text-white text-xl md:text-2xl 2xl:text-4xl font-bold font-youngSerif">
+                          {data.title}
+                        </div>
+                      )}
+                      {data?.name && (
+                        <div className="text-white text-lg md:text-xl 2xl:text-2xl mt-2 font-medium">
+                          {data.name}
+                        </div>
+                      )}
+                      {data?.description && (
+                        <p className="text-sm md:text-base text-white/90 mt-4 max-w-xl">
+                          {data.description}
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    <span className="text-white text-xl md:text-2xl 2xl:text-4xl font-bold font-youngSerif">
+                      Coming Soon
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -80,15 +96,39 @@ export default function HomeSpeakers() {
         <div className="block xl:hidden w-full max-w-sm flex flex-col items-center gap-6 p-4">
           {/* Speaker Image */}
           <div className="flex justify-center flex-shrink-0 w-[200px] h-[200px]">
-            <div className="w-full h-full border border-orange-400 shadow-[0_0_30px_10px_rgba(255,165,0,0.5)] bg-black/80 rounded-lg flex items-center justify-center">
-              <span className="text-white text-lg font-bold font-youngSerif">Coming Soon</span>
+            <div className="w-full h-full border border-orange-400 shadow-[0_0_30px_10px_rgba(255,165,0,0.5)] bg-black/80 rounded-lg flex items-center justify-center overflow-hidden">
+              {data?.img ? (
+                <Image
+                  src={data.img}
+                  alt={data.name || 'Keynote Speaker'}
+                  width={400}
+                  height={400}
+                  className="w-full h-full object-contain"
+                />
+              ) : (
+                <span className="text-white text-lg font-bold font-youngSerif">Coming Soon</span>
+              )}
             </div>
           </div>
           {/* Speaker Details */}
           <div className="relative w-full rounded-3xl bg-black/80 border border-orange-400 shadow-[0_0_30px_10px_rgba(255,165,0,0.5)] min-h-[280px]">
             <div className="relative flex flex-col justify-center items-center gap-y-2 p-4 h-full">
-              <div className="flex items-center justify-center h-full">
-                <span className="text-white text-lg font-bold font-youngSerif">Coming Soon</span>
+              <div className="flex flex-col items-center justify-center h-full text-center px-4">
+                {data?.title || data?.name ? (
+                  <>
+                    {data?.title && (
+                      <div className="text-white text-lg font-bold font-youngSerif">
+                        {data.title}
+                      </div>
+                    )}
+                    {data?.name && <div className="text-white text-base mt-1">{data.name}</div>}
+                    {data?.description && (
+                      <p className="text-sm text-white/90 mt-3">{data.description}</p>
+                    )}
+                  </>
+                ) : (
+                  <span className="text-white text-lg font-bold font-youngSerif">Coming Soon</span>
+                )}
               </div>
             </div>
           </div>
