@@ -31,10 +31,31 @@ export interface PreEventData {
 
 export const PRE_EVENTS_DATA: PreEventData[] = [
   {
-    id: 'pnc-bank-meet-and-greet',
-    title: 'PNC Bank Meet & Greet',
+    id: 't-mobile-meet-and-greet',
+    title: 'T-Mobile Meet & Greet',
     description:
-      'Join us for an exclusive PNC BANK Meet and Greet. Mingle with industry experts, play fun games, and enjoy free food while expanding your professional network!',
+      'Big ideas start with great conversations. Join T-Mobile for a pre-HackUTD 2025 meet & greet! Connect with technology leaders (including some UTD alumni) in a casual setting, share your passion for innovation, and get inspired for an amazing hackathon weekend ahead.',
+    type: 'Sponsor',
+    track: 'General',
+    startDate: '2025-11-05T18:00:00-06:00',
+    endDate: '2025-11-05T19:30:00-06:00',
+    location: 'ECSW Axxess Atrium',
+    roomNumber: 'Axxess Atrium',
+    isVirtual: false,
+    registrationRequired: true,
+    rsvpLink: 'https://docs.google.com/forms/d/1Ig_nmUS8R9ssA5yRXBDMP4HzAOcMkCiqjYuCGuY0dAs/edit',
+    maxCapacity: 100,
+    currentRegistrations: 0,
+    speakers: ['T-Mobile', 'UTD Alumni'],
+    organizer: 'T-Mobile',
+    contactEmail: 'info@hackutd.co',
+    tags: ['Networking', 'Free Food', 'Sponsor', 'Industry Leaders'],
+  },
+  {
+    id: 'pnc-bank-networking-and-games',
+    title: 'PNC Networking and Games Pre-Event',
+    description:
+      'Join us for the PNC Pre-Event! This is a perfect opportunity to network with industry professionals, get some free food, and enjoy some games!',
     type: 'Sponsor',
     track: 'General',
     startDate: '2025-11-06T19:00:00-06:00',
@@ -42,7 +63,9 @@ export const PRE_EVENTS_DATA: PreEventData[] = [
     location: 'ECSS 2.311',
     roomNumber: 'ECSS 2.311',
     isVirtual: false,
-    registrationRequired: false,
+    registrationRequired: true,
+    rsvpLink:
+      'https://docs.google.com/forms/d/e/1FAIpQLSexvTFKLuFCL9PDrGqUN6oaVneblDPAK9V-cWzqMcTzVO5jcw/viewform',
     maxCapacity: 150,
     currentRegistrations: 0,
     speakers: ['PNC Bank'],
