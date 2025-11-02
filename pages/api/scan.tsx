@@ -138,11 +138,13 @@ async function handleScan(req: NextApiRequest, res: NextApiResponse) {
       return res.status(404).json({ code: 'not found', message: 'User data not found...' });
     }
 
-    let scans = (userData.scans ?? []).map((obj: any) =>
-      typeof obj === 'string' ? obj : obj.name,
-    );
+    // Keep scans in their original format (don't convert objects to strings!)
+    let scans = userData.scans ?? [];
 
-    const userCheckedIn = await userAlreadyCheckedIn(scans);
+    // Extract scan names for checking (but don't modify the original scans array)
+    const scanNames = scans.map((obj: any) => (typeof obj === 'string' ? obj : obj.name));
+
+    const userCheckedIn = await userAlreadyCheckedIn(scanNames);
     const scanIsCheckInEvent = await checkIfScanIsCheckIn(bodyData.scan);
 
     if (!userCheckedIn && scanIsCheckInEvent && ENABLE_ACCEPT_REJECT_FEATURE) {
@@ -174,10 +176,13 @@ async function handleScan(req: NextApiRequest, res: NextApiResponse) {
     }
 
     if (!userCheckedIn && !scanIsCheckInEvent) {
-      scans.push({
+      // Add illegal scan record
+      const illegalScanRecord = {
         name: ILLEGAL_SCAN_NAME,
         timestamp: new Date().toISOString(),
-      });
+        netPoints: 0,
+      };
+      scans.push(illegalScanRecord);
       await db.collection(REGISTRATION_COLLECTION).doc(bodyData.id).update({ scans });
       return res.status(403).json({
         code: 'not-checked-in',
@@ -201,7 +206,13 @@ async function handleScan(req: NextApiRequest, res: NextApiResponse) {
     // Check if scan is reclaimable
     const isReclaimable = scanType?.isReclaimable || false;
 
-    if (!isReclaimable && scans.includes(bodyData.scan)) {
+    // Check for duplicate scans (works with both string and object formats)
+    const hasScan = scans.some((scan) => {
+      const scanName = typeof scan === 'string' ? scan : scan.name;
+      return scanName === bodyData.scan;
+    });
+
+    if (!isReclaimable && hasScan) {
       return res.status(201).json({ code: 'duplicate' });
     }
 
