@@ -23,7 +23,7 @@ export default function HomeSpeakers() {
         style={{ maxWidth: '100vw', overflowX: 'hidden', width: '100%' }}
       >
         {/* Speaker Banner (this now serves as the main header for the section) */}
-        <div className="relative w-full max-w-[500px] h-[170px] 2xl:max-w-[800px] 2xl:h-[300px] z-20 mt-12">
+        <div className="relative w-full max-w-[500px] h-[170px] 2xl:max-w-[800px] 2xl:h-[300px] z-20 mb-10 mt-64">
           <Image
             src="/assets/SpeakerRoll.png"
             alt="Keynote Speaker Banner"
@@ -48,7 +48,7 @@ export default function HomeSpeakers() {
           <div className="flex flex-col lg:flex-row justify-center items-center gap-6 lg:gap-10 p-4 lg:p-8">
             {/* Speaker Image */}
             <div className="flex justify-center flex-shrink-0">
-              <div className="w-[200px] h-[200px] md:w-[250px] md:h-[250px] lg:w-[300px] lg:h-[300px] 2xl:w-[400px] 2xl:h-[400px] border border-orange-400 shadow-[0_0_30px_10px_rgba(255,165,0,0.5)] bg-black/80 rounded-lg flex items-center justify-center">
+              <div className="w-[200px] h-[200px] md:w-[250px] md:h-[250px] lg:w-[300px] lg:h-[300px] 2xl:w-[400px] 2xl:h-[400px] border border-purple-300 shadow-[0_0_30px_10px_rgba(216,180,254,0.5)] bg-black/80 rounded-lg flex items-center justify-center">
                 <Image
                   src={data.img || SpeakerImage}
                   alt={data.name || 'Keynote Speaker'}
@@ -60,23 +60,26 @@ export default function HomeSpeakers() {
             </div>
             {/* Speaker Details */}
             <div className="relative w-full max-w-[500px] lg:max-w-[400px] 2xl:max-w-[600px] min-h-[280px] lg:h-80 2xl:h-96">
-              <div className="absolute inset-0 rounded-3xl bg-black/80 border border-orange-400 shadow-[0_0_30px_10px_rgba(255,165,0,0.5)]"></div>
+              <div className="absolute inset-0 rounded-3xl bg-black/80 border border-purple-300 shadow-[0_0_30px_10px_rgba(216,180,254,0.5)]"></div>
               <div className="relative flex flex-col justify-center items-center gap-y-2 p-4 lg:p-6 h-full">
-                <div className="flex flex-col items-center justify-center h-full text-center px-4">
+                <div className="flex flex-col items-start justify-center h-full text-left px-4">
                   {data?.title || data?.name ? (
                     <>
-                      {data?.title && (
-                        <div className="text-white text-xl md:text-2xl 2xl:text-4xl font-bold font-youngSerif">
-                          {data.title}
-                        </div>
-                      )}
                       {data?.name && (
-                        <div className="text-white text-lg md:text-xl 2xl:text-2xl mt-2 font-medium">
+                        <div
+                          className="text-white text-xl md:text-2xl 2xl:text-4xl font-bold font-youngSerif -mt-6 mb-4 pt-2"
+                          style={{ color: '#E3DDC6' }}
+                        >
                           {data.name}
                         </div>
                       )}
+                      {data?.title && (
+                        <div className="text-white text-lg md:text-xl 2xl:text-2xl mt-2 font-medium mb-2">
+                          {data.title}
+                        </div>
+                      )}
                       {data?.description && (
-                        <p className="text-sm md:text-base text-white/90 mt-4 max-w-xl">
+                        <p className="text-base md:text-lg text-white/90 mt-4 max-w-xl">
                           {data.description}
                         </p>
                       )}
@@ -95,8 +98,8 @@ export default function HomeSpeakers() {
         {/* -------------------- MOBILE LAYOUT (HIDDEN ON DESKTOP) -------------------- */}
         <div className="block xl:hidden w-full max-w-sm flex flex-col items-center gap-6 p-4">
           {/* Speaker Image */}
-          <div className="flex justify-center flex-shrink-0 w-[200px] h-[200px]">
-            <div className="w-full h-full border border-orange-400 shadow-[0_0_30px_10px_rgba(255,165,0,0.5)] bg-black/80 rounded-lg flex items-center justify-center overflow-hidden">
+          <div className="flex justify-center flex-shrink-0 w-[200px] h-[200px] -mt-16">
+            <div className="w-full h-full border border border-purple-300 shadow-[0_0_30px_10px_rgba(216,180,254,0.5)] bg-black/80 rounded-lg flex items-center justify-center overflow-hidden ">
               {data?.img ? (
                 <Image
                   src={data.img}
@@ -111,19 +114,22 @@ export default function HomeSpeakers() {
             </div>
           </div>
           {/* Speaker Details */}
-          <div className="relative w-full rounded-3xl bg-black/80 border border-orange-400 shadow-[0_0_30px_10px_rgba(255,165,0,0.5)] min-h-[280px]">
+          <div className="relative w-full rounded-3xl bg-black/80 border border border-purple-300 shadow-[0_0_30px_10px_rgba(216,180,254,0.5)] min-h-[280px]">
             <div className="relative flex flex-col justify-center items-center gap-y-2 p-4 h-full">
               <div className="flex flex-col items-center justify-center h-full text-center px-4">
                 {data?.title || data?.name ? (
                   <>
-                    {data?.title && (
-                      <div className="text-white text-lg font-bold font-youngSerif">
-                        {data.title}
+                    {data?.name && (
+                      <div
+                        className="text-white text-lg font-bold font-youngSerif mb-2"
+                        style={{ color: '#E3DDC6' }}
+                      >
+                        {data.name}
                       </div>
                     )}
-                    {data?.name && <div className="text-white text-base mt-1">{data.name}</div>}
+                    {data?.title && <div className="text-white text-base mt-1">{data.title}</div>}
                     {data?.description && (
-                      <p className="text-sm text-white/90 mt-3">{data.description}</p>
+                      <p className="text-md text-white/90 mt-3">{data.description}</p>
                     )}
                   </>
                 ) : (
