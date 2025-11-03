@@ -5,6 +5,7 @@ import {
   extractUserDataFromToken,
   userIsAuthorized,
 } from '../../../lib/authorization/check-authorization';
+import { computeHash, determineColorByTeamIdx } from '../../../lib/stats/group';
 
 initializeApi();
 
@@ -160,11 +161,15 @@ async function handlePostApplications(req: NextApiRequest, res: NextApiResponse)
       msg: 'Profile already exists',
     });
   }
+  // Assign group animal based on user ID hash
+  const groupAnimal = determineColorByTeamIdx(computeHash(body.user.id));
+
   const completedRegistrationInfo = {
     ...body,
     user: {
       ...body.user,
       permissions: ['hacker'],
+      group: groupAnimal, // Store group animal in database
     },
   };
   await db.collection(APPLICATIONS_COLLECTION).doc(body.user.id).set(completedRegistrationInfo);
