@@ -79,10 +79,19 @@ export default async function handler(
     snapshot.docs.forEach((doc) => {
       const userData = doc.data();
       const group = userData.user?.group;
-      const points = userData.points || 0;
       const firstName = userData.user?.firstName || '';
       const lastName = userData.user?.lastName || '';
       const email = userData.user?.preferredEmail || '';
+
+      // Calculate total points gained (sum of all positive netPoints from scans)
+      let totalPointsGained = 0;
+      if (userData['scans'] && Array.isArray(userData['scans'])) {
+        totalPointsGained = userData['scans'].reduce((sum: number, scan: any) => {
+          const netPoints = scan.netPoints || 0;
+          // Only count positive points (points gained, not spent)
+          return sum + (netPoints > 0 ? netPoints : 0);
+        }, 0);
+      }
 
       // Check if user has the check-in scan
       const hasCheckIn =
@@ -95,18 +104,18 @@ export default async function handler(
 
       // Only count checked-in users
       if (group && groupData[group] && hasCheckIn) {
-        groupData[group].totalPoints += points;
+        groupData[group].totalPoints += totalPointsGained;
         groupData[group].members.push({
           name: `${firstName} ${lastName}`.trim(),
           email,
-          points,
+          points: totalPointsGained,
         });
 
         // Add to overall list
         allCheckedInUsers.push({
           name: `${firstName} ${lastName}`.trim(),
           email,
-          points,
+          points: totalPointsGained,
           group,
         });
       }
