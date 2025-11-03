@@ -48,7 +48,7 @@ export default function GroupLeaderboardModal() {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed top-6 left-6 z-40 bg-[#2D5016] hover:bg-[#7A9E7E] text-white rounded-full w-16 h-16 flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110"
+        className="fixed top-6 left-6 z-[1001] bg-[#2D5016] hover:bg-[#7A9E7E] text-white rounded-full w-16 h-16 flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110"
         aria-label="Open Group Leaderboard"
       >
         <Trophy className="w-8 h-8" strokeWidth={2.5} />
@@ -57,7 +57,7 @@ export default function GroupLeaderboardModal() {
       {/* Modal */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black bg-opacity-50 z-[1002] flex items-center justify-center p-4"
           onClick={() => setIsOpen(false)}
         >
           <div
