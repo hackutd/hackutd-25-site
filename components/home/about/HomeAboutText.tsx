@@ -1,13 +1,41 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 
 import { SectionReferenceContext } from '@/lib/context/section';
 import gsap from 'gsap';
+
+const foxFrames = [
+  '/assets/pathDrawing/fox-split/frame01.webp',
+  '/assets/pathDrawing/fox-split/frame02.webp',
+  '/assets/pathDrawing/fox-split/frame03.webp',
+  '/assets/pathDrawing/fox-split/frame04.webp',
+  '/assets/pathDrawing/fox-split/frame05.webp',
+  '/assets/pathDrawing/fox-split/frame06.webp',
+  '/assets/pathDrawing/fox-split/frame07.webp',
+  '/assets/pathDrawing/fox-split/frame08.webp',
+  '/assets/pathDrawing/fox-split/frame09.webp',
+  '/assets/pathDrawing/fox-split/frame10.webp',
+  '/assets/pathDrawing/fox-split/frame11.webp',
+];
 
 const HomeAboutText = () => {
   const { aboutRef } = useContext(SectionReferenceContext);
   const titleRef = useRef(null); // Reference for title animation
   const explanationRef = useRef(null); // Reference for explanation animation
   const containerRef = useRef(null); // Reference for entire container to observe
+
+  const [currentFrame, setCurrentFrame] = useState(0);
+
+  // 2. useEffect to set up the animation loop
+  useEffect(() => {
+    // Set an interval to update the frame
+    const intervalId = setInterval(() => {
+      // Move to the next frame, looping back to 0 at the end
+      setCurrentFrame((prevFrame) => (prevFrame + 1) % foxFrames.length);
+    }, 200); // 100ms = 10 frames per second. Adjust this for speed.
+
+    // 3. Cleanup function to stop the interval when the component is removed
+    return () => clearInterval(intervalId);
+  }, []); // The empty array [] ensures this effect runs only once
 
   useEffect(() => {
     // Show content immediately without animations
@@ -93,16 +121,16 @@ const HomeAboutText = () => {
           </div>
 
           {/* Fox image below the about text */}
-          <div className="relative w-full flex justify-center -mt-4">
+          <div className="relative w-full flex justify-center mt-4">
             <img
-              src="/assets/pathDrawing/sfox.GIF"
-              alt="Fox"
+              // 4. The src is now dynamic, based on the current frame state
+              src={foxFrames[currentFrame]}
+              alt="Animated Fox"
               className="
-                w-80 md:w-96 lg:w-[500px] xl:w-[500px] 2xl:w-[600px]
-                h-auto
-                md:-mt-12 lg:-mt-16
-                scale-[1.4]        /* enlarge by 40% */
-                origin-center      /* scale from the middle */
+              w-80 md:w-96 lg:w-[500px] xl:w-[500px] xl:translate-x-60 2xl:w-[600px]
+              h-auto
+              md:-mt-[6rem] lg:-mt-[8rem] 
+              origin-center
               "
             />
           </div>

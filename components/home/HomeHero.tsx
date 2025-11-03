@@ -201,83 +201,147 @@ export default function HomeHero() {
         </div>
       </section>
 
-      {/*Cat Image*/}
-      <div className="absolute left-[38%] -translate-x-1/2 z-10" style={{ top: '50rem' }}>
-        <div className="md:hidden">
+      <div className="absolute left-[35%] top-[85%] -translate-x-1/2 z-20 pointer-events-none">
+        {/* --- DETAILED MOBILE & TABLET CAT (< 1024px) --- */}
+        <div
+          className="
+              absolute
+              lg:hidden 
+              
+              top-[58vh]    
+              left-[10vw]   
+              
+              sm:top-[200px]
+              sm:left-[12vw]
+              sm:-translate-x-0
+
+
+            "
+        >
           <Image
             src="/assets/topDrawing/cat.GIF"
             alt="Cat"
-            width={100}
-            height={100}
-            className="!w-[200px] !h-[200px]"
+            width={200}
+            height={200}
+            className="
+              
+                w-[30vw] max-w-[150px]
+                
+                sm:w-[25vw] sm:max-w-[200px]
+              "
             unoptimized
           />
         </div>
-        <div className="hidden md:block">
+
+        {/* --- DETAILED DESKTOP CAT (>= 1024px) --- */}
+        <div className="hidden md:block pointer-events-none">
           <Image
             src="/assets/topDrawing/cat.GIF"
             alt="Cat"
             width={400}
             height={400}
-            className="!w-[400px] !h-[400px]"
+            className="
+                
+                md:w-[22vw]
+                md:-translate-y-[450px]
+                
+                lg:w-[25vw] 
+
+                xl:w-[22vw] 
+                xl:-translate-y-4
+
+                2xl:w-[20vw]
+                2xl:translate-y-4
+              "
             unoptimized
           />
         </div>
       </div>
 
-      {/*Crow Image*/}
-      <div className="absolute left-[85%] -translate-x-1/2 z-10" style={{ top: '25rem' }}>
-        <div className="md:hidden">
-          <Image
-            src="/assets/topDrawing/crow.GIF"
-            alt="Crow"
-            width={350}
-            height={350}
-            className="!w-[350px] !h-[350px]"
-            unoptimized
-          />
-        </div>
-        <div className="hidden md:block">
-          <Image
-            src="/assets/topDrawing/crow.GIF"
-            alt="Crow"
-            width={700}
-            height={700}
-            className="!w-[800px] !h-[700px]"
-            unoptimized
-          />
-        </div>
+      <div
+        className="
+            absolute
+            z-10
+            hidden
+            2xl:block
+            bottom-[0%]  
+            right-[5%]
+            
+          "
+      >
+        <Image
+          src="/assets/topDrawing/crow.GIF"
+          alt="Crow"
+          width={300}
+          height={300}
+          className="w-[20vw]"
+          unoptimized
+        />
       </div>
 
-      {/*Fox Image*/}
+      {/*Fox Image (Ground Left)*/}
       <div className="absolute left-1/4 transform -translate-x-1/2 z-10">
-        <div className="md:hidden" style={{ marginTop: '-28rem' }}>
-          <Image src="/assets/topDrawing/fox.GIF" alt="Fox" width={480} height={480} unoptimized />
-        </div>
-        <div className="hidden md:block" style={{ marginTop: '-15rem' }}>
-          <Image src="/assets/topDrawing/fox.GIF" alt="Fox" width={960} height={960} unoptimized />
-        </div>
-      </div>
-
-      {/*Deer Image*/}
-      <div className="absolute left-3/4 -translate-x-1/2 z-10 max-w-none" style={{ top: '42rem' }}>
-        <div className="md:hidden">
+        {/* --- MOBILE FOX --- */}
+        <div className="md:hidden" style={{ marginTop: '-30rem', marginLeft: '-5rem' }}>
           <Image
-            src="/assets/topDrawing/whiteDeer.GIF"
-            alt="Deer"
-            width={600}
-            height={720}
-            className="!w-[600px] !h-[720px] max-w-none"
+            src="/assets/topDrawing/fox.GIF"
+            alt="Fox"
+            width={300}
+            height={300}
+            className="
+              w-[500px]
+              
+              "
             unoptimized
           />
         </div>
-        <div className="hidden md:block">
+
+        {/* --- DESKTOP FOX --- */}
+        <div className="hidden md:block" style={{ marginTop: '-3rem' }}>
+          <Image
+            src="/assets/topDrawing/fox.GIF"
+            alt="Fox"
+            width={500}
+            height={500}
+            className="
+              w-[800px]
+              md:-translate-y-[550px]
+              lg:-translate-y-[200px]
+              xl:-translate-y-[100px]
+              2xl:-translate-y-[50px]
+              "
+            unoptimized
+          />
+        </div>
+      </div>
+
+      {/* Deer Image (Ground Right) */}
+      <div className="absolute left-3/4 transform -translate-x-1/2 z-10">
+        {/* --- MOBILE DEER --- */}
+        <div className="md:hidden" style={{ marginTop: '-35rem' }}>
           <Image
             src="/assets/topDrawing/whiteDeer.GIF"
             alt="Deer"
-            width={1200}
-            height={1440}
-            className="!w-[700px] !h-[940px] max-w-none"
+            width={350}
+            height={420}
+            className="w-[350px] max-w-[600px]"
+            unoptimized
+          />
+        </div>
+
+        {/* --- DESKTOP DEER --- */}
+        <div className="hidden md:block" style={{ marginTop: '-10rem' }}>
+          <Image
+            src="/assets/topDrawing/whiteDeer.GIF"
+            alt="Deer"
+            width={700}
+            height={840}
+            className="w-[600px] max-w-[1000px]
+              md:-translate-y-[550px]
+              lg:-translate-y-[200px]
+              xl:-translate-y-[70px]
+              2xl:-translate-y-[-40px]
+              "
             unoptimized
           />
         </div>
@@ -298,8 +362,9 @@ export default function HomeHero() {
           <Image
             src="/assets/topDrawing/poyo.GIF"
             alt="Poyo"
-            width={960}
-            height={960}
+            width={720}
+            height={720}
+            className="md:-translate-y-[300px] lg:-translate-y-[100px] xl:-translate-y-[20px] 2xl:-translate-y-[-120px]"
             unoptimized
           />
         </div>
@@ -332,24 +397,51 @@ export default function HomeHero() {
       </div>
 
       <div className={`my-32 mb-32 md:my-[60rem] md:mb-[128rem]`}>
-        <div className="absolute z-0" style={{ left: '-8rem', marginTop: '20rem' }}>
-          <div className="md:hidden">
-            <Image
-              src="/assets/pathDrawing/cliff.webp"
-              alt="Cliff"
-              width={300}
-              height={400}
-              className="w-80 h-96"
-            />
-          </div>
-          <div className="hidden md:block">
-            <Image
-              src="/assets/pathDrawing/cliff.webp"
-              alt="Cliff"
-              width={400}
-              height={600}
-              className="w-[50rem] h-[40rem] md:w-[60rem] md:h-[50rem]"
-            />
+        <div className="relative w-full">
+          <div className="absolute z-0" style={{ left: '-8rem', marginTop: '20rem' }}>
+            <div className="md:hidden">
+              <Image
+                src="/assets/pathDrawing/cliff.webp"
+                alt="Cliff"
+                width={300}
+                height={400}
+                className="w-80 h-96"
+              />
+            </div>
+            <div className="hidden md:block">
+              <Image
+                src="/assets/pathDrawing/cliff.webp"
+                alt="Cliff"
+                width={400}
+                height={600}
+                className="w-[50rem] h-[40rem] md:w-[60rem] md:h-[50rem]"
+              />
+            </div>
+
+            {/* --- THE CAT (Desktop Only) --- */}
+            <div
+              className="
+              absolute
+              left-1/4
+              hidden      
+              lg:block    
+              top-[25%]   
+               
+              z-10        
+              pointer-events-none 
+            "
+            >
+              <Image
+                src="/assets/pathDrawing/standingcat.GIF"
+                alt="Standing Cat"
+                width={300}
+                height={400}
+                className="w-[20vw] 
+                
+                "
+                unoptimized
+              />
+            </div>
           </div>
         </div>
 

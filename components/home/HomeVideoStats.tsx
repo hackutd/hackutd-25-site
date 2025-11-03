@@ -21,7 +21,7 @@ export default function HomeVideoStats() {
         }}
       />
       <img
-        src="/assets/pathDrawing/gust.webp"
+        src="/assets/pathDrawing/gust.GIF"
         alt="Gust"
         className="absolute right-0 top-0 -mt-[30vw] z-5 md:w-[28vw] hidden md:block xl:-mt-[50vw] 2xl:-mt-[60rem]"
         style={{ right: '8vw', top: '8vw' }}
