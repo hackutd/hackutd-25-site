@@ -41,7 +41,7 @@ const HackCountdown: React.FC<Props> = ({ targetDate }) => {
   return (
     <section className="relative w-screen flex justify-center items-start overflow-x-hidden mt-16 md:mt-32">
       <div className="relative w-screen flex flex-col justify-center items-center overflow-x-hidden">
-        <div className="relative w-[95vw] md:w-[600px] h-auto aspect-[2.4/1] z-20 translate-y-12 md:translate-y-64 xl:translate-y-72 2xl:translate-y-[60rem]">
+        <div className="relative w-[95vw] md:w-[600px] h-auto aspect-[2.4/1] z-20 translate-y-12 md:translate-y-64 xl:translate-y-72 2xl:translate-y-[60rem] mb-4">
           <Image
             src="/assets/KeynoteSpeakerRoll.svg"
             alt="Countdown banner"
@@ -98,7 +98,7 @@ const HackCountdown: React.FC<Props> = ({ targetDate }) => {
         </div>
 
         {/* -------------------- MOBILE LAYOUT (VISIBLE ON SMALL SCREENS) -------------------- */}
-        <div className="block md:hidden flex flex-col items-center mt-8 px-4">
+        <div className="block md:hidden flex flex-col items-center mt-8 px-4 -mt-6">
           <div className="flex flex-row flex-wrap justify-center gap-4 mt-8">
             {Object.entries(timeLeft).map(([unit, value]) => {
               const digits = value.toString().padStart(2, '0').split('');
