@@ -34,12 +34,16 @@ export default function WaitlistCheckinPage() {
   const [scanStatus, setScanStatus] = useState<ApiResponseType | undefined>(undefined);
   const [showNotifyDialog, setShowNotifyDialog] = useState(false);
   const { user, isSignedIn } = useAuthContext();
-  const [upperBoundValue, setUpperBoundValue] = useState<number>(0);
+  const [lowerBoundValue, setLowerBoundValue] = useState<number>(1);
+  const [upperBoundValue, setUpperBoundValue] = useState<number>(1);
   const [currentUserData, setCurrentUserData] = useState<string | undefined>(undefined);
 
-  const handleUpdateLateCheckInUpperBound = async (value: number) => {
+  const handleUpdateLateCheckInBounds = async (lowerBound: number, upperBound: number) => {
     try {
-      const { data } = await RequestHelper.post<{ value: number }, ApiResponseType>(
+      const { data } = await RequestHelper.post<
+        { lowerBound: number; upperBound: number },
+        ApiResponseType
+      >(
         '/api/waitlist/upperbound',
         {
           headers: {
@@ -48,9 +52,37 @@ export default function WaitlistCheckinPage() {
           },
         },
         {
-          value,
+          lowerBound,
+          upperBound,
         },
       );
+      if (data.statusCode !== 200) {
+        alert('Unexpected error...');
+        console.error(data.msg);
+      } else {
+        alert(data.msg);
+      }
+    } catch (error) {
+      alert('Unexpected error...');
+      console.error(error);
+    }
+  };
+
+  const handleClearWaitlist = async () => {
+    const confirmed = confirm(
+      'Are you sure you want to remove ALL people from the waitlist? This action cannot be undone.',
+    );
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch('/api/waitlist/clear', {
+        method: 'DELETE',
+        headers: {
+          Authorization: user.token,
+          'Content-Type': 'application/json',
+        },
+      });
+      const data: ApiResponseType = await response.json();
       if (data.statusCode !== 200) {
         alert('Unexpected error...');
         console.error(data.msg);
@@ -110,7 +142,7 @@ export default function WaitlistCheckinPage() {
     return <div className="text-2xl font-black text-center">Unauthorized</div>;
 
   return (
-    <div className="flex flex-col flex-grow">
+    <div className="flex flex-col flex-grow bg-white">
       <WaitlistCheckInNotificationDialog
         isOpen={showNotifyDialog}
         closeModal={() => {
@@ -142,21 +174,52 @@ export default function WaitlistCheckinPage() {
       <div className="mt-4 flex flex-col justify-center">
         <div className="my-6 mx-auto">
           <div className="md:flex gap-x-4 mb-10 items-center">
-            <h1 className="text-lg">Set late check-in eligible upper bound: </h1>
-            <input
-              type="number"
-              name="lateCheckInUpperBound"
-              onChange={(e) => setUpperBoundValue(parseInt(e.target.value))}
-            />
+            <h1 className="text-lg text-gray-900">Notify waitlist numbers: </h1>
+            <div className="flex items-center gap-x-2">
+              <input
+                type="number"
+                name="lateCheckInLowerBound"
+                placeholder="From"
+                value={lowerBoundValue}
+                onChange={(e) => setLowerBoundValue(parseInt(e.target.value) || 1)}
+                className="w-20 px-2 py-1 border border-gray-300 rounded text-gray-900"
+              />
+              <span className="text-gray-900">to</span>
+              <input
+                type="number"
+                name="lateCheckInUpperBound"
+                placeholder="To"
+                value={upperBoundValue}
+                onChange={(e) => setUpperBoundValue(parseInt(e.target.value) || 1)}
+                className="w-20 px-2 py-1 border border-gray-300 rounded text-gray-900"
+              />
+            </div>
             <button
               className="rounded-full bg-[rgba(66,184,187,1)] text-white border-2 border-solid border-[rgba(66,184,187,1)] font-bold py-2 px-8 hover:border-white hover:text-[rgba(66,184,187,1)] hover:bg-white transition"
-              // Score of 4 means strong YES
               onClick={async () => {
-                await handleUpdateLateCheckInUpperBound(upperBoundValue);
+                if (lowerBoundValue > upperBoundValue) {
+                  alert('Lower bound must be less than or equal to upper bound');
+                  return;
+                }
+                await handleUpdateLateCheckInBounds(lowerBoundValue, upperBoundValue);
               }}
             >
-              UPDATE
+              NOTIFY
             </button>
+          </div>
+          <div className="md:flex gap-x-4 mb-10 items-center border-t border-gray-300 pt-6">
+            <h1 className="text-lg text-gray-900">Clear entire waitlist: </h1>
+            <button
+              className="rounded-full bg-red-600 text-white border-2 border-solid border-red-600 font-bold py-2 px-8 hover:border-red-600 hover:text-red-600 hover:bg-white transition"
+              onClick={async () => {
+                await handleClearWaitlist();
+              }}
+            >
+              CLEAR ALL
+            </button>
+            <span className="text-sm text-gray-600 ml-2">
+              (Removes everyone & resets counter to 1)
+            </span>
           </div>
           <div className="flex flex-col gap-y-4">
             {scanStatus === undefined ? (
