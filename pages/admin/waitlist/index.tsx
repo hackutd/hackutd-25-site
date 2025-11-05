@@ -37,6 +37,7 @@ export default function WaitlistCheckinPage() {
   const [lowerBoundValue, setLowerBoundValue] = useState<number>(1);
   const [upperBoundValue, setUpperBoundValue] = useState<number>(1);
   const [currentUserData, setCurrentUserData] = useState<string | undefined>(undefined);
+  const [scannedUserInfo, setScannedUserInfo] = useState<any>(undefined);
 
   const handleUpdateLateCheckInBounds = async (lowerBound: number, upperBound: number) => {
     try {
@@ -126,13 +127,27 @@ export default function WaitlistCheckinPage() {
     }
   };
 
-  const handleScan = (data: string) => {
+  const handleScan = async (data: string) => {
     if (!data.startsWith('hack:')) {
       setScanStatus({
         statusCode: 400,
         msg: SCAN_STATUS.invalidFormat,
       });
     } else {
+      // Fetch user info to pre-populate contact info
+      try {
+        const userId = data.replaceAll('hack:', '');
+        const response = await RequestHelper.get(`/api/userinfo?id=${userId}`, {
+          headers: {
+            Authorization: user.token,
+          },
+        });
+        setScannedUserInfo(response.data);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+        setScannedUserInfo(undefined);
+      }
+
       setShowNotifyDialog(true);
       setCurrentUserData(data);
     }
@@ -148,11 +163,13 @@ export default function WaitlistCheckinPage() {
         closeModal={() => {
           setShowNotifyDialog(false);
           setCurrentUserData(undefined);
+          setScannedUserInfo(undefined);
           setScanStatus({
             statusCode: 200,
             msg: SCAN_STATUS.scanCancelled,
           });
         }}
+        userInfo={scannedUserInfo}
         onFormSubmit={async (optInType, contactInfo) => {
           try {
             await updateWaitListHandler(currentUserData, optInType, contactInfo);
@@ -164,6 +181,7 @@ export default function WaitlistCheckinPage() {
             console.error(error);
           } finally {
             setCurrentUserData(undefined);
+            setScannedUserInfo(undefined);
           }
         }}
       />
