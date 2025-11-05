@@ -47,6 +47,7 @@ export default function ProfilePage() {
       netPoints?: number;
     }>
   >([]);
+  const [isCheckedIn, setIsCheckedIn] = useState<boolean>(false);
   const resumeRef = useRef(null);
 
   const isValidUrl = (s: string) => {
@@ -108,6 +109,26 @@ export default function ProfilePage() {
 
     fetchUserPoints();
   }, [isSignedIn, user]);
+
+  // Check if user is checked in
+  useEffect(() => {
+    const checkIfCheckedIn = () => {
+      // Simple check: if user has any scan with "check-in" in the name (case insensitive)
+      // This works because scan types with isCheckIn=true are typically named with "check-in" or "Check-In"
+      const hasCheckInScan = userScans.some((scan) => {
+        // Safety check: ensure scan and scan.name exist
+        if (!scan || !scan.name) return false;
+        const scanName = scan.name.toLowerCase();
+        return scanName.includes('check-in') || scanName.includes('checkin');
+      });
+
+      setIsCheckedIn(hasCheckInScan);
+    };
+
+    if (userScans.length > 0) {
+      checkIfCheckedIn();
+    }
+  }, [userScans]);
 
   const formatStudyLevel = (s: string) => {
     if (s === 'grad') return 'Graduate Student';
@@ -303,14 +324,24 @@ export default function ProfilePage() {
               <div>
                 <h1
                   className={`font-fredoka text-xl font-semibold ${
-                    profile?.status === 'Accepted'
+                    isCheckedIn
+                      ? 'text-[#4CAF50]'
+                      : profile?.waitListInfo?.waitlistNumber
+                      ? 'text-[#FFA500]'
+                      : profile?.status === 'Accepted'
                       ? 'text-[#90EE90]'
                       : profile?.status === 'Rejected'
                       ? 'text-[#DE3163]'
                       : 'text-[#2D5016]'
                   }`}
                 >
-                  {profile?.status ? profile?.status : 'In Review'}
+                  {isCheckedIn
+                    ? 'Checked In'
+                    : profile?.waitListInfo?.waitlistNumber
+                    ? `Walk-in #${profile.waitListInfo.waitlistNumber}`
+                    : profile?.status
+                    ? profile?.status
+                    : 'In Review'}
                 </h1>
                 <div className="text-xs md:flex pt-2 md:pt-0">
                   {profile?.updatedAt && (
@@ -411,7 +442,9 @@ export default function ProfilePage() {
 
           {/* Info */}
           <div className="w-full">
-            <h1 className="text-center font-fredoka font-semibold text-5xl md:mt-0 mt-10 text-[#2D5016]">{`${profile?.user.firstName} ${profile?.user.lastName}`}</h1>
+            <h1 className="text-center font-fredoka font-semibold text-5xl md:mt-0 mt-10 text-[#2D5016]">
+              {`${profile?.user.firstName} ${profile?.user.lastName}`}
+            </h1>
 
             <div className="w-full grid gap-8 grid-cols-1 md:grid-cols-2 mt-8">
               <TextField
