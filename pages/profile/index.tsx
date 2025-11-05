@@ -110,24 +110,55 @@ export default function ProfilePage() {
     fetchUserPoints();
   }, [isSignedIn, user]);
 
-  // Check if user is checked in
+  // Check if user is checked in - ONCE CHECKED IN, ALWAYS CHECKED IN
   useEffect(() => {
     const checkIfCheckedIn = () => {
-      // Simple check: if user has any scan with "check-in" in the name (case insensitive)
-      // This works because scan types with isCheckIn=true are typically named with "check-in" or "Check-In"
+      // Check multiple patterns for check-in scans
       const hasCheckInScan = userScans.some((scan) => {
-        // Safety check: ensure scan and scan.name exist
-        if (!scan || !scan.name) return false;
-        const scanName = scan.name.toLowerCase();
-        return scanName.includes('check-in') || scanName.includes('checkin');
+        // Handle both old format (strings) and new format (objects)
+        let scanName: string;
+
+        if (typeof scan === 'string') {
+          // Old format: scan is just a string like "Check-In"
+          scanName = scan;
+        } else if (scan && typeof scan === 'object' && scan.name) {
+          // New format: scan is an object like {name: "Check-In", timestamp: "...", netPoints: 100}
+          scanName = scan.name;
+        } else {
+          // Invalid scan format
+          console.log('⚠️ Invalid scan format:', scan);
+          return false;
+        }
+
+        const scanNameLower = scanName.toLowerCase().trim();
+        const isCheckIn =
+          scanNameLower.includes('check-in') ||
+          scanNameLower.includes('checkin') ||
+          scanNameLower.includes('check in') ||
+          scanNameLower === 'check-in';
+
+        if (isCheckIn) {
+          console.log('✓ Found check-in scan:', scanName);
+        }
+
+        return isCheckIn;
       });
+
+      // Debug logging
+      console.log('=== CHECK-IN DETECTION ===');
+      console.log('Total scans:', userScans.length);
+      console.log(
+        'All scan names:',
+        userScans.map((s) => (typeof s === 'string' ? s : s?.name || 'NO NAME')),
+      );
+      console.log('Has check-in scan:', hasCheckInScan);
+      console.log('========================');
 
       setIsCheckedIn(hasCheckInScan);
     };
 
-    if (userScans.length > 0) {
-      checkIfCheckedIn();
-    }
+    // Always run the check, even with 0 scans
+    checkIfCheckedIn();
   }, [userScans]);
 
   const formatStudyLevel = (s: string) => {

@@ -43,27 +43,19 @@ async function handleClearPoints(req: NextApiRequest, res: NextApiResponse) {
           totalPointsCleared += userData.points;
         }
 
-        // Zero out netPoints in all scans
-        const updatedScans = hasScans
-          ? userData.scans.map((scan: any) => ({
-              ...scan,
-              netPoints: 0,
-            }))
-          : [];
-
         const currentBatch = batches[batches.length - 1];
         currentBatch.update(doc.ref, {
           points: 0,
-          scans: updatedScans,
+          scans: [], // Remove all scans completely
         });
 
         updatedCount++;
         batchCount++;
 
         console.log(
-          `User ${doc.id}: Cleared ${userData.points || 0} points and zeroed ${
+          `User ${doc.id}: Cleared ${userData.points || 0} points and removed ${
             userData.scans?.length || 0
-          } scan points`,
+          } scans`,
         );
 
         // Create new batch every 500 operations (Firestore limit)
