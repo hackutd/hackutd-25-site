@@ -163,6 +163,10 @@ export default function AppHeaderCoreMobile(props: Props) {
                             onClick: () => router.push('/admin/stats'),
                           },
                           {
+                            optionName: 'Check-In Counter',
+                            onClick: () => router.push('/admin/checkin-counter'),
+                          },
+                          {
                             optionName: 'Admin Leaderboard',
                             onClick: () => router.push('/admin/leaderboard'),
                           },

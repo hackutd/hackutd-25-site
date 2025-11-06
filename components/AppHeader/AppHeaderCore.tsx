@@ -194,6 +194,10 @@ export default function AppHeaderCore(props: Props) {
                             onClick: () => router.push('/admin/stats'),
                           },
                           {
+                            optionName: 'Check-In Counter',
+                            onClick: () => router.push('/admin/checkin-counter'),
+                          },
+                          {
                             optionName: 'Decision Control',
                             onClick: () => router.push('/admin/decisions'),
                           },
