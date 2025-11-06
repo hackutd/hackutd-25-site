@@ -56,7 +56,6 @@ export default function AppNavbarBottom(props: Props) {
     itemIdx++;
 
     // LivestreamIcon
-    /*
     items.push(
       <button
         id={itemIdRoot + itemIdx}
@@ -74,7 +73,6 @@ export default function AppNavbarBottom(props: Props) {
       </button>,
     );
     itemIdx++;
-    */
 
     // CalendarIcon - DIRECT ELEMENT APPROACH
     items.push(
