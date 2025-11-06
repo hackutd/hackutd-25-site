@@ -102,6 +102,12 @@ export default function AppHeaderCore(props: Props) {
         },
       },
       {
+        text: 'Livestream',
+        onClick: () => {
+          router.push('/live');
+        },
+      },
+      {
         text: 'Hackerpack',
         onClick: () => {
           window.open('https://guide.hackutd.co/dayof/', '_blank');
