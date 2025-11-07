@@ -33,10 +33,10 @@ export default function ScanForm({
   };
 
   return (
-    <div className="px-6 py-4">
-      <div className="w-3/5 my-5 mx-auto">
+    <div className="px-4 md:px-6 py-3 md:py-4">
+      <div className="w-full md:w-3/5 my-3 md:my-5 mx-auto">
         <input
-          className="p-3 rounded-lg w-full border-[1px] focus:border-primaryDark"
+          className="p-2 md:p-3 rounded-lg w-full border-[1px] focus:border-primaryDark text-sm md:text-base"
           type="text"
           name="name"
           value={formData.name || ''}
@@ -44,82 +44,94 @@ export default function ScanForm({
           placeholder="Enter name of scantype"
         />
         {!formData.isPermanentScan && (
-          <div className="flex flex-row gap-x-2 items-center my-4">
+          <div className="flex flex-col md:flex-row gap-2 md:gap-x-2 items-stretch md:items-center my-3 md:my-4">
             <DateTimePicker
               label="Enter start date"
               value={formData.startTime}
               onChange={(newValue) => handleInputChange('startTime', newValue)}
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params) => <TextField {...params} size="small" />}
             />
             <DateTimePicker
               label="Enter end date"
               value={formData.endTime}
               onChange={(newValue) => handleInputChange('endTime', newValue)}
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params) => <TextField {...params} size="small" />}
             />
           </div>
         )}
-        <div className="flex flex-row gap-x-2 items-center my-4">
+        <div className="flex flex-row gap-x-2 items-center my-2 md:my-4">
           <input
             type="checkbox"
             id="isCheckin"
             name="isCheckin"
             checked={formData.isCheckIn || false}
             onChange={(e) => handleInputChange('isCheckIn', e.target.checked)}
+            className="w-4 h-4"
           />
-          <h1>Is this for check-in event?</h1>
+          <label htmlFor="isCheckin" className="text-sm md:text-base">
+            Is this for check-in event?
+          </label>
         </div>
-        <div className="flex flex-row gap-x-2 items-center my-4">
+        <div className="flex flex-row gap-x-2 items-center my-2 md:my-4">
           <input
             type="checkbox"
             id="isPermanent"
             name="isPermanent"
             checked={formData.isPermanentScan || false}
             onChange={(e) => handleInputChange('isPermanentScan', e.target.checked)}
+            className="w-4 h-4"
           />
-          <h1>Will this scan be available throughout the event?</h1>
+          <label htmlFor="isPermanent" className="text-sm md:text-base">
+            Will this scan be available throughout the event?
+          </label>
         </div>
-        <div className="my-4">
+        <div className="my-3 md:my-4">
           <input
-            className="p-3 rounded-lg w-full border-[1px] focus:border-primaryDark"
+            className="p-2 md:p-3 rounded-lg w-full border-[1px] focus:border-primaryDark text-sm md:text-base"
             type="number"
             name="netPoints"
             value={formData.netPoints || 0}
             onChange={(e) => handleInputChange('netPoints', parseInt(e.target.value) || 0)}
-            placeholder="Enter points to award (positive) or deduct (negative)"
+            placeholder="Enter points to award/deduct"
           />
         </div>
-        <div className="flex flex-row gap-x-2 items-center my-4">
+        <div className="flex flex-row gap-x-2 items-center my-2 md:my-4">
           <input
             type="checkbox"
             id="isSwag"
             name="isSwag"
             checked={formData.isSwag || false}
             onChange={(e) => handleInputChange('isSwag', e.target.checked)}
+            className="w-4 h-4"
           />
-          <h1>Is this for swag/merchandise?</h1>
+          <label htmlFor="isSwag" className="text-sm md:text-base">
+            Is this for swag/merchandise?
+          </label>
         </div>
-        <div className="flex flex-row gap-x-2 items-center my-4">
+        <div className="flex flex-row gap-x-2 items-center my-2 md:my-4">
           <input
             type="checkbox"
             id="isReclaimable"
             name="isReclaimable"
             checked={formData.isReclaimable || false}
             onChange={(e) => handleInputChange('isReclaimable', e.target.checked)}
+            className="w-4 h-4"
           />
-          <h1>Can this scan be reclaimed multiple times?</h1>
+          <label htmlFor="isReclaimable" className="text-sm md:text-base">
+            Can this scan be reclaimed multiple times?
+          </label>
         </div>
       </div>
-      <div className="flex justify-around">
-        <div className="flex flex-row gap-x-3">
+      <div className="flex justify-center md:justify-around mt-4">
+        <div className="flex flex-col sm:flex-row gap-2 md:gap-x-3 w-full sm:w-auto px-4 md:px-0">
           <button
-            className="bg-green-200 hover:bg-green-300 border border-green-800 text-green-900 p-3 rounded-lg font-bold"
+            className="bg-green-200 hover:bg-green-300 border border-green-800 text-green-900 p-2 md:p-3 rounded-lg font-bold text-sm md:text-base"
             onClick={onSubmit}
           >
             {submitLabel}
           </button>
           <button
-            className="font-bold p-3 rounded-lg text-red-800 bg-red-100 hover:bg-red-200 border border-red-400"
+            className="font-bold p-2 md:p-3 rounded-lg text-red-800 bg-red-100 hover:bg-red-200 border border-red-400 text-sm md:text-base"
             onClick={onCancel}
           >
             Cancel

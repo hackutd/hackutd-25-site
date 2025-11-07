@@ -185,13 +185,13 @@ export default function Admin() {
         <>
           <div className="mt-16">
             <button
-              className="text-primaryDark font-bold md:text-lg text-base flex items-center px-6"
+              className="text-primaryDark font-bold text-sm md:text-lg flex items-center px-4 md:px-6 py-2"
               onClick={() => setShowNewScanForm(false)}
             >
               <ChevronLeftIcon />
               Return to scanner
             </button>
-            <div className="text-2xl font-black text-center">Add New Scan</div>
+            <div className="text-xl md:text-2xl font-black text-center mt-2">Add New Scan</div>
             <ScanForm
               formData={newScanForm}
               onFormChange={setNewScanForm}
@@ -204,7 +204,7 @@ export default function Admin() {
       ) : (
         <>
           <div className="flex flex-col justify-center mt-16">
-            <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center md:h-auto max-h-[26rem] max-w-full overflow-y-auto p-2">
+            <div className="flex flex-col md:flex-row md:flex-wrap md:justify-center md:h-auto max-h-[70vh] md:max-h-[26rem] max-w-full overflow-y-auto p-2 md:p-4 gap-0 md:gap-2">
               {scansFetched ? (
                 scanTypes.map((scan, idx) => (
                   <ScanType
@@ -252,9 +252,9 @@ export default function Admin() {
                     />
                   </div>
                 ) : (
-                  <div className="mx-auto flex flex-row gap-x-4 my-6">
+                  <div className="mx-auto flex flex-col sm:flex-row gap-2 sm:gap-x-4 my-6 px-4 sm:px-0 max-w-md sm:max-w-none">
                     <button
-                      className="font-bold bg-green-200 hover:bg-green-300 border border-green-800 text-green-700 rounded-lg md:p-3 p-1 px-2"
+                      className="font-bold bg-green-200 hover:bg-green-300 border border-green-800 text-green-700 rounded-lg p-3 md:p-3 text-sm md:text-base"
                       onClick={() => setStartScan(true)}
                     >
                       Start Scan
@@ -262,13 +262,13 @@ export default function Admin() {
                     {user.permissions.includes('super_admin') && (
                       <>
                         <button
-                          className="font-bold bg-gray-200 hover:bg-gray-300 border border-gray-500 rounded-lg md:p-3 p-1 px-2"
+                          className="font-bold bg-gray-200 hover:bg-gray-300 border border-gray-500 rounded-lg p-3 md:p-3 text-sm md:text-base"
                           onClick={() => setEditScan(true)}
                         >
                           Edit
                         </button>
                         <button
-                          className="font-bold text-red-700 bg-red-100 hover:bg-red-200 border border-red-400 rounded-lg md:p-3 p-1 px-2"
+                          className="font-bold text-red-700 bg-red-100 hover:bg-red-200 border border-red-400 rounded-lg p-3 md:p-3 text-sm md:text-base"
                           onClick={() => setShowDeleteScanDialog(true)}
                         >
                           Delete
@@ -276,7 +276,7 @@ export default function Admin() {
                       </>
                     )}
                     <button
-                      className="font-bold text-red-800 bg-red-100 hover:bg-red-200 border border-red-400 rounded-lg md:p-3 p-1 px-2"
+                      className="font-bold text-red-800 bg-red-100 hover:bg-red-200 border border-red-400 rounded-lg p-3 md:p-3 text-sm md:text-base"
                       onClick={() => {
                         setCurrentScan(undefined);
                         setCurrentScanIdx(-1);
@@ -294,9 +294,9 @@ export default function Admin() {
               !showDeleteScanDialog &&
               !startScan &&
               user.permissions.includes('super_admin') && (
-                <div className="mx-auto my-8 mt-12">
+                <div className="mx-auto my-6 md:my-8 mt-8 md:mt-12 px-4">
                   <button
-                    className="py-3 px-4 font-bold rounded-lg hover:bg-secondary bg-primaryDark text-white hover:text-primaryDark border-[1px] border-transparent hover:border-primaryDark transition duration-300 ease-in-out"
+                    className="py-3 px-6 md:px-4 font-bold rounded-lg hover:bg-secondary bg-primaryDark text-white hover:text-primaryDark border-[1px] border-transparent hover:border-primaryDark transition duration-300 ease-in-out text-sm md:text-base w-full sm:w-auto"
                     onClick={() => setShowNewScanForm(true)}
                   >
                     Add a new Scan
