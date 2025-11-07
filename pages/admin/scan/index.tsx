@@ -57,6 +57,10 @@ export default function Admin() {
   const [startScan, setStartScan] = useState(false);
   const [editScan, setEditScan] = useState(false);
   const [showDeleteScanDialog, setShowDeleteScanDialog] = useState(false);
+  const [showClearCheckInsDialog, setShowClearCheckInsDialog] = useState(false);
+  const [clearingCheckIns, setClearingCheckIns] = useState(false);
+  const [showClearPointsDialog, setShowClearPointsDialog] = useState(false);
+  const [clearingPoints, setClearingPoints] = useState(false);
 
   const [newScanForm, setNewScanForm] = useState<ScanFormData>({
     name: '',
@@ -152,6 +156,68 @@ export default function Admin() {
     }
   };
 
+  const handleClearCheckIns = async () => {
+    if (!user.permissions.includes('super_admin')) {
+      alert('You do not have the required permission to use this functionality');
+      return;
+    }
+
+    setClearingCheckIns(true);
+    try {
+      const response = await fetch('/api/clear-checkins', {
+        method: 'POST',
+        headers: {
+          Authorization: user.token!,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(
+          `Success! ${data.usersUpdated} users updated, ${data.scansRemoved} check-in scans removed.`,
+        );
+        setShowClearCheckInsDialog(false);
+      } else {
+        alert(`Error: ${data.msg}`);
+      }
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Failed to clear check-ins');
+    } finally {
+      setClearingCheckIns(false);
+    }
+  };
+
+  const handleClearPoints = async () => {
+    if (!user.permissions.includes('super_admin')) {
+      alert('You do not have the required permission to use this functionality');
+      return;
+    }
+
+    setClearingPoints(true);
+    try {
+      const response = await fetch('/api/clear-points', {
+        method: 'POST',
+        headers: {
+          Authorization: user.token!,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(`Success! ${data.usersUpdated} users updated, ${data.pointsCleared} points cleared.`);
+        setShowClearPointsDialog(false);
+      } else {
+        alert(`Error: ${data.msg}`);
+      }
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Failed to clear points');
+    } finally {
+      setClearingPoints(false);
+    }
+  };
+
   useEffect(() => {
     const fetchScans = async () => {
       if (!isSignedIn || scansFetched) return;
@@ -185,13 +251,13 @@ export default function Admin() {
         <>
           <div className="mt-16">
             <button
-              className="text-primaryDark font-bold md:text-lg text-base flex items-center px-6"
+              className="text-primaryDark font-bold text-sm md:text-lg flex items-center px-4 md:px-6 py-2"
               onClick={() => setShowNewScanForm(false)}
             >
               <ChevronLeftIcon />
               Return to scanner
             </button>
-            <div className="text-2xl font-black text-center">Add New Scan</div>
+            <div className="text-xl md:text-2xl font-black text-center mt-2">Add New Scan</div>
             <ScanForm
               formData={newScanForm}
               onFormChange={setNewScanForm}
@@ -204,7 +270,7 @@ export default function Admin() {
       ) : (
         <>
           <div className="flex flex-col justify-center mt-16">
-            <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center md:h-auto max-h-[26rem] max-w-full overflow-y-auto p-2">
+            <div className="flex flex-col md:flex-row md:flex-wrap md:justify-center md:h-auto max-h-[70vh] md:max-h-[26rem] max-w-full overflow-y-auto p-2 md:p-4 gap-0 md:gap-2">
               {scansFetched ? (
                 scanTypes.map((scan, idx) => (
                   <ScanType
@@ -231,6 +297,7 @@ export default function Admin() {
                       setCurrentScan(undefined);
                       setStartScan(false);
                     }}
+                    onBack={() => setStartScan(false)}
                   />
                 ) : editScan ? (
                   <div>
@@ -252,9 +319,9 @@ export default function Admin() {
                     />
                   </div>
                 ) : (
-                  <div className="mx-auto flex flex-row gap-x-4 my-6">
+                  <div className="mx-auto flex flex-col sm:flex-row gap-2 sm:gap-x-4 my-6 px-4 sm:px-0 max-w-md sm:max-w-none">
                     <button
-                      className="font-bold bg-green-200 hover:bg-green-300 border border-green-800 text-green-700 rounded-lg md:p-3 p-1 px-2"
+                      className="font-bold bg-green-200 hover:bg-green-300 border border-green-800 text-green-700 rounded-lg p-3 md:p-3 text-sm md:text-base"
                       onClick={() => setStartScan(true)}
                     >
                       Start Scan
@@ -262,13 +329,13 @@ export default function Admin() {
                     {user.permissions.includes('super_admin') && (
                       <>
                         <button
-                          className="font-bold bg-gray-200 hover:bg-gray-300 border border-gray-500 rounded-lg md:p-3 p-1 px-2"
+                          className="font-bold bg-gray-200 hover:bg-gray-300 border border-gray-500 rounded-lg p-3 md:p-3 text-sm md:text-base"
                           onClick={() => setEditScan(true)}
                         >
                           Edit
                         </button>
                         <button
-                          className="font-bold text-red-700 bg-red-100 hover:bg-red-200 border border-red-400 rounded-lg md:p-3 p-1 px-2"
+                          className="font-bold text-red-700 bg-red-100 hover:bg-red-200 border border-red-400 rounded-lg p-3 md:p-3 text-sm md:text-base"
                           onClick={() => setShowDeleteScanDialog(true)}
                         >
                           Delete
@@ -276,7 +343,7 @@ export default function Admin() {
                       </>
                     )}
                     <button
-                      className="font-bold text-red-800 bg-red-100 hover:bg-red-200 border border-red-400 rounded-lg md:p-3 p-1 px-2"
+                      className="font-bold text-red-800 bg-red-100 hover:bg-red-200 border border-red-400 rounded-lg p-3 md:p-3 text-sm md:text-base"
                       onClick={() => {
                         setCurrentScan(undefined);
                         setCurrentScanIdx(-1);
@@ -294,13 +361,27 @@ export default function Admin() {
               !showDeleteScanDialog &&
               !startScan &&
               user.permissions.includes('super_admin') && (
-                <div className="mx-auto my-8 mt-12">
+                <div className="mx-auto my-6 md:my-8 mt-8 md:mt-12 px-4">
                   <button
-                    className="py-3 px-4 font-bold rounded-lg hover:bg-secondary bg-primaryDark text-white hover:text-primaryDark border-[1px] border-transparent hover:border-primaryDark transition duration-300 ease-in-out"
+                    className="py-3 px-6 md:px-4 font-bold rounded-lg hover:bg-secondary bg-primaryDark text-white hover:text-primaryDark border-[1px] border-transparent hover:border-primaryDark transition duration-300 ease-in-out text-sm md:text-base w-full sm:w-auto"
                     onClick={() => setShowNewScanForm(true)}
                   >
                     Add a new Scan
                   </button>
+                  <div className="flex flex-row gap-4">
+                    <button
+                      className="py-3 px-4 font-bold rounded-lg bg-orange-500 hover:bg-orange-600 text-white border-[1px] border-orange-600 transition duration-300 ease-in-out"
+                      onClick={() => setShowClearCheckInsDialog(true)}
+                    >
+                      Clear All Check-ins
+                    </button>
+                    <button
+                      className="py-3 px-4 font-bold rounded-lg bg-red-500 hover:bg-red-600 text-white border-[1px] border-red-600 transition duration-300 ease-in-out"
+                      onClick={() => setShowClearPointsDialog(true)}
+                    >
+                      Clear All Points
+                    </button>
+                  </div>
                 </div>
               )}
           </div>
@@ -310,13 +391,13 @@ export default function Admin() {
       <Dialog
         open={showDeleteScanDialog}
         onClose={() => setShowDeleteScanDialog(false)}
-        className="fixed z-10 inset-0 overflow-y-auto"
+        className="relative z-50"
       >
-        <div className="flex items-center justify-center min-h-screen">
-          <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
-          <div className="rounded-2xl relative bg-white flex flex-col justify-between p-4 max-w-sm mx-auto">
-            <Dialog.Title>
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel className="rounded-2xl relative bg-white flex flex-col justify-between p-4 max-w-sm mx-auto w-full">
+            <Dialog.Title className="text-xl font-bold text-red-600">
               Delete <span className="font-bold">{currentScan?.name}</span>
             </Dialog.Title>
 
@@ -341,7 +422,93 @@ export default function Admin() {
                 Cancel
               </button>
             </div>
-          </div>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
+
+      <Dialog
+        open={showClearCheckInsDialog}
+        onClose={() => !clearingCheckIns && setShowClearCheckInsDialog(false)}
+        className="relative z-50"
+      >
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel className="rounded-2xl relative bg-white flex flex-col justify-between p-6 max-w-md mx-auto w-full">
+            <Dialog.Title className="text-xl font-bold text-orange-600">
+              Clear All Check-ins
+            </Dialog.Title>
+
+            <div className="my-7 flex flex-col gap-y-4">
+              <Dialog.Description className="text-gray-700">
+                This will remove <span className="font-bold">all check-in scans</span> from{' '}
+                <span className="font-bold">all users</span> in the database.
+              </Dialog.Description>
+              <p className="text-red-600 font-semibold">
+                ⚠This action cannot be undone! Points earned from check-ins will also be deducted.
+              </p>
+              <p className="text-gray-600">Are you absolutely sure you want to proceed?</p>
+            </div>
+
+            <div className="flex flex-row justify-end gap-x-2">
+              <button
+                className="rounded-lg p-3 text-orange-800 bg-orange-100 hover:bg-orange-200 border border-orange-400 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handleClearCheckIns}
+                disabled={clearingCheckIns}
+              >
+                {clearingCheckIns ? 'Clearing...' : 'Clear All Check-ins'}
+              </button>
+              <button
+                className="rounded-lg p-3 bg-gray-200 hover:bg-gray-300 border border-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={() => setShowClearCheckInsDialog(false)}
+                disabled={clearingCheckIns}
+              >
+                Cancel
+              </button>
+            </div>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
+
+      <Dialog
+        open={showClearPointsDialog}
+        onClose={() => !clearingPoints && setShowClearPointsDialog(false)}
+        className="relative z-50"
+      >
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel className="rounded-2xl relative bg-white flex flex-col justify-between p-6 max-w-md mx-auto w-full">
+            <Dialog.Title className="text-xl font-bold text-red-600">Clear All Points</Dialog.Title>
+
+            <div className="my-7 flex flex-col gap-y-4">
+              <Dialog.Description className="text-gray-700">
+                This will set <span className="font-bold">all points to 0</span> for{' '}
+                <span className="font-bold">all users</span> in the database.
+              </Dialog.Description>
+              <p className="text-red-600 font-semibold">
+                ⚠This action cannot be undone! All user points will be reset to zero.
+              </p>
+              <p className="text-gray-600">Are you absolutely sure you want to proceed?</p>
+            </div>
+
+            <div className="flex flex-row justify-end gap-x-2">
+              <button
+                className="rounded-lg p-3 text-red-800 bg-red-100 hover:bg-red-200 border border-red-400 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handleClearPoints}
+                disabled={clearingPoints}
+              >
+                {clearingPoints ? 'Clearing...' : 'Clear All Points'}
+              </button>
+              <button
+                className="rounded-lg p-3 bg-gray-200 hover:bg-gray-300 border border-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={() => setShowClearPointsDialog(false)}
+                disabled={clearingPoints}
+              >
+                Cancel
+              </button>
+            </div>
+          </Dialog.Panel>
         </div>
       </Dialog>
     </div>

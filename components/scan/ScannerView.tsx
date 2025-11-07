@@ -12,9 +12,10 @@ interface ScannerViewProps {
   currentScan: ScanType;
   userToken: string;
   onDone: () => void;
+  onBack?: () => void;
 }
 
-export default function ScannerView({ currentScan, userToken, onDone }: ScannerViewProps) {
+export default function ScannerView({ currentScan, userToken, onDone, onBack }: ScannerViewProps) {
   const [scanData, setScanData] = useState<string>();
   const [success, setSuccess] = useState<string>();
   const [scannedUserInfo, setScannedUserInfo] = useState<UserProfile>();
@@ -40,78 +41,96 @@ export default function ScannerView({ currentScan, userToken, onDone }: ScannerV
         }),
       });
 
-      setScanData(data);
       const userId = data.split(':')[1];
       const userResponse = await fetch(`/api/userinfo?id=${userId}`, {
         headers: { Authorization: userToken },
       });
       const userPayload = await userResponse.json();
-      setScannedUserInfo(userPayload.data);
 
+      let successMessage = '';
       if (result.status === 404) {
-        setSuccess(successStrings.invalidUser);
+        successMessage = successStrings.invalidUser;
       } else if (result.status === 201) {
-        setSuccess(successStrings.alreadyClaimed);
+        successMessage = successStrings.alreadyClaimed;
       } else if (result.status === 403) {
-        setSuccess(successStrings.notCheckedIn);
+        successMessage = successStrings.notCheckedIn;
       } else if (result.status === 400) {
         const resultData = await result.json();
         if (resultData.code === 'insufficient-points') {
-          setSuccess(
-            `Insufficient points! You need ${resultData.required} points but only have ${resultData.current}.`,
-          );
+          successMessage = `Insufficient points! You need ${resultData.required} points but only have ${resultData.current}.`;
         } else {
-          setSuccess(successStrings.lateCheckinIneligible);
+          successMessage = successStrings.lateCheckinIneligible;
         }
       } else if (result.status !== 200) {
-        setSuccess(successStrings.unexpectedError);
+        successMessage = successStrings.unexpectedError;
       } else {
         const resultData = await result.json();
         if (resultData.pointsAwarded !== undefined) {
-          setSuccess(
-            `${successStrings.claimed} ${resultData.message} Total: ${resultData.newTotalPoints} points`,
-          );
+          successMessage = `${successStrings.claimed} ${resultData.message} Total: ${resultData.newTotalPoints} points`;
         } else {
-          setSuccess(successStrings.claimed);
+          successMessage = successStrings.claimed;
         }
       }
+
+      // Set all state at once to prevent race condition
+      setScannedUserInfo(userPayload.data);
+      setSuccess(successMessage);
+      setScanData(data);
     } catch (err) {
       console.error(err);
-      setScanData(data);
       setSuccess(successStrings.unexpectedError);
+      setScanData(data);
     }
   };
 
   return (
-    <div className="my-6">
-      <div className="flex flex-col gap-y-4">
-        <div className="text-center text-xl font-black">{currentScan.name}</div>
+    <div className="my-4 md:my-6 px-2 md:px-0">
+      <div className="flex flex-col gap-y-3 md:gap-y-4">
+        <div className="flex items-center justify-between px-2 md:px-0">
+          {onBack && !scanData && (
+            <button
+              onClick={onBack}
+              className="text-gray-600 hover:text-gray-800 font-semibold text-sm md:text-base flex items-center gap-1"
+            >
+              ← Back
+            </button>
+          )}
+          {(!onBack || scanData) && <div className="w-16"></div>}
+          <h2 className="text-center text-lg md:text-xl font-black flex-grow">
+            {currentScan.name}
+          </h2>
+          <div className="w-16"></div>
+        </div>
 
-        {!scanData && <QRCodeReader width={200} height={200} callback={handleScan} />}
+        {!scanData && (
+          <div className="flex justify-center">
+            <QRCodeReader width={200} height={200} callback={handleScan} />
+          </div>
+        )}
 
         {scanData && (
           <>
             <div
-              className="text-center text-3xl font-black"
+              className="text-center text-xl md:text-3xl font-black px-4"
               style={{ color: getSuccessColor(success! as SuccessMessage) }}
             >
-              <p>{success ?? 'Unexpected error!'}</p>
+              <p className="mb-2">{success ?? 'Unexpected error!'}</p>
               {scannedUserInfo && (
-                <p>
+                <p className="text-lg md:text-2xl">
                   Name: {scannedUserInfo.user.firstName} {scannedUserInfo.user.lastName}
                 </p>
               )}
             </div>
 
-            <div className="flex m-auto items-center justify-center">
+            <div className="flex flex-col sm:flex-row m-auto items-center justify-center gap-2 sm:gap-0 px-4 w-full sm:w-auto">
               <div
-                className="w-min-5 m-3 rounded-lg text-center text-lg font-black p-3 cursor-pointer hover:bg-green-300 border border-green-800 text-green-900"
+                className="w-full sm:w-min-5 mx-0 sm:m-3 rounded-lg text-center text-base md:text-lg font-black p-2 md:p-3 cursor-pointer hover:bg-green-300 border border-green-800 text-green-900"
                 onClick={() => setScanData(undefined)}
               >
                 Next Scan
               </div>
               <div
-                className="w-min-5 m-3 rounded-lg text-center text-lg font-black p-3 cursor-pointer hover:bg-green-300 border border-green-800 text-green-900"
+                className="w-full sm:w-min-5 mx-0 sm:m-3 rounded-lg text-center text-base md:text-lg font-black p-2 md:p-3 cursor-pointer hover:bg-green-300 border border-green-800 text-green-900"
                 onClick={onDone}
               >
                 Done

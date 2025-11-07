@@ -13,13 +13,26 @@ export default function PointsCard({ points, scans = [] }: PointsCardProps) {
   const totalScans = scans.length;
 
   // Calculate points earned and spent
+  // Handle both string format (old) and object format (new)
   const totalPointsEarned = scans
-    .filter((scan) => (scan.netPoints || 0) > 0)
-    .reduce((sum, scan) => sum + (scan.netPoints || 0), 0);
+    .filter((scan) => {
+      const points = typeof scan === 'object' ? scan.netPoints || 0 : 0;
+      return points > 0;
+    })
+    .reduce((sum, scan) => {
+      const points = typeof scan === 'object' ? scan.netPoints || 0 : 0;
+      return sum + points;
+    }, 0);
   const totalPointsSpent = Math.abs(
     scans
-      .filter((scan) => (scan.netPoints || 0) < 0)
-      .reduce((sum, scan) => sum + (scan.netPoints || 0), 0),
+      .filter((scan) => {
+        const points = typeof scan === 'object' ? scan.netPoints || 0 : 0;
+        return points < 0;
+      })
+      .reduce((sum, scan) => {
+        const points = typeof scan === 'object' ? scan.netPoints || 0 : 0;
+        return sum + points;
+      }, 0),
   );
 
   // Alternative calculation if netPoints is not available
@@ -57,26 +70,20 @@ export default function PointsCard({ points, scans = [] }: PointsCardProps) {
             {scans
               .slice(-5)
               .reverse()
-              .map((scan, index) => (
-                <div
-                  key={index}
-                  className="flex justify-between items-center py-1 border-b border-gray-100 last:border-b-0"
-                >
-                  <div className="text-sm text-gray-700">{scan.name}</div>
+              .map((scan, index) => {
+                // Handle both string format (old) and object format (new)
+                const isStringFormat = typeof scan === 'string';
+                const scanName = isStringFormat ? scan : scan.name || 'Unknown';
+
+                return (
                   <div
-                    className={`text-sm font-medium ${
-                      (scan.netPoints || 0) > 0
-                        ? 'text-green-600'
-                        : (scan.netPoints || 0) < 0
-                        ? 'text-red-600'
-                        : 'text-gray-600'
-                    }`}
+                    key={index}
+                    className="flex justify-between items-center py-1 border-b border-gray-100 last:border-b-0"
                   >
-                    {(scan.netPoints || 0) > 0 ? '+' : ''}
-                    {scan.netPoints || 0}
+                    <div className="text-sm text-gray-700">{scanName}</div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
           </div>
         </div>
       )}

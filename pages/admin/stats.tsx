@@ -18,33 +18,59 @@ import Loading from '@/components/icon/Loading';
 
 const allowedRoles = ['super_admin'];
 
+interface TopHacker {
+  name: string;
+  email: string;
+  points: number;
+}
+
+interface GroupLeaderboardData {
+  group: string;
+  totalPoints: number;
+  memberCount: number;
+  averagePoints: number;
+  topMembers: TopHacker[];
+}
+
 export default function AdminStatsPage() {
   const [loading, setLoading] = useState(true);
   const { user, isSignedIn } = useAuthContext();
   const [statsData, setStatsData] = useState<GeneralStats>();
   const [allCandidatesStats, setAllCandidatesStats] = useState<GeneralStats>();
+  const [groupLeaderboard, setGroupLeaderboard] = useState<GroupLeaderboardData[]>([]);
 
   useEffect(() => {
     async function getData() {
-      const [statsResponse, allCandidatesResponse] = await Promise.all([
-        RequestHelper.get<GeneralStats & { timestamp: any }>('/api/stats', {
-          headers: {
-            Authorization: user.token,
-          },
-        }),
-        RequestHelper.get<GeneralStats & { timestamp: any }>('/api/stats-all-candidates', {
-          headers: {
-            Authorization: user.token,
-          },
-        }),
-      ]);
+      try {
+        const [statsResponse, allCandidatesResponse, leaderboardResponse] = await Promise.all([
+          RequestHelper.get<GeneralStats & { timestamp: any }>('/api/stats', {
+            headers: {
+              Authorization: user.token,
+            },
+          }),
+          RequestHelper.get<GeneralStats & { timestamp: any }>('/api/stats-all-candidates', {
+            headers: {
+              Authorization: user.token,
+            },
+          }),
+          fetch('/api/group-leaderboard').then((res) => res.json()),
+        ]);
 
-      setStatsData(statsResponse.data);
-      setAllCandidatesStats(allCandidatesResponse.data);
-      setLoading(false);
+        console.log('Leaderboard response:', leaderboardResponse);
+
+        setStatsData(statsResponse.data);
+        setAllCandidatesStats(allCandidatesResponse.data);
+        setGroupLeaderboard(leaderboardResponse.leaderboard || []);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+        setLoading(false);
+      }
     }
-    getData();
-  }, []);
+    if (user?.token) {
+      getData();
+    }
+  }, [user?.token]);
 
   if (!isSignedIn || !checkUserPermission(user, allowedRoles)) {
     return <div className="text-2xl font-black text-center">Unauthorized</div>;
@@ -83,6 +109,69 @@ export default function AdminStatsPage() {
             title="Super Admin"
             value={allCandidatesStats.superAdminCount}
           />
+        </div>
+
+        <div className="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-lg shadow-md p-6 border-2 border-yellow-400">
+          <div className="flex items-center gap-2 mb-4">
+            <svg
+              className="w-6 h-6 text-yellow-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+              />
+            </svg>
+            <h2 className="text-2xl font-bold text-gray-800">Top 5 Hackers Per Group</h2>
+          </div>
+          {groupLeaderboard && groupLeaderboard.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {groupLeaderboard.map((group) => (
+                <div key={group.group} className="bg-white rounded-lg p-4 shadow-sm">
+                  <h3 className="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <span>Team {group.group}</span>
+                    <span className="text-sm font-normal text-gray-500">
+                      ({group.memberCount} members)
+                    </span>
+                  </h3>
+                  {group.topMembers && group.topMembers.length > 0 ? (
+                    <div className="space-y-2">
+                      {group.topMembers.map((hacker, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-center justify-between bg-gray-50 rounded px-3 py-2"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-bold text-gray-500 w-6">#{idx + 1}</span>
+                            <span className="text-sm font-medium text-gray-800 truncate max-w-[180px]">
+                              {hacker.name || hacker.email}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className="text-lg font-bold text-[#2D5016]">
+                              {hacker.points}
+                            </span>
+                            <span className="text-xs text-gray-500">pts</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-500 text-center py-2">No members yet</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-4 text-gray-600">
+              <p>No checked-in hackers with points yet.</p>
+              <p className="text-sm text-gray-500 mt-1">Check console for debug info.</p>
+            </div>
+          )}
         </div>
 
         {allCandidatesStats &&

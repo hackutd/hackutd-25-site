@@ -15,10 +15,10 @@ export interface Props {
 export default function ScanType({ name, onClick }: Props) {
   return (
     <div
-      className="hidden md:block md:p-4 p-2 cursor-pointer m-3 bg-primaryDark rounded-lg text-white hover:bg-white hover:text-[#40B7BA] transition duration-300 ease-in-out h-min"
+      className="p-3 md:p-4 cursor-pointer m-2 md:m-3 bg-primaryDark rounded-lg text-white hover:bg-white hover:text-[#40B7BA] transition duration-300 ease-in-out h-min min-h-[3rem] flex items-center justify-center"
       onClick={onClick}
     >
-      <div className="text-center md:text-lg font-bold">{name}</div>
+      <div className="text-center text-base md:text-lg font-bold">{name}</div>
     </div>
   );
 }
