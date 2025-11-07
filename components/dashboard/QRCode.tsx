@@ -10,7 +10,7 @@ export interface Props {
 
 // TODO: update this
 const IMAGE_GROUP_MAPPING = {
-  Bird: '/assets/ab-bird.webp',
+  Raven: '/assets/ab-bird.webp',
   Cat: '/assets/ab-cat.webp',
   Deer: '/assets/ab-deer.webp',
   Fox: '/assets/ab-fox.webp',
@@ -18,7 +18,7 @@ const IMAGE_GROUP_MAPPING = {
 
 // TODO: update this
 const COLOR_GROUP_MAPPING = {
-  Bird: '#E7A65D',
+  Raven: '#E7A65D',
   Cat: '#000000',
   Deer: '#C59E7D',
   Fox: '#8B4513',
