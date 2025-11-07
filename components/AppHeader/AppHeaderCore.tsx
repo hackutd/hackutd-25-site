@@ -212,9 +212,14 @@ export default function AppHeaderCore(props: Props) {
               </div>
               <div className="px-1 py-1 w-1/4">
                 <AdminNavbarColumn
-                  sectionTitle="Temporary Scans"
+                  sectionTitle="Tavern Related Scans"
                   options={scanList
-                    .filter((scan) => !scan.isPermanentScan)
+                    .filter(
+                      (scan) =>
+                        scan.name.toLowerCase().includes('workshop') ||
+                        scan.name.toLowerCase().includes('ramen') ||
+                        scan.name.toLowerCase().includes('tavern'),
+                    )
                     .map((scan) => ({
                       optionName: scan.name,
                       onClick: () => setCurrentScan(scan),
@@ -224,9 +229,14 @@ export default function AppHeaderCore(props: Props) {
 
               <div className="px-1 py-1">
                 <AdminNavbarColumn
-                  sectionTitle="Permanent Scans"
+                  sectionTitle="Normal Scans"
                   options={scanList
-                    .filter((scan) => scan.isPermanentScan)
+                    .filter(
+                      (scan) =>
+                        !scan.name.toLowerCase().includes('workshop') &&
+                        !scan.name.toLowerCase().includes('ramen') &&
+                        !scan.name.toLowerCase().includes('tavern'),
+                    )
                     .map((scan) => ({
                       optionName: scan.name,
                       onClick: () => setCurrentScan(scan),

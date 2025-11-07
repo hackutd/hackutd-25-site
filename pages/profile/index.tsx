@@ -47,6 +47,7 @@ export default function ProfilePage() {
       netPoints?: number;
     }>
   >([]);
+  const [isCheckedIn, setIsCheckedIn] = useState<boolean>(false);
   const resumeRef = useRef(null);
 
   const isValidUrl = (s: string) => {
@@ -108,6 +109,57 @@ export default function ProfilePage() {
 
     fetchUserPoints();
   }, [isSignedIn, user]);
+
+  // Check if user is checked in - ONCE CHECKED IN, ALWAYS CHECKED IN
+  useEffect(() => {
+    const checkIfCheckedIn = () => {
+      // Check multiple patterns for check-in scans
+      const hasCheckInScan = userScans.some((scan) => {
+        // Handle both old format (strings) and new format (objects)
+        let scanName: string;
+
+        if (typeof scan === 'string') {
+          // Old format: scan is just a string like "Check-In"
+          scanName = scan;
+        } else if (scan && typeof scan === 'object' && scan.name) {
+          // New format: scan is an object like {name: "Check-In", timestamp: "...", netPoints: 100}
+          scanName = scan.name;
+        } else {
+          // Invalid scan format
+          console.log('⚠️ Invalid scan format:', scan);
+          return false;
+        }
+
+        const scanNameLower = scanName.toLowerCase().trim();
+        const isCheckIn =
+          scanNameLower.includes('check-in') ||
+          scanNameLower.includes('checkin') ||
+          scanNameLower.includes('check in') ||
+          scanNameLower === 'check-in';
+
+        if (isCheckIn) {
+          console.log('✓ Found check-in scan:', scanName);
+        }
+
+        return isCheckIn;
+      });
+
+      // Debug logging
+      console.log('=== CHECK-IN DETECTION ===');
+      console.log('Total scans:', userScans.length);
+      console.log(
+        'All scan names:',
+        userScans.map((s) => (typeof s === 'string' ? s : s?.name || 'NO NAME')),
+      );
+      console.log('Has check-in scan:', hasCheckInScan);
+      console.log('========================');
+
+      setIsCheckedIn(hasCheckInScan);
+    };
+
+    // Always run the check, even with 0 scans
+    checkIfCheckedIn();
+  }, [userScans]);
 
   const formatStudyLevel = (s: string) => {
     if (s === 'grad') return 'Graduate Student';
@@ -303,14 +355,24 @@ export default function ProfilePage() {
               <div>
                 <h1
                   className={`font-fredoka text-xl font-semibold ${
-                    profile?.status === 'Accepted'
+                    isCheckedIn
+                      ? 'text-[#4CAF50]'
+                      : profile?.waitListInfo?.waitlistNumber
+                      ? 'text-[#FFA500]'
+                      : profile?.status === 'Accepted'
                       ? 'text-[#90EE90]'
                       : profile?.status === 'Rejected'
                       ? 'text-[#DE3163]'
                       : 'text-[#2D5016]'
                   }`}
                 >
-                  {profile?.status ? profile?.status : 'In Review'}
+                  {isCheckedIn
+                    ? 'Checked In'
+                    : profile?.waitListInfo?.waitlistNumber
+                    ? `Walk-in #${profile.waitListInfo.waitlistNumber}`
+                    : profile?.status
+                    ? profile?.status
+                    : 'In Review'}
                 </h1>
                 <div className="text-xs md:flex pt-2 md:pt-0">
                   {profile?.updatedAt && (
@@ -411,7 +473,9 @@ export default function ProfilePage() {
 
           {/* Info */}
           <div className="w-full">
-            <h1 className="text-center font-fredoka font-semibold text-5xl md:mt-0 mt-10 text-[#2D5016]">{`${profile?.user.firstName} ${profile?.user.lastName}`}</h1>
+            <h1 className="text-center font-fredoka font-semibold text-5xl md:mt-0 mt-10 text-[#2D5016]">
+              {`${profile?.user.firstName} ${profile?.user.lastName}`}
+            </h1>
 
             <div className="w-full grid gap-8 grid-cols-1 md:grid-cols-2 mt-8">
               <TextField

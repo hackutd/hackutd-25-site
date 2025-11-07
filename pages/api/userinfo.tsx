@@ -112,6 +112,9 @@ async function handleUserInfo(req: NextApiRequest, res: NextApiResponse) {
       });
     }
 
+    // Use stored group if available, otherwise calculate it (fallback for legacy users)
+    const groupAnimal = userData.user?.group || determineColorByTeamIdx(computeHash(userData.id));
+
     return res.status(200).json({
       ...userData,
       status: applicationStatus,
@@ -121,7 +124,7 @@ async function handleUserInfo(req: NextApiRequest, res: NextApiResponse) {
       scans: userData.scans || [],
       user: {
         ...userData.user,
-        group: determineColorByTeamIdx(computeHash(userData.id)),
+        group: groupAnimal, // Use stored group, fallback to calculated
       },
     });
   } catch (error) {
