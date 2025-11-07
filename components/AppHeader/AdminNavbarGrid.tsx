@@ -14,17 +14,20 @@ export default function AdminNavbarGrid({
   options,
   numCols = 3,
 }: AdminNavbarGridProps) {
+  const gridColsClass =
+    numCols === 2 ? 'grid-cols-2' : numCols === 1 ? 'grid-cols-1' : 'grid-cols-3';
+
   return (
-    <div className="bg-gray-100 p-3 h-full">
-      <h1 className="px-2 mb-5 text-lg text-[#5D5A88] font-medium">{sectionTitle}</h1>
-      <div className={`grid grid-cols-${numCols}`}>
+    <div className="bg-gray-100 p-2 h-full">
+      <h1 className="px-2 mb-2 text-sm font-semibold text-[#5D5A88]">{sectionTitle}</h1>
+      <div className={`grid ${gridColsClass} gap-2`}>
         {options.map((option) => (
           <Menu.Item key={option.optionName}>
             {({ active }) => (
               <button
                 className={`${
                   active ? 'bg-[#EAE6F2]' : 'text-[#5D5A88]'
-                } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                } group flex w-full items-center justify-center rounded-md px-4 py-3 text-sm font-medium text-center whitespace-normal break-words leading-snug min-h-[3rem]`}
                 onClick={() => option.onClick()}
               >
                 {option.optionName}

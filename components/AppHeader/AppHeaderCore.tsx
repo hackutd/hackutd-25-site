@@ -214,37 +214,13 @@ export default function AppHeaderCore(props: Props) {
                   ]}
                 />
               </div>
-              <div className="px-1 py-1 w-1/4">
+              <div className="px-1 py-1 w-1/2">
                 <AdminNavbarColumn
-                  sectionTitle="Tavern Related Scans"
-                  options={scanList
-                    .filter(
-                      (scan) =>
-                        scan.name.toLowerCase().includes('workshop') ||
-                        scan.name.toLowerCase().includes('ramen') ||
-                        scan.name.toLowerCase().includes('tavern'),
-                    )
-                    .map((scan) => ({
-                      optionName: scan.name,
-                      onClick: () => setCurrentScan(scan),
-                    }))}
-                />
-              </div>
-
-              <div className="px-1 py-1">
-                <AdminNavbarColumn
-                  sectionTitle="Normal Scans"
-                  options={scanList
-                    .filter(
-                      (scan) =>
-                        !scan.name.toLowerCase().includes('workshop') &&
-                        !scan.name.toLowerCase().includes('ramen') &&
-                        !scan.name.toLowerCase().includes('tavern'),
-                    )
-                    .map((scan) => ({
-                      optionName: scan.name,
-                      onClick: () => setCurrentScan(scan),
-                    }))}
+                  sectionTitle="Scans"
+                  options={scanList.map((scan) => ({
+                    optionName: scan.name,
+                    onClick: () => setCurrentScan(scan),
+                  }))}
                 />
               </div>
             </Menu.Items>

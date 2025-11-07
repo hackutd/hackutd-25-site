@@ -122,99 +122,87 @@ export default function AppHeaderCoreMobile(props: Props) {
 
     if (isAdmin) {
       items.push(
-        <Menu id={itemIdRoot + itemIdx} as="div">
-          <div
-            className={clsx(
-              'py-2 px-4 text-[#40B7BA] cursor-pointer flex gap-1 items-center justify-center font-bold',
-              'hover:bg-[#DFFEFF] transition-[background] duration-300 ease-in-out',
-              'rounded-[20px]',
-            )}
-          >
-            <div className="text-[#40B7BA]">Admin</div>
-          </div>
+        <Menu id={itemIdRoot + itemIdx} as="div" className="relative">
+          {({ close }) => (
+            <>
+              <Menu.Button
+                className={clsx(
+                  'py-2 px-4 text-[#40B7BA] cursor-pointer flex gap-1 items-center justify-center font-bold',
+                  'hover:bg-[#DFFEFF] transition-[background] duration-300 ease-in-out',
+                  'rounded-[20px]',
+                )}
+              >
+                <div className="text-[#40B7BA]">Admin</div>
+              </Menu.Button>
 
-          <div>
-            <div className="flex-col absolute right-0 mt-2 w-full origin-top-right divide-x divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none flex">
-              <div className="px-1 py-1 w-full">
-                <AdminNavbarGrid
-                  numCols={2}
-                  sectionTitle="Admin"
-                  options={[
-                    {
-                      optionName: 'Event Dashboard',
-                      onClick: () => router.push('/admin'),
-                    },
-                    {
-                      optionName: 'Scanner',
-                      onClick: () => router.push('/admin/scan'),
-                    },
-                    {
-                      optionName: 'User Dashboard',
-                      onClick: () => router.push('/admin/users'),
-                    },
-                    {
-                      optionName: 'Late Check-in',
-                      onClick: () => router.push('/admin/waitlist'),
-                    },
-                    ...(isSuperAdmin
-                      ? [
-                          {
-                            optionName: 'Stats at a Glance',
-                            onClick: () => router.push('/admin/stats'),
-                          },
-                          {
-                            optionName: 'Check-In Counter',
-                            onClick: () => router.push('/admin/checkin-counter'),
-                          },
-                          {
-                            optionName: 'Admin Leaderboard',
-                            onClick: () => router.push('/admin/leaderboard'),
-                          },
-                          {
-                            optionName: 'Decision Control',
-                            onClick: () => router.push('/admin/decisions'),
-                          },
-                        ]
-                      : []),
-                  ]}
-                />
-              </div>
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+              >
+                <Menu.Items className="fixed left-2 right-2 mt-2 origin-top divide-y divide-gray-100 rounded-lg bg-white shadow-2xl ring-1 ring-black/5 focus:outline-none z-50 max-h-[75vh] overflow-y-auto">
+                  <div className="py-1">
+                    <AdminNavbarGrid
+                      numCols={2}
+                      sectionTitle="Admin"
+                      options={[
+                        {
+                          optionName: 'Event Dashboard',
+                          onClick: () => router.push('/admin'),
+                        },
+                        {
+                          optionName: 'Scanner',
+                          onClick: () => router.push('/admin/scan'),
+                        },
+                        {
+                          optionName: 'User Dashboard',
+                          onClick: () => router.push('/admin/users'),
+                        },
+                        {
+                          optionName: 'Late Check-in',
+                          onClick: () => router.push('/admin/waitlist'),
+                        },
+                        ...(isSuperAdmin
+                          ? [
+                              {
+                                optionName: 'Stats at a Glance',
+                                onClick: () => router.push('/admin/stats'),
+                              },
+                              {
+                                optionName: 'Check-In Counter',
+                                onClick: () => router.push('/admin/checkin-counter'),
+                              },
+                              {
+                                optionName: 'Admin Leaderboard',
+                                onClick: () => router.push('/admin/leaderboard'),
+                              },
+                              {
+                                optionName: 'Decision Control',
+                                onClick: () => router.push('/admin/decisions'),
+                              },
+                            ]
+                          : []),
+                      ]}
+                    />
+                  </div>
 
-              <div className="w-full px-1 py-1">
-                <AdminNavbarColumn
-                  sectionTitle="Workshops + Tavern"
-                  options={scanList
-                    .filter(
-                      (scan) =>
-                        scan.name.toLowerCase().includes('workshop') ||
-                        scan.name.toLowerCase().includes('ramen') ||
-                        scan.name.toLowerCase().includes('tavern'),
-                    )
-                    .map((scan) => ({
-                      optionName: scan.name,
-                      onClick: () => setCurrentScan(scan),
-                    }))}
-                />
-              </div>
-
-              <div className="px-1 py-1">
-                <AdminNavbarColumn
-                  sectionTitle="Everything Else"
-                  options={scanList
-                    .filter(
-                      (scan) =>
-                        !scan.name.toLowerCase().includes('workshop') &&
-                        !scan.name.toLowerCase().includes('ramen') &&
-                        !scan.name.toLowerCase().includes('tavern'),
-                    )
-                    .map((scan) => ({
-                      optionName: scan.name,
-                      onClick: () => setCurrentScan(scan),
-                    }))}
-                />
-              </div>
-            </div>
-          </div>
+                  <div className="py-1">
+                    <AdminNavbarColumn
+                      sectionTitle="Scans"
+                      options={scanList.map((scan) => ({
+                        optionName: scan.name,
+                        onClick: () => setCurrentScan(scan),
+                      }))}
+                    />
+                  </div>
+                </Menu.Items>
+              </Transition>
+            </>
+          )}
         </Menu>,
       );
       itemIdx++;
@@ -224,10 +212,10 @@ export default function AppHeaderCoreMobile(props: Props) {
   };
 
   return (
-    <div className="flex justify-center py-2 w-full">
+    <div className="flex justify-center py-2 w-full relative">
       <div
         id="nav-bar"
-        className="relative font-dmSans border-[3px] border-[rgba(30,30,30,0.60)] rounded-xl p-1 bg-white opacity-100 text-[#40B7BA] cursor-pointer w-[80%]"
+        className="relative font-dmSans border-[3px] border-[rgba(30,30,30,0.60)] rounded-xl p-1 bg-white opacity-100 text-[#40B7BA] cursor-pointer w-[95%] z-10"
       >
         <FloatingDockWrapper
           classes={{

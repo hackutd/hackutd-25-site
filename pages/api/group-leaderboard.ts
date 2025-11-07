@@ -15,7 +15,7 @@ async function getCheckInEventName() {
 }
 
 export interface GroupLeaderboardData {
-  group: 'Bird' | 'Cat' | 'Deer' | 'Fox';
+  group: 'Raven' | 'Cat' | 'Deer' | 'Fox';
   totalPoints: number;
   memberCount: number;
   averagePoints: number;
@@ -80,7 +80,7 @@ export default async function handler(
         members: Array<{ name: string; email: string; points: number }>;
       }
     > = {
-      Bird: { totalPoints: 0, members: [] },
+      Raven: { totalPoints: 0, members: [] },
       Cat: { totalPoints: 0, members: [] },
       Deer: { totalPoints: 0, members: [] },
       Fox: { totalPoints: 0, members: [] },
@@ -167,7 +167,7 @@ export default async function handler(
       const topMembers = sortedMembers.slice(0, 5);
 
       return {
-        group: group as 'Bird' | 'Cat' | 'Deer' | 'Fox',
+        group: group as 'Raven' | 'Cat' | 'Deer' | 'Fox',
         totalPoints: data.totalPoints,
         memberCount: data.members.length,
         averagePoints:

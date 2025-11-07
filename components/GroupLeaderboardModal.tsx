@@ -3,14 +3,14 @@ import { Trophy } from 'lucide-react';
 import { GroupLeaderboardData } from '../pages/api/group-leaderboard';
 
 const GROUP_COLORS = {
-  Bird: 'from-orange-400 to-yellow-500',
+  Raven: 'from-orange-400 to-yellow-500',
   Cat: 'from-gray-700 to-gray-900',
   Deer: 'from-amber-600 to-yellow-700',
   Fox: 'from-orange-600 to-red-700',
 };
 
 const GROUP_MASCOTS = {
-  Bird: '/assets/ab-bird.webp',
+  Raven: '/assets/ab-bird.webp',
   Cat: '/assets/ab-cat.webp',
   Deer: '/assets/ab-deer.webp',
   Fox: '/assets/ab-fox.webp',
@@ -92,7 +92,7 @@ export default function GroupLeaderboardModal() {
                 <div className="space-y-2">
                   {data.leaderboard.map((group, index) => {
                     const gradientMap = {
-                      Bird: 'linear-gradient(to right, #fb923c, #eab308)',
+                      Raven: 'linear-gradient(to right, #fb923c, #eab308)',
                       Cat: 'linear-gradient(to right, #374151, #111827)',
                       Deer: 'linear-gradient(to right, #d97706, #a16207)',
                       Fox: 'linear-gradient(to right, #ea580c, #b91c1c)',
