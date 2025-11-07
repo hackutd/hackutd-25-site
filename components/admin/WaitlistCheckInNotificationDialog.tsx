@@ -1,19 +1,67 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 
 interface Props {
   isOpen: boolean;
   closeModal: () => void;
   onFormSubmit: (subscriptionType: string, payload: string) => Promise<unknown>;
+  userInfo?: any;
+}
+
+function formatPhoneInput(value: string): string {
+  // Remove all non-digit characters
+  const digits = value.replace(/\D/g, '');
+
+  // Format as (XXX) XXX-XXXX
+  if (digits.length <= 3) {
+    return digits;
+  } else if (digits.length <= 6) {
+    return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  } else if (digits.length <= 10) {
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  } else {
+    // Limit to 10 digits
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+  }
 }
 
 export default function WaitlistCheckInNotificationDialog({
   isOpen,
   closeModal,
   onFormSubmit,
+  userInfo,
 }: Props) {
   const [optInType, setOptInType] = useState<string>('');
   const [contactInfo, setContactInfo] = useState<string>('');
+  const [error, setError] = useState<string>('');
+
+  // Reset form when dialog opens/closes
+  useEffect(() => {
+    if (!isOpen) {
+      setOptInType('');
+      setContactInfo('');
+      setError('');
+    }
+  }, [isOpen]);
+
+  // Pre-populate contact info when user selects a method
+  const handleOptInTypeChange = (selectedType: string) => {
+    setOptInType(selectedType);
+    setError('');
+
+    // Auto-populate based on selection and available user data
+    if (userInfo) {
+      if (selectedType === 'sms' && userInfo.phoneNumber && userInfo.phoneNumber !== '') {
+        setContactInfo(formatPhoneInput(userInfo.phoneNumber));
+      } else if (selectedType === 'email' && userInfo.user?.preferredEmail) {
+        setContactInfo(userInfo.user.preferredEmail);
+      } else {
+        setContactInfo('');
+      }
+    } else {
+      setContactInfo('');
+    }
+  };
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -51,7 +99,7 @@ export default function WaitlistCheckInNotificationDialog({
                   </p>
                   <select
                     value={optInType}
-                    onChange={(e) => setOptInType(e.target.value)}
+                    onChange={(e) => handleOptInTypeChange(e.target.value)}
                     defaultValue=""
                     className="rounded-lg"
                   >
@@ -62,23 +110,60 @@ export default function WaitlistCheckInNotificationDialog({
                     <option value="sms">Via SMS</option>
                   </select>
                   {optInType !== '' && (
-                    <input
-                      className="rounded-lg"
-                      value={contactInfo}
-                      onChange={(e) => setContactInfo(e.target.value)}
-                      placeholder={optInType === 'email' ? 'Email' : 'Phone Number'}
-                    />
+                    <>
+                      <input
+                        className="rounded-lg"
+                        value={contactInfo}
+                        onChange={(e) => {
+                          setError('');
+                          if (optInType === 'sms') {
+                            setContactInfo(formatPhoneInput(e.target.value));
+                          } else {
+                            setContactInfo(e.target.value);
+                          }
+                        }}
+                        placeholder={
+                          optInType === 'email' ? 'Email' : 'Phone Number (e.g., (214) 555-1234)'
+                        }
+                      />
+                      {error && <p className="text-sm text-red-600">{error}</p>}
+                    </>
                   )}
                 </div>
 
                 <div className="mt-4">
                   <button
                     type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={async (e) => {
                       e.preventDefault();
+
+                      // Validate input
+                      if (!contactInfo.trim()) {
+                        setError('Please enter a contact method');
+                        return;
+                      }
+
+                      if (optInType === 'sms') {
+                        const digits = contactInfo.replace(/\D/g, '');
+                        if (digits.length !== 10) {
+                          setError('Please enter a valid 10-digit phone number');
+                          return;
+                        }
+                      } else if (optInType === 'email') {
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!emailRegex.test(contactInfo)) {
+                          setError('Please enter a valid email address');
+                          return;
+                        }
+                      }
+
                       await onFormSubmit(optInType, contactInfo);
+                      setContactInfo('');
+                      setOptInType('');
+                      setError('');
                     }}
+                    disabled={!optInType || !contactInfo}
                   >
                     Submit
                   </button>

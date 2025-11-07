@@ -16,6 +16,7 @@ import { FCMProvider } from '@/lib/service-worker/FCMContext';
 
 import AppHeader from '@/components/AppHeader';
 import AppNavbarBottom from '@/components/AppNavbarBottom';
+import GroupLeaderboardModal from '@/components/GroupLeaderboardModal';
 
 import { NavbarCallbackRegistryContext } from '@/lib/context/navbar';
 import { SectionReferenceContext } from '@/lib/context/section';
@@ -141,6 +142,8 @@ function PortalApp({ Component, pageProps }: AppProps) {
                 <BottomSpacer />
               </div>
               <AppNavbarBottom />
+              {/* Group Leaderboard Floating Button & Modal */}
+              <GroupLeaderboardModal />
             </NavbarCallbackRegistryContext.Provider>
           </SectionReferenceContext.Provider>
         </FCMProvider>

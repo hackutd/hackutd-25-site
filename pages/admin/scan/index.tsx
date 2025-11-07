@@ -57,6 +57,10 @@ export default function Admin() {
   const [startScan, setStartScan] = useState(false);
   const [editScan, setEditScan] = useState(false);
   const [showDeleteScanDialog, setShowDeleteScanDialog] = useState(false);
+  const [showClearCheckInsDialog, setShowClearCheckInsDialog] = useState(false);
+  const [clearingCheckIns, setClearingCheckIns] = useState(false);
+  const [showClearPointsDialog, setShowClearPointsDialog] = useState(false);
+  const [clearingPoints, setClearingPoints] = useState(false);
 
   const [newScanForm, setNewScanForm] = useState<ScanFormData>({
     name: '',
@@ -149,6 +153,68 @@ export default function Admin() {
       setShowDeleteScanDialog(false);
     } catch (error) {
       alert(error instanceof Error ? error.message : 'Failed to delete scan');
+    }
+  };
+
+  const handleClearCheckIns = async () => {
+    if (!user.permissions.includes('super_admin')) {
+      alert('You do not have the required permission to use this functionality');
+      return;
+    }
+
+    setClearingCheckIns(true);
+    try {
+      const response = await fetch('/api/clear-checkins', {
+        method: 'POST',
+        headers: {
+          Authorization: user.token!,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(
+          `Success! ${data.usersUpdated} users updated, ${data.scansRemoved} check-in scans removed.`,
+        );
+        setShowClearCheckInsDialog(false);
+      } else {
+        alert(`Error: ${data.msg}`);
+      }
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Failed to clear check-ins');
+    } finally {
+      setClearingCheckIns(false);
+    }
+  };
+
+  const handleClearPoints = async () => {
+    if (!user.permissions.includes('super_admin')) {
+      alert('You do not have the required permission to use this functionality');
+      return;
+    }
+
+    setClearingPoints(true);
+    try {
+      const response = await fetch('/api/clear-points', {
+        method: 'POST',
+        headers: {
+          Authorization: user.token!,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(`Success! ${data.usersUpdated} users updated, ${data.pointsCleared} points cleared.`);
+        setShowClearPointsDialog(false);
+      } else {
+        alert(`Error: ${data.msg}`);
+      }
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Failed to clear points');
+    } finally {
+      setClearingPoints(false);
     }
   };
 
@@ -301,6 +367,20 @@ export default function Admin() {
                   >
                     Add a new Scan
                   </button>
+                  <div className="flex flex-row gap-4">
+                    <button
+                      className="py-3 px-4 font-bold rounded-lg bg-orange-500 hover:bg-orange-600 text-white border-[1px] border-orange-600 transition duration-300 ease-in-out"
+                      onClick={() => setShowClearCheckInsDialog(true)}
+                    >
+                      Clear All Check-ins
+                    </button>
+                    <button
+                      className="py-3 px-4 font-bold rounded-lg bg-red-500 hover:bg-red-600 text-white border-[1px] border-red-600 transition duration-300 ease-in-out"
+                      onClick={() => setShowClearPointsDialog(true)}
+                    >
+                      Clear All Points
+                    </button>
+                  </div>
                 </div>
               )}
           </div>
@@ -337,6 +417,92 @@ export default function Admin() {
               <button
                 className="rounded-lg p-3 bg-gray-200 hover:bg-gray-300 border border-gray-500"
                 onClick={() => setShowDeleteScanDialog(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </Dialog>
+
+      <Dialog
+        open={showClearCheckInsDialog}
+        onClose={() => !clearingCheckIns && setShowClearCheckInsDialog(false)}
+        className="fixed z-10 inset-0 overflow-y-auto"
+      >
+        <div className="flex items-center justify-center min-h-screen">
+          <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+
+          <div className="rounded-2xl relative bg-white flex flex-col justify-between p-6 max-w-md mx-auto">
+            <Dialog.Title className="text-xl font-bold text-orange-600">
+              Clear All Check-ins
+            </Dialog.Title>
+
+            <div className="my-7 flex flex-col gap-y-4">
+              <Dialog.Description className="text-gray-700">
+                This will remove <span className="font-bold">all check-in scans</span> from{' '}
+                <span className="font-bold">all users</span> in the database.
+              </Dialog.Description>
+              <p className="text-red-600 font-semibold">
+                ⚠This action cannot be undone! Points earned from check-ins will also be deducted.
+              </p>
+              <p className="text-gray-600">Are you absolutely sure you want to proceed?</p>
+            </div>
+
+            <div className="flex flex-row justify-end gap-x-2">
+              <button
+                className="rounded-lg p-3 text-orange-800 bg-orange-100 hover:bg-orange-200 border border-orange-400 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handleClearCheckIns}
+                disabled={clearingCheckIns}
+              >
+                {clearingCheckIns ? 'Clearing...' : 'Clear All Check-ins'}
+              </button>
+              <button
+                className="rounded-lg p-3 bg-gray-200 hover:bg-gray-300 border border-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={() => setShowClearCheckInsDialog(false)}
+                disabled={clearingCheckIns}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </Dialog>
+
+      <Dialog
+        open={showClearPointsDialog}
+        onClose={() => !clearingPoints && setShowClearPointsDialog(false)}
+        className="fixed z-10 inset-0 overflow-y-auto"
+      >
+        <div className="flex items-center justify-center min-h-screen">
+          <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+
+          <div className="rounded-2xl relative bg-white flex flex-col justify-between p-6 max-w-md mx-auto">
+            <Dialog.Title className="text-xl font-bold text-red-600">Clear All Points</Dialog.Title>
+
+            <div className="my-7 flex flex-col gap-y-4">
+              <Dialog.Description className="text-gray-700">
+                This will set <span className="font-bold">all points to 0</span> for{' '}
+                <span className="font-bold">all users</span> in the database.
+              </Dialog.Description>
+              <p className="text-red-600 font-semibold">
+                ⚠This action cannot be undone! All user points will be reset to zero.
+              </p>
+              <p className="text-gray-600">Are you absolutely sure you want to proceed?</p>
+            </div>
+
+            <div className="flex flex-row justify-end gap-x-2">
+              <button
+                className="rounded-lg p-3 text-red-800 bg-red-100 hover:bg-red-200 border border-red-400 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handleClearPoints}
+                disabled={clearingPoints}
+              >
+                {clearingPoints ? 'Clearing...' : 'Clear All Points'}
+              </button>
+              <button
+                className="rounded-lg p-3 bg-gray-200 hover:bg-gray-300 border border-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={() => setShowClearPointsDialog(false)}
+                disabled={clearingPoints}
               >
                 Cancel
               </button>
