@@ -18,9 +18,9 @@ export default function AdminNavbarGrid({
     numCols === 2 ? 'grid-cols-2' : numCols === 1 ? 'grid-cols-1' : 'grid-cols-3';
 
   return (
-    <div className="bg-gray-100 p-2 h-full">
-      <h1 className="px-2 mb-2 text-sm font-semibold text-[#5D5A88]">{sectionTitle}</h1>
-      <div className={`grid ${gridColsClass} gap-2`}>
+    <div className="bg-gray-100 p-2">
+      <h1 className="px-2 mb-1 text-sm font-semibold text-[#5D5A88]">{sectionTitle}</h1>
+      <div className={`grid ${gridColsClass} gap-1`}>
         {options.map((option) => (
           <Menu.Item key={option.optionName}>
             {({ active }) => (

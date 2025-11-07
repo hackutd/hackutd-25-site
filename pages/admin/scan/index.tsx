@@ -297,6 +297,7 @@ export default function Admin() {
                       setCurrentScan(undefined);
                       setStartScan(false);
                     }}
+                    onBack={() => setStartScan(false)}
                   />
                 ) : editScan ? (
                   <div>
@@ -390,13 +391,13 @@ export default function Admin() {
       <Dialog
         open={showDeleteScanDialog}
         onClose={() => setShowDeleteScanDialog(false)}
-        className="fixed z-10 inset-0 overflow-y-auto"
+        className="relative z-50"
       >
-        <div className="flex items-center justify-center min-h-screen">
-          <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
-          <div className="rounded-2xl relative bg-white flex flex-col justify-between p-4 max-w-sm mx-auto">
-            <Dialog.Title>
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel className="rounded-2xl relative bg-white flex flex-col justify-between p-4 max-w-sm mx-auto w-full">
+            <Dialog.Title className="text-xl font-bold text-red-600">
               Delete <span className="font-bold">{currentScan?.name}</span>
             </Dialog.Title>
 
@@ -421,19 +422,19 @@ export default function Admin() {
                 Cancel
               </button>
             </div>
-          </div>
+          </Dialog.Panel>
         </div>
       </Dialog>
 
       <Dialog
         open={showClearCheckInsDialog}
         onClose={() => !clearingCheckIns && setShowClearCheckInsDialog(false)}
-        className="fixed z-10 inset-0 overflow-y-auto"
+        className="relative z-50"
       >
-        <div className="flex items-center justify-center min-h-screen">
-          <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
-          <div className="rounded-2xl relative bg-white flex flex-col justify-between p-6 max-w-md mx-auto">
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel className="rounded-2xl relative bg-white flex flex-col justify-between p-6 max-w-md mx-auto w-full">
             <Dialog.Title className="text-xl font-bold text-orange-600">
               Clear All Check-ins
             </Dialog.Title>
@@ -465,19 +466,19 @@ export default function Admin() {
                 Cancel
               </button>
             </div>
-          </div>
+          </Dialog.Panel>
         </div>
       </Dialog>
 
       <Dialog
         open={showClearPointsDialog}
         onClose={() => !clearingPoints && setShowClearPointsDialog(false)}
-        className="fixed z-10 inset-0 overflow-y-auto"
+        className="relative z-50"
       >
-        <div className="flex items-center justify-center min-h-screen">
-          <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
-          <div className="rounded-2xl relative bg-white flex flex-col justify-between p-6 max-w-md mx-auto">
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel className="rounded-2xl relative bg-white flex flex-col justify-between p-6 max-w-md mx-auto w-full">
             <Dialog.Title className="text-xl font-bold text-red-600">Clear All Points</Dialog.Title>
 
             <div className="my-7 flex flex-col gap-y-4">
@@ -507,7 +508,7 @@ export default function Admin() {
                 Cancel
               </button>
             </div>
-          </div>
+          </Dialog.Panel>
         </div>
       </Dialog>
     </div>

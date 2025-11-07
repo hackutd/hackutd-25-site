@@ -12,9 +12,10 @@ interface ScannerViewProps {
   currentScan: ScanType;
   userToken: string;
   onDone: () => void;
+  onBack?: () => void;
 }
 
-export default function ScannerView({ currentScan, userToken, onDone }: ScannerViewProps) {
+export default function ScannerView({ currentScan, userToken, onDone, onBack }: ScannerViewProps) {
   const [scanData, setScanData] = useState<string>();
   const [success, setSuccess] = useState<string>();
   const [scannedUserInfo, setScannedUserInfo] = useState<UserProfile>();
@@ -40,52 +41,66 @@ export default function ScannerView({ currentScan, userToken, onDone }: ScannerV
         }),
       });
 
-      setScanData(data);
       const userId = data.split(':')[1];
       const userResponse = await fetch(`/api/userinfo?id=${userId}`, {
         headers: { Authorization: userToken },
       });
       const userPayload = await userResponse.json();
-      setScannedUserInfo(userPayload.data);
 
+      let successMessage = '';
       if (result.status === 404) {
-        setSuccess(successStrings.invalidUser);
+        successMessage = successStrings.invalidUser;
       } else if (result.status === 201) {
-        setSuccess(successStrings.alreadyClaimed);
+        successMessage = successStrings.alreadyClaimed;
       } else if (result.status === 403) {
-        setSuccess(successStrings.notCheckedIn);
+        successMessage = successStrings.notCheckedIn;
       } else if (result.status === 400) {
         const resultData = await result.json();
         if (resultData.code === 'insufficient-points') {
-          setSuccess(
-            `Insufficient points! You need ${resultData.required} points but only have ${resultData.current}.`,
-          );
+          successMessage = `Insufficient points! You need ${resultData.required} points but only have ${resultData.current}.`;
         } else {
-          setSuccess(successStrings.lateCheckinIneligible);
+          successMessage = successStrings.lateCheckinIneligible;
         }
       } else if (result.status !== 200) {
-        setSuccess(successStrings.unexpectedError);
+        successMessage = successStrings.unexpectedError;
       } else {
         const resultData = await result.json();
         if (resultData.pointsAwarded !== undefined) {
-          setSuccess(
-            `${successStrings.claimed} ${resultData.message} Total: ${resultData.newTotalPoints} points`,
-          );
+          successMessage = `${successStrings.claimed} ${resultData.message} Total: ${resultData.newTotalPoints} points`;
         } else {
-          setSuccess(successStrings.claimed);
+          successMessage = successStrings.claimed;
         }
       }
+
+      // Set all state at once to prevent race condition
+      setScannedUserInfo(userPayload.data);
+      setSuccess(successMessage);
+      setScanData(data);
     } catch (err) {
       console.error(err);
-      setScanData(data);
       setSuccess(successStrings.unexpectedError);
+      setScanData(data);
     }
   };
 
   return (
     <div className="my-4 md:my-6 px-2 md:px-0">
       <div className="flex flex-col gap-y-3 md:gap-y-4">
-        <div className="text-center text-lg md:text-xl font-black">{currentScan.name}</div>
+        <div className="flex items-center justify-between px-2 md:px-0">
+          {onBack && !scanData && (
+            <button
+              onClick={onBack}
+              className="text-gray-600 hover:text-gray-800 font-semibold text-sm md:text-base flex items-center gap-1"
+            >
+              ← Back
+            </button>
+          )}
+          {(!onBack || scanData) && <div className="w-16"></div>}
+          <h2 className="text-center text-lg md:text-xl font-black flex-grow">
+            {currentScan.name}
+          </h2>
+          <div className="w-16"></div>
+        </div>
 
         {!scanData && (
           <div className="flex justify-center">

@@ -1,25 +1,13 @@
 import { useAuthContext } from '@/lib/user/AuthContext';
 import { Menu, Transition } from '@headlessui/react';
-import { Fragment, useEffect, useState } from 'react';
-import AdminNavbarColumn from './AdminNavbarColumn';
+import { Fragment } from 'react';
 import { useRouter } from 'next/router';
 import AdminNavbarGrid from './AdminNavbarGrid';
-import { RequestHelper } from '@/lib/request-helper';
-import QRScanDialog from './QRScanDialog';
 import FloatingDockWrapper from '../FloatingDock';
 import clsx from 'clsx';
 
 type Props = {
   dockItemIdRoot?: string;
-};
-
-type Scan = {
-  precendence: number;
-  name: string;
-  isCheckIn: boolean;
-  startTime: Date;
-  endTime: Date;
-  isPermanentScan: boolean;
 };
 
 export default function AppHeaderCoreMobile(props: Props) {
@@ -28,25 +16,6 @@ export default function AppHeaderCoreMobile(props: Props) {
 
   const isSuperAdmin = user ? user.permissions.indexOf('super_admin') !== -1 : false;
   const isAdmin = isSuperAdmin || (user ? user.permissions.indexOf('admin') !== -1 : false);
-
-  const [scanList, setScanList] = useState<Scan[]>([]);
-  const [currentScan, setCurrentScan] = useState<Scan | null>(null);
-
-  useEffect(() => {
-    async function getScanData() {
-      const scans = await RequestHelper.get<Scan[]>('/api/scantypes', {
-        headers: {
-          authorization: user?.token || '',
-        },
-      });
-      setScanList(scans.data);
-    }
-    if (!isAdmin) {
-      setScanList([]);
-    } else {
-      getScanData();
-    }
-  }, [user, isAdmin]);
 
   const mainDockItems = (): JSX.Element[] => {
     const items: JSX.Element[] = [];
@@ -145,7 +114,7 @@ export default function AppHeaderCoreMobile(props: Props) {
                 leaveTo="transform opacity-0 scale-95"
               >
                 <Menu.Items className="fixed left-2 right-2 mt-2 origin-top divide-y divide-gray-100 rounded-lg bg-white shadow-2xl ring-1 ring-black/5 focus:outline-none z-50 max-h-[75vh] overflow-y-auto">
-                  <div className="py-1">
+                  <div className="p-1">
                     <AdminNavbarGrid
                       numCols={2}
                       sectionTitle="Admin"
@@ -189,16 +158,6 @@ export default function AppHeaderCoreMobile(props: Props) {
                       ]}
                     />
                   </div>
-
-                  <div className="py-1">
-                    <AdminNavbarColumn
-                      sectionTitle="Scans"
-                      options={scanList.map((scan) => ({
-                        optionName: scan.name,
-                        onClick: () => setCurrentScan(scan),
-                      }))}
-                    />
-                  </div>
                 </Menu.Items>
               </Transition>
             </>
@@ -223,8 +182,6 @@ export default function AppHeaderCoreMobile(props: Props) {
           }}
           items={mainDockItems()}
         />
-
-        <QRScanDialog scan={currentScan} onModalClose={() => setCurrentScan(null)} />
       </div>
     </div>
   );
