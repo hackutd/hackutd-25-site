@@ -83,35 +83,39 @@ export default function ScannerView({ currentScan, userToken, onDone }: ScannerV
   };
 
   return (
-    <div className="my-6">
-      <div className="flex flex-col gap-y-4">
-        <div className="text-center text-xl font-black">{currentScan.name}</div>
+    <div className="my-4 md:my-6 px-2 md:px-0">
+      <div className="flex flex-col gap-y-3 md:gap-y-4">
+        <div className="text-center text-lg md:text-xl font-black">{currentScan.name}</div>
 
-        {!scanData && <QRCodeReader width={200} height={200} callback={handleScan} />}
+        {!scanData && (
+          <div className="flex justify-center">
+            <QRCodeReader width={200} height={200} callback={handleScan} />
+          </div>
+        )}
 
         {scanData && (
           <>
             <div
-              className="text-center text-3xl font-black"
+              className="text-center text-xl md:text-3xl font-black px-4"
               style={{ color: getSuccessColor(success! as SuccessMessage) }}
             >
-              <p>{success ?? 'Unexpected error!'}</p>
+              <p className="mb-2">{success ?? 'Unexpected error!'}</p>
               {scannedUserInfo && (
-                <p>
+                <p className="text-lg md:text-2xl">
                   Name: {scannedUserInfo.user.firstName} {scannedUserInfo.user.lastName}
                 </p>
               )}
             </div>
 
-            <div className="flex m-auto items-center justify-center">
+            <div className="flex flex-col sm:flex-row m-auto items-center justify-center gap-2 sm:gap-0 px-4 w-full sm:w-auto">
               <div
-                className="w-min-5 m-3 rounded-lg text-center text-lg font-black p-3 cursor-pointer hover:bg-green-300 border border-green-800 text-green-900"
+                className="w-full sm:w-min-5 mx-0 sm:m-3 rounded-lg text-center text-base md:text-lg font-black p-2 md:p-3 cursor-pointer hover:bg-green-300 border border-green-800 text-green-900"
                 onClick={() => setScanData(undefined)}
               >
                 Next Scan
               </div>
               <div
-                className="w-min-5 m-3 rounded-lg text-center text-lg font-black p-3 cursor-pointer hover:bg-green-300 border border-green-800 text-green-900"
+                className="w-full sm:w-min-5 mx-0 sm:m-3 rounded-lg text-center text-base md:text-lg font-black p-2 md:p-3 cursor-pointer hover:bg-green-300 border border-green-800 text-green-900"
                 onClick={onDone}
               >
                 Done
