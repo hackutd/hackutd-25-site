@@ -24,15 +24,16 @@ export default function CheckInCounterPage() {
 
   const fetchCheckInStats = async () => {
     try {
-      const response = await RequestHelper.get('/api/checkin-stats', {
+      const response = await RequestHelper.get<CheckInStats>('/api/checkin-stats', {
         headers: {
           Authorization: user.token,
         },
       });
-      setStats(response.data);
+      setStats(response.data as CheckInStats);
       setError(null);
     } catch (err) {
-      setError(err.message || 'Failed to fetch check-in stats');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch check-in stats';
+      setError(errorMessage);
       console.error('Error fetching check-in stats:', err);
     } finally {
       setLoading(false);
