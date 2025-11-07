@@ -6,7 +6,7 @@ export default function ParkingPage() {
 
   useEffect(() => {
     // Redirect to the PDF
-    window.location.href = '/assets/saturdayParking.pdf';
+    window.location.href = '/assets/saturdaySundayParking.pdf';
   }, []);
 
   return (
@@ -17,7 +17,7 @@ export default function ParkingPage() {
         </h1>
         <p className="text-gray-600">
           If you are not redirected automatically,{' '}
-          <a href="/assets/saturdayParking.pdf" className="text-blue-600 underline">
+          <a href="/assets/saturdaySundayParking.pdf" className="text-blue-600 underline">
             click here
           </a>
           .
