@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
+import Markdown from 'react-markdown';
 
 const PRIZE_INDEX = ['1st', '2nd', '3rd'];
 
@@ -53,7 +54,7 @@ export default function HomeChallengesCard({ challenge, blockType }: Props) {
           >
             {challenge.title}
           </h1>
-          {/* Description */}
+          {/* Prizes */}
           <div className="mb-8 max-w-fit">
             {challenge.prizes.map((prize, idx) => (
               <p key={idx} className="text-md text-balance text-[#FFFFFF] font-[DM-sans]">
@@ -61,7 +62,24 @@ export default function HomeChallengesCard({ challenge, blockType }: Props) {
               </p>
             ))}
           </div>
-          <div className="text-[#FFFFFF] font-[DM-sans]">{challenge.description}</div>
+          {/* Description */}
+          <Markdown
+            components={{
+              a(props) {
+                const { node, ...rest } = props;
+                return (
+                  <a
+                    style={{ color: '#0066ff' }}
+                    className="underline underline-offset-8"
+                    {...rest}
+                  />
+                );
+              },
+            }}
+            className="text-[#FFFFFF] font-[DM-sans]"
+          >
+            {challenge.description}
+          </Markdown>
         </div>
       </div>
     </motion.div>
