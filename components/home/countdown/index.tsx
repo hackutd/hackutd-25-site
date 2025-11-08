@@ -83,7 +83,7 @@ const HackCountdown: React.FC<Props> = ({ targetDate }) => {
                         <div style={{ display: 'flex' }}>
                           {digits.map((digit, index) => (
                             <div key={`${unit}-${index}`} className={styles.digitBox}>
-                              <span className={styles.digit}>{digit}</span>
+                              <span className={styles.digit}>{/*digit*/ 0}</span>
                             </div>
                           ))}
                         </div>

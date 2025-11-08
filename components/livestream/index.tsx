@@ -7,7 +7,7 @@ const Livestream = () => {
         <div className="aspect-video w-full overflow-hidden rounded-lg bg-black/60 shadow-lg">
           <iframe
             style={{ width: '100%', height: '100%' }}
-            //src="https://www.youtube.com/watch?v=Rc6xBsiI6y8"
+            src="https://www.youtube.com/embed/JtETFw9G60Y"
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; Fullscreen; allow-same-origin"
             referrerPolicy="strict-origin-when-cross-origin"
