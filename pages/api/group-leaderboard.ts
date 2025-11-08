@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { firestore } from 'firebase-admin';
 import initializeApi from '../../lib/admin/init';
+import { normalizeGroupName } from '@/lib/stats/group';
 
 const SCANTYPES_COLLECTION = '/scan-types';
 
@@ -73,8 +74,9 @@ export default async function handler(
     console.log(`Processing ${snapshot.size} registrations...`);
 
     // Calculate points per group
+    type GroupName = GroupLeaderboardData['group'];
     const groupData: Record<
-      string,
+      GroupName,
       {
         totalPoints: number;
         members: Array<{ name: string; email: string; points: number }>;
@@ -91,13 +93,13 @@ export default async function handler(
       name: string;
       email: string;
       points: number;
-      group: string;
+      group: GroupName;
     }> = [];
 
     let processedCount = 0;
     snapshot.docs.forEach((doc) => {
       const userData = doc.data();
-      const group = userData.user?.group;
+      const group = normalizeGroupName(userData.user?.group) as GroupName | undefined;
 
       // Skip early if no group or group not in our list
       if (!group || !groupData[group]) return;
@@ -162,19 +164,22 @@ export default async function handler(
     console.log(`Processed ${processedCount} checked-in users`);
 
     // Build leaderboard
-    const leaderboard: GroupLeaderboardData[] = Object.entries(groupData).map(([group, data]) => {
-      const sortedMembers = data.members.sort((a, b) => b.points - a.points);
-      const topMembers = sortedMembers.slice(0, 5);
+    const leaderboard: GroupLeaderboardData[] = (Object.keys(groupData) as GroupName[]).map(
+      (group) => {
+        const data = groupData[group];
+        const sortedMembers = data.members.sort((a, b) => b.points - a.points);
+        const topMembers = sortedMembers.slice(0, 5);
 
-      return {
-        group: group as 'Raven' | 'Cat' | 'Deer' | 'Fox',
-        totalPoints: data.totalPoints,
-        memberCount: data.members.length,
-        averagePoints:
-          data.members.length > 0 ? Math.round(data.totalPoints / data.members.length) : 0,
-        topMembers,
-      };
-    });
+        return {
+          group,
+          totalPoints: data.totalPoints,
+          memberCount: data.members.length,
+          averagePoints:
+            data.members.length > 0 ? Math.round(data.totalPoints / data.members.length) : 0,
+          topMembers,
+        };
+      },
+    );
 
     // Sort by average points (as used in the modal)
     leaderboard.sort((a, b) => b.averagePoints - a.averagePoints);
