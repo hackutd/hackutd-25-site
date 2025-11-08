@@ -127,7 +127,7 @@ const HomeAboutText = () => {
               src={foxFrames[currentFrame]}
               alt="Animated Fox"
               className="
-              w-80 md:w-96 lg:w-[500px] xl:w-[500px] xl:translate-x-60 2xl:w-[600px]
+              w-80 md:w-96 lg:w-[500px] xl:w-[500px] xl:-translate-x-5 xl:translate-y-4 2xl:w-[600px]
               h-auto
               md:-mt-[6rem] lg:-mt-[8rem] 
               origin-center

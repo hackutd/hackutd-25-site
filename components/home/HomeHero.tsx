@@ -201,63 +201,6 @@ export default function HomeHero() {
         </div>
       </section>
 
-      <div className="absolute left-[35%] top-[85%] -translate-x-1/2 z-20 pointer-events-none">
-        {/* --- DETAILED MOBILE & TABLET CAT (< 1024px) --- */}
-        <div
-          className="
-              absolute
-              lg:hidden 
-              
-              top-[58vh]    
-              left-[10vw]   
-              
-              sm:top-[200px]
-              sm:left-[12vw]
-              sm:-translate-x-0
-
-
-            "
-        >
-          <Image
-            src="/assets/topDrawing/cat.GIF"
-            alt="Cat"
-            width={200}
-            height={200}
-            className="
-              
-                w-[30vw] max-w-[150px]
-                
-                sm:w-[25vw] sm:max-w-[200px]
-              "
-            unoptimized
-          />
-        </div>
-
-        {/* --- DETAILED DESKTOP CAT (>= 1024px) --- */}
-        <div className="hidden md:block pointer-events-none">
-          <Image
-            src="/assets/topDrawing/cat.GIF"
-            alt="Cat"
-            width={400}
-            height={400}
-            className="
-                
-                md:w-[22vw]
-                md:-translate-y-[450px]
-                
-                lg:w-[25vw] 
-
-                xl:w-[22vw] 
-                xl:-translate-y-4
-
-                2xl:w-[20vw]
-                2xl:translate-y-4
-              "
-            unoptimized
-          />
-        </div>
-      </div>
-
       <div
         className="
             absolute
@@ -279,7 +222,6 @@ export default function HomeHero() {
         />
       </div>
 
-      {/*Fox Image (Ground Left)*/}
       <div className="absolute left-1/4 transform -translate-x-1/2 z-10">
         {/* --- MOBILE FOX --- */}
         <div className="md:hidden" style={{ marginTop: '-30rem', marginLeft: '-5rem' }}>
