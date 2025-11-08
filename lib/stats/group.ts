@@ -1,5 +1,11 @@
 import { hackPortalConfig } from '../../hackportal.config';
 
+export type GroupName = 'Raven' | 'Cat' | 'Deer' | 'Fox';
+
+const LEGACY_GROUP_ALIASES: Record<string, GroupName> = {
+  bird: 'Raven',
+};
+
 export function computeHash(userId: string): number {
   const p = 61,
     m = 1000000009;
@@ -12,6 +18,36 @@ export function computeHash(userId: string): number {
   return ans;
 }
 
-export function determineColorByTeamIdx(userHashValue: number) {
-  return hackPortalConfig.groupNames[userHashValue % hackPortalConfig.groupNames.length];
+export function normalizeGroupName(group?: string | null): GroupName | undefined {
+  if (!group) {
+    return undefined;
+  }
+
+  const trimmed = group.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+
+  const lower = trimmed.toLowerCase();
+
+  const canonicalMatch = hackPortalConfig.groupNames.find((name) => name.toLowerCase() === lower);
+  if (canonicalMatch) {
+    return canonicalMatch as GroupName;
+  }
+
+  if (LEGACY_GROUP_ALIASES[lower]) {
+    return LEGACY_GROUP_ALIASES[lower];
+  }
+
+  return undefined;
+}
+
+export function determineColorByTeamIdx(userHashValue: number): GroupName {
+  const index = userHashValue % hackPortalConfig.groupNames.length;
+  const group = hackPortalConfig.groupNames[index];
+  const normalized = normalizeGroupName(group);
+  if (!normalized) {
+    throw new Error(`Unknown group name configured for index ${index}: ${group}`);
+  }
+  return normalized;
 }

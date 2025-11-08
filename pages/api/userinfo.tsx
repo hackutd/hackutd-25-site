@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { auth, firestore } from 'firebase-admin';
 import initializeApi from '../../lib/admin/init';
-import { computeHash, determineColorByTeamIdx } from '@/lib/stats/group';
+import { computeHash, determineColorByTeamIdx, normalizeGroupName } from '@/lib/stats/group';
 
 initializeApi();
 
@@ -112,8 +112,9 @@ async function handleUserInfo(req: NextApiRequest, res: NextApiResponse) {
       });
     }
 
-    // Use stored group if available, otherwise calculate it (fallback for legacy users)
-    const groupAnimal = userData.user?.group || determineColorByTeamIdx(computeHash(userData.id));
+    // Use stored group if available (normalized), otherwise calculate it (fallback for legacy users)
+    const storedGroup = normalizeGroupName(userData.user?.group);
+    const groupAnimal = storedGroup ?? determineColorByTeamIdx(computeHash(userData.id));
 
     return res.status(200).json({
       ...userData,
