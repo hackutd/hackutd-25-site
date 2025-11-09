@@ -46,16 +46,16 @@ export default function AppHeaderCore(props: Props) {
         onClick: () => {
           console.log('Desktop Schedule button clicked, pathname:', router.pathname);
           if (router.pathname === '/') {
-            const element = document.getElementById('pre-events-section');
-            console.log('Found pre-events-section element:', element);
+            const element = document.getElementById('schedule-section');
+            console.log('Found schedule-section element:', element);
             if (element) {
               element.scrollIntoView({ behavior: 'smooth' });
             } else {
-              console.log('pre-events-section not found');
+              console.log('schedule-section not found');
             }
           } else {
-            console.log('Navigating to /#pre-events-section');
-            router.push('/#pre-events-section');
+            console.log('Navigating to /#schedule-section');
+            router.push('/#schedule-section');
           }
         },
       },
