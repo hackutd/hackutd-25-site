@@ -85,9 +85,9 @@ export default function AppNavbarBottom(props: Props) {
           }
 
           if (router.pathname === '/') {
-            document.getElementById('pre-events-section')?.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('schedule-section')?.scrollIntoView({ behavior: 'smooth' });
           } else {
-            router.push('/#pre-events-section');
+            router.push('/#schedule-section');
           }
         }}
       >
