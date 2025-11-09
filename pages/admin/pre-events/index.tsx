@@ -3,12 +3,18 @@ import { RequestHelper } from '../../../lib/request-helper';
 import { useState } from 'react';
 import PreEventForm from '../../../components/admin/pre-event/PreEventForm';
 import PreEventList from '../../../components/admin/pre-event/PreEventList';
+import { useAuthContext } from '@/lib/user/AuthContext';
+import { checkUserPermission } from '@/lib/util';
 
 interface Props {
   events: PreEvent[];
 }
 
+const allowedRoles = ['super_admin'];
+
 export default function PreEventPage(props: Props) {
+  const { user, isSignedIn } = useAuthContext();
+  const hasAccess = isSignedIn && checkUserPermission(user, allowedRoles);
   const [events, setEvents] = useState<PreEvent[]>(props.events);
   const [showForm, setShowForm] = useState<boolean>(false);
   const [editingEventIndex, setEditingEventIndex] = useState<number>(-1);
@@ -22,9 +28,17 @@ export default function PreEventPage(props: Props) {
     const eventToDelete = events[eventIndex];
     if (confirm(`Are you sure you want to delete "${eventToDelete.title}"?`)) {
       try {
+        if (!user?.token) {
+          alert('You are not authorized to perform this action.');
+          return;
+        }
         await RequestHelper.delete(
           '/api/pre-events',
-          {},
+          {
+            headers: {
+              Authorization: user.token,
+            },
+          },
           {
             Event: eventToDelete.Event,
           },
@@ -39,13 +53,33 @@ export default function PreEventPage(props: Props) {
 
   const handleFormSubmit = async (eventData: PreEvent) => {
     try {
+      if (!user?.token) {
+        alert('You are not authorized to perform this action.');
+        return;
+      }
       if (editingEventIndex === -1) {
         // Adding new event
-        await RequestHelper.post('/api/pre-events', {}, eventData);
+        await RequestHelper.post(
+          '/api/pre-events',
+          {
+            headers: {
+              Authorization: user.token,
+            },
+          },
+          eventData,
+        );
         setEvents([...events, eventData]);
       } else {
         // Updating existing event
-        await RequestHelper.post('/api/pre-events', {}, eventData);
+        await RequestHelper.post(
+          '/api/pre-events',
+          {
+            headers: {
+              Authorization: user.token,
+            },
+          },
+          eventData,
+        );
         const updatedEvents = [...events];
         updatedEvents[editingEventIndex] = eventData;
         setEvents(updatedEvents);
@@ -67,6 +101,10 @@ export default function PreEventPage(props: Props) {
     setShowForm(false);
     setEditingEventIndex(-1);
   };
+
+  if (!hasAccess) {
+    return <div className="text-2xl font-black text-center">Unauthorized</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-900">
