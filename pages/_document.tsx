@@ -7,10 +7,10 @@ export default function Document() {
         {/* Basic meta tags */}
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-        <meta
+        {/* <meta
           name="viewport"
           content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
-        />
+        /> */}
 
         {/* SEO Meta Tags */}
         <meta

@@ -101,6 +101,7 @@ export default function HomeHero() {
         backgroundPosition: 'center top',
         backgroundAttachment: 'scroll',
         zIndex: 2,
+        minHeight: '100vh',
       }}
     >
       <section className="min-h-[100vh] flex flex-col-reverse md:flex-col">
@@ -200,23 +201,113 @@ export default function HomeHero() {
         </div>
       </section>
 
-      <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
-        <div className="md:hidden" style={{ marginTop: '-20rem' }}>
+      <div
+        className="
+            absolute
+            z-10
+            hidden
+            2xl:block
+            bottom-[0%]  
+            right-[5%]
+            
+          "
+      >
+        <Image
+          src="/assets/topDrawing/crow.GIF"
+          alt="Crow"
+          width={300}
+          height={300}
+          className="w-[20vw]"
+          unoptimized
+        />
+      </div>
+
+      <div className="absolute left-1/4 transform -translate-x-1/2 z-10">
+        {/* --- MOBILE FOX --- */}
+        <div className="md:hidden" style={{ marginTop: '-30rem', marginLeft: '-5rem' }}>
           <Image
-            src="/assets/topDrawing/poyo.webp"
-            alt="Poyo"
-            width={120}
-            height={120}
-            className="w-24 h-24"
+            src="/assets/topDrawing/fox.GIF"
+            alt="Fox"
+            width={300}
+            height={300}
+            className="
+              w-[500px]
+              
+              "
+            unoptimized
           />
         </div>
-        <div className="hidden md:block" style={{ marginTop: '15rem' }}>
+
+        {/* --- DESKTOP FOX --- */}
+        <div className="hidden md:block" style={{ marginTop: '-3rem' }}>
           <Image
-            src="/assets/topDrawing/poyo.webp"
+            src="/assets/topDrawing/fox.GIF"
+            alt="Fox"
+            width={500}
+            height={500}
+            className="
+              w-[800px]
+              md:-translate-y-[550px]
+              lg:-translate-y-[200px]
+              xl:-translate-y-[100px]
+              2xl:-translate-y-[50px]
+              "
+            unoptimized
+          />
+        </div>
+      </div>
+
+      {/* Deer Image (Ground Right) */}
+      <div className="absolute left-3/4 transform -translate-x-1/2 z-10">
+        {/* --- MOBILE DEER --- */}
+        <div className="md:hidden" style={{ marginTop: '-35rem' }}>
+          <Image
+            src="/assets/topDrawing/whiteDeer.GIF"
+            alt="Deer"
+            width={350}
+            height={420}
+            className="w-[350px] max-w-[600px]"
+            unoptimized
+          />
+        </div>
+
+        {/* --- DESKTOP DEER --- */}
+        <div className="hidden md:block" style={{ marginTop: '-10rem' }}>
+          <Image
+            src="/assets/topDrawing/whiteDeer.GIF"
+            alt="Deer"
+            width={700}
+            height={840}
+            className="w-[600px] max-w-[1000px]
+              md:-translate-y-[550px]
+              lg:-translate-y-[200px]
+              xl:-translate-y-[70px]
+              2xl:-translate-y-[-40px]
+              "
+            unoptimized
+          />
+        </div>
+      </div>
+
+      {/* Poyo Image */}
+      <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
+        <div className="md:hidden" style={{ marginTop: '-22rem' }}>
+          <Image
+            src="/assets/topDrawing/poyo.GIF"
             alt="Poyo"
-            width={240}
-            height={240}
-            className="w-48 h-48 md:w-64 md:h-64"
+            width={480}
+            height={480}
+            unoptimized
+          />
+        </div>
+        <div className="hidden md:block" style={{ marginTop: '5rem' }}>
+          <Image
+            src="/assets/topDrawing/poyo.GIF"
+            alt="Poyo"
+            width={720}
+            height={720}
+            className="md:-translate-y-[300px] lg:-translate-y-[100px] xl:-translate-y-[20px] 2xl:-translate-y-[-120px]"
+            unoptimized
           />
         </div>
       </div>
@@ -248,24 +339,51 @@ export default function HomeHero() {
       </div>
 
       <div className={`my-32 mb-32 md:my-[60rem] md:mb-[128rem]`}>
-        <div className="absolute z-0" style={{ left: '-8rem', marginTop: '20rem' }}>
-          <div className="md:hidden">
-            <Image
-              src="/assets/pathDrawing/cliff.webp"
-              alt="Cliff"
-              width={300}
-              height={400}
-              className="w-80 h-96"
-            />
-          </div>
-          <div className="hidden md:block">
-            <Image
-              src="/assets/pathDrawing/cliff.webp"
-              alt="Cliff"
-              width={400}
-              height={600}
-              className="w-[50rem] h-[40rem] md:w-[60rem] md:h-[50rem]"
-            />
+        <div className="relative w-full">
+          <div className="absolute z-0" style={{ left: '-8rem', marginTop: '20rem' }}>
+            <div className="md:hidden">
+              <Image
+                src="/assets/pathDrawing/cliff.webp"
+                alt="Cliff"
+                width={300}
+                height={400}
+                className="w-80 h-96"
+              />
+            </div>
+            <div className="hidden md:block">
+              <Image
+                src="/assets/pathDrawing/cliff.webp"
+                alt="Cliff"
+                width={400}
+                height={600}
+                className="w-[50rem] h-[40rem] md:w-[60rem] md:h-[50rem]"
+              />
+            </div>
+
+            {/* --- THE CAT (Desktop Only) --- */}
+            <div
+              className="
+              absolute
+              left-1/4
+              hidden      
+              lg:block    
+              top-[25%]   
+               
+              z-10        
+              pointer-events-none 
+            "
+            >
+              <Image
+                src="/assets/pathDrawing/standingcat.GIF"
+                alt="Standing Cat"
+                width={300}
+                height={400}
+                className="w-[20vw] 
+                
+                "
+                unoptimized
+              />
+            </div>
           </div>
         </div>
 
@@ -293,7 +411,7 @@ export default function HomeHero() {
           }}
         />
         <Image
-          src="/assets/pathDrawing/deer.webp"
+          src="/assets/pathDrawing/edeer.GIF"
           alt="Deer"
           width={200}
           height={300}
@@ -310,6 +428,7 @@ export default function HomeHero() {
           onLoad={() => {
             console.log('Deer image loaded successfully');
           }}
+          unoptimized
         />
         <KeynoteSpeaker />
       </div>
