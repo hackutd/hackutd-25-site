@@ -5,9 +5,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { GetServerSideProps } from 'next';
+import { checkUserPermission } from '@/lib/util';
+
+const allowedRoles = ['super_admin'];
 
 const Page = () => {
   const { user, isSignedIn } = useAuthContext();
+  const hasAccess = isSignedIn && checkUserPermission(user, allowedRoles);
 
   const [values, setValues] = React.useState({
     name: '',
@@ -43,11 +47,15 @@ const Page = () => {
   };
 
   const onSubmit = async () => {
+    if (!user?.token) {
+      alert('You are not authorized to perform this action.');
+      return;
+    }
     const { data }: any = await RequestHelper.post(
       '/api/keynotespeakers',
       {
         headers: {
-          authorization: user.token,
+          Authorization: user.token,
         },
       },
       form,
@@ -62,12 +70,22 @@ const Page = () => {
   };
 
   useEffect(() => {
+    if (!hasAccess) return;
+
     const fetchData = async () => {
-      const { data: keynote }: any = await RequestHelper.get('/api/keynotespeakers', {});
+      const { data: keynote }: any = await RequestHelper.get('/api/keynotespeakers', {
+        headers: {
+          Authorization: user?.token ?? '',
+        },
+      });
       setValues(keynote);
     };
     fetchData();
-  }, []);
+  }, [hasAccess, user?.token]);
+
+  if (!hasAccess) {
+    return <div className="text-2xl font-black text-center">Unauthorized</div>;
+  }
 
   return (
     <div className="w-full h-full flex flex-col justify-center items-center p-12 gap-4 relative">
