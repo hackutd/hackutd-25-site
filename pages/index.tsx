@@ -222,9 +222,9 @@ export default function Home({
         />
 
         <div className="relative z-10">
-          <div className="my-72">
+          {/* <div className="my-72">
             <HomePreEventsSimple />
-          </div>
+          </div> */}
 
           <div className="my-72">
             <HomeSchedule scheduleCard={scheduleCard} dateCard={dateCard} />
